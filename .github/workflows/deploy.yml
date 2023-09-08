@@ -1,0 +1,16 @@
+name: Deploy the aplication (ah re que ahora no hago nada)
+on: 
+  workflow_dispatch:
+    branches:
+      - main
+  push:
+    branches:
+      - mian
+
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "my workflow"
+      - run: ls

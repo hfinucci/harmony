@@ -21,17 +21,22 @@ server.get('/ping', async (request, reply) => {
   return 'hola mundo!\n'
 })
 
+let color_id = 2
+
 server.ready().then(() => {
     server.io.on("connect", (socket) => {
-        console.log("a new client has connected!")
-        console.log(socket.id)
-        socket.on("disconnect", () => {
-            console.log("a client has disconnected!")
-        })
-        socket.on("presskey", (payload) => {
-            console.log(payload)
-            socket.broadcast.emit("presskey", payload);
-        });
+      console.log("a new client has connected!")
+      console.log(`sending color_id = ${color_id}`)
+      socket.emit("color_id", color_id);
+      color_id += 1
+      console.log(socket.id)
+      socket.on("disconnect", () => {
+          console.log("a client has disconnected!")
+      })
+      socket.on("presskey", (payload) => {
+          console.log(payload)
+          socket.broadcast.emit("presskey", payload);
+      });
     });
     
 });

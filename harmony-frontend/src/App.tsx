@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [colorId, setColorId] = useState();
 
   useEffect(() => {
     function onConnect() {
@@ -23,6 +24,9 @@ function App() {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
+    socket.on('color_id', (value) => {
+      setColorId(value)
+    })
     socket.on('presskey', (noteToPlay: string) => {
       console.log(`reproduciendo ${noteToPlay}`)
       playSynth(noteToPlay)
@@ -55,7 +59,7 @@ function App() {
   
   return (
     <div>
-      <Piano></Piano>
+      <Piano colorId={colorId}></Piano>
       {/* <Piano onChange={(change: ({note: number, state: boolean})) => processPianoClick(change)}/> */}
     </div>
   )

@@ -1,6 +1,7 @@
 
-import './App.css'
-import { Piano } from 'react-nexusui';
+// import { Piano } from 'react-nexusui';
+import './index.css';
+import { Piano } from './Piano';
 import * as Tone from 'tone'
 import { pitch } from './notes';
 import { socket } from './socket';
@@ -54,7 +55,8 @@ function App() {
   
   return (
     <div>
-      <Piano onChange={(change: ({note: number, state: boolean})) => processPianoClick(change)}/>
+      <Piano></Piano>
+      {/* <Piano onChange={(change: ({note: number, state: boolean})) => processPianoClick(change)}/> */}
     </div>
   )
 }

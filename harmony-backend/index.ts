@@ -1,50 +1,18 @@
-import fastify from 'fastify'
-import fastifyIO from "fastify-socket.io";
-import cors from '@fastify/cors'
+import server, { logger } from "./server";
+import { connectToDB } from './persistence/dbConfig';
 
+const ADDRESS = process.env.ADDRESS || '127.0.0.1'
+const PORT = process.env.PORT || '3000'
 
-const { ADDRESS = 'localhost', PORT = '3000' } = process.env;
+logger.info("Starting server...")
 
-const server = fastify()
-server.register(cors, {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  });
-  server.register(fastifyIO, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    }
-  });
+// Missing top level await. Server may be started before DB connection is established.
+connectToDB()
 
-server.get('/ping', async (request, reply) => {
-  return 'hola mundo!\n'
-})
-
-let color_id = 2
-
-server.ready().then(() => {
-    server.io.on("connect", (socket) => {
-      console.log("a new client has connected!")
-      console.log(`sending color_id = ${color_id}`)
-      socket.emit("color_id", color_id);
-      color_id += 1
-      console.log(socket.id)
-      socket.on("disconnect", () => {
-          console.log("a client has disconnected!")
-      })
-      socket.on("presskey", (payload) => {
-          console.log(payload)
-          socket.broadcast.emit("presskey", payload);
-      });
-    });
-    
-});
-
-server.listen({ host: ADDRESS, port: parseInt(PORT, 10) }, function (err, address) {
-    if (err) {
-      server.log.error(err)
-      process.exit(1)
-    }
-    console.log(`Server listening at ${address}`)
+server.listen({ host: ADDRESS, port: parseInt(PORT, 10) }, function (err: any, address: any) {
+  if (err) {
+    logger.error(err)
+    process.exit(1)
+  }
+  logger.info(`Server listening at ${address}`)
 })

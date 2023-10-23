@@ -14,14 +14,12 @@ jobs:
         run: cd harmony-frontend && npm install
       - name: Run test
         run: cd harmony-frontend && npm run test
-  # coverage:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Clone repo
-  #       uses: actions/checkout@v3
-  #     - name: Move to front
-  #       run: cd harmony-frontend
-  #     - name: Install modules
-  #       run: npm install
-  #     - name: Run coverage
-  #       run: npm run coverage
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+      - name: Install modules
+        run: cd harmony-frontend && npm install
+      - name: Run coverage
+        run: cd harmony-frontend && npm run coverage

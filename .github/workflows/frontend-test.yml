@@ -1,6 +1,6 @@
 name: Test frontend of pull request
 on: 
-  pull-request:
+  pull_request:
     branches:
       - main
 

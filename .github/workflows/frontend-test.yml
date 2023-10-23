@@ -12,6 +12,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Move to front
         run: cd harmony-frontend
+      - name: npm version
+        run: npm -v
       - name: Install modules
         run: npm install
       - name: Run test

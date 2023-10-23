@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@v3
+      - name: ls
+        run: ls
       - name: Move to front
         run: cd harmony-frontend
       - name: ls

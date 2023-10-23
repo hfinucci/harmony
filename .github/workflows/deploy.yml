@@ -11,8 +11,9 @@ jobs:
   exploring:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Clone repo
+        uses: actions/checkout@v3
       - run: echo "my workflow"
       - run: ls
       - run: cd harmony-backend && ls
-      - run: cd ../harmony-frontend && ls
+      - run: cd harmony-frontend && ls

@@ -10,18 +10,10 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@v3
-      - name: ls
-        run: ls
-      - name: Move to front
-        run: cd harmony-frontend
-      - name: ls
-        run: ls
-      - name: npm version
-        run: npm -v
       - name: Install modules
-        run: npm install
+        run: cd harmony-frontend && npm install
       - name: Run test
-        run: npm run test
+        run: cd harmony-frontend && npm run test
   # coverage:
   #   runs-on: ubuntu-latest
   #   steps:

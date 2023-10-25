@@ -12,12 +12,12 @@ export const Navbar = () => {
                 <div className="hidden w-full md:block md:w-auto" id="navbar-default">
                     <ul className="flex flex-col p-4 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
                         <li>
-                            <Link to="/login">
+                            <Link to="/session">
                                 <h1 className="bg-white text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-2 px-4 rounded-full">Iniciar Sesión</h1>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/register">
+                            <Link to="/session">
                                 <h1 className="hover:bg-white hover:text-fuchsia-950 text-white border border-fuchsia-950 bg-fuchsia-950 py-2 px-4 rounded-full">Registrarse</h1>
                             </Link>
                         </li>

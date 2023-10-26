@@ -9,7 +9,11 @@ const LandingPage = () => {
             <section className="relative">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6"></div>
                 <div className="flex flex-row items-center justify-between pt-32 pb-12 px-12">
-                    <img src={guitarists} className="max-w-md max-h-md" />
+                    <img
+                        src={guitarists}
+                        className="max-w-md max-h-md"
+                        alt="Guitarists"
+                    />
                     <div className="flex flex-col">
                         <h1 className="text-7xl font-serif font-bold text-fuchsia-950">
                             Harmony
@@ -57,7 +61,11 @@ const LandingPage = () => {
                             </p>
                         </div>
                     </div>
-                    <img src={jazzband} className="max-w-md max-h-md" />
+                    <img
+                        src={jazzband}
+                        className="max-w-md max-h-md"
+                        alt="Jazz band"
+                    />
                     <div className="grid grid-rows-2 grid-flow-col">
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
@@ -103,12 +111,20 @@ const LandingPage = () => {
                             ¡Es muy fácil!
                         </h2>
                     </div>
-                    <img src={musicroom} className="max-w-sm max-h-sm" />
+                    <img
+                        src={musicroom}
+                        className="max-w-sm max-h-sm"
+                        alt="Listening to music in a room"
+                    />
                 </div>
             </section>
             <section className="relative">
                 <div className="flex flex-row pb-12">
-                    <img src={rockband} className="max-w-md max-h-md" />
+                    <img
+                        src={rockband}
+                        className="max-w-md max-h-md"
+                        alt="Rock band"
+                    />
                     <div className="flex flex-col justify-evenly text-center">
                         <h1 className="text-5xl font-serif font-bold text-fuchsia-950">
                             ¡Unite ahora!

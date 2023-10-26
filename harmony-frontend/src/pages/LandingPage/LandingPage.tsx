@@ -107,10 +107,10 @@ const LandingPage = () => {
                 </div>
             </section>
             <section className="relative">
-                <div className="flex flex-row">
+                <div className="flex flex-row pb-12">
                     <img src={rockband} className="max-w-md max-h-md" />
-                    <div className="flex flex-col justify-center text-center">
-                        <h1 className="text-5xl font-serif font-bold text-fuchsia-950 pb-12">
+                    <div className="flex flex-col justify-evenly text-center">
+                        <h1 className="text-5xl font-serif font-bold text-fuchsia-950">
                             ¡Unite ahora!
                         </h1>
                         <p className="text-xl font-serif text-zinc-500 px-12">
@@ -121,9 +121,11 @@ const LandingPage = () => {
                             global. Regístrate ahora para comenzar tu viaje
                             musical en equipo.
                         </p>
-                        <button className="rounded-md bg-fuchsia-900 text-white">
-                            Registrate
-                        </button>
+                        <div>
+                            <button className="rounded-md bg-fuchsia-900 text-white px-4 py-2">
+                                Registrate
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>

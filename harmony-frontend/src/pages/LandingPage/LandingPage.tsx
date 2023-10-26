@@ -1,5 +1,7 @@
 import guitarists from "../../assets/landing-guitarists.png";
 import jazzband from "../../assets/landing-jazz-band.png";
+import musicroom from "../../assets/landing-music-room.png";
+import rockband from "../../assets/landing-rock-band.png";
 
 const LandingPage = () => {
     return (
@@ -7,7 +9,11 @@ const LandingPage = () => {
             <section className="relative">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6"></div>
                 <div className="flex flex-row items-center justify-between pt-32 pb-12 px-12">
-                    <img src={guitarists} className="max-w-md max-h-md" />
+                    <img
+                        src={guitarists}
+                        className="max-w-md max-h-md"
+                        alt="Guitarists"
+                    />
                     <div className="flex flex-col">
                         <h1 className="text-7xl font-serif font-bold text-fuchsia-950">
                             Harmony
@@ -55,7 +61,11 @@ const LandingPage = () => {
                             </p>
                         </div>
                     </div>
-                    <img src={jazzband} className="max-w-md max-h-md" />
+                    <img
+                        src={jazzband}
+                        className="max-w-md max-h-md"
+                        alt="Jazz band"
+                    />
                     <div className="grid grid-rows-2 grid-flow-col">
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
@@ -75,6 +85,62 @@ const LandingPage = () => {
                                 a tus ideas musicales, desde la escritura de
                                 partituras hasta la grabación en línea.
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className="relative px-12 pt-12 pb-6">
+                <div className="flex flex-row justify-center">
+                    <div className="flex flex-col justify-around">
+                        <h1 className="text-5xl font-serif font-bold text-fuchsia-950 pb-4">
+                            ¿Cómo funciona?
+                        </h1>
+                        <p className="text-2xl font-serif text-zinc-500 indent-16">
+                            Crea tu proyecto musical.
+                        </p>
+                        <p className="text-2xl font-serif text-zinc-500 indent-32">
+                            Invita a sus colaboradores.
+                        </p>
+                        <p className="text-2xl font-serif text-zinc-500 indent-60">
+                            Comienza a componer y modificar juntos.
+                        </p>
+                        <p className="text-2xl font-serif text-zinc-500 indent-80">
+                            Escucha y perfecciona tu música en tiempo real.
+                        </p>
+                        <h2 className="text-4xl font-serif font-bold text-fuchsia-950 indent-96">
+                            ¡Es muy fácil!
+                        </h2>
+                    </div>
+                    <img
+                        src={musicroom}
+                        className="max-w-sm max-h-sm"
+                        alt="Listening to music in a room"
+                    />
+                </div>
+            </section>
+            <section className="relative">
+                <div className="flex flex-row pb-12">
+                    <img
+                        src={rockband}
+                        className="max-w-md max-h-md"
+                        alt="Rock band"
+                    />
+                    <div className="flex flex-col justify-evenly text-center">
+                        <h1 className="text-5xl font-serif font-bold text-fuchsia-950">
+                            ¡Unite ahora!
+                        </h1>
+                        <p className="text-xl font-serif text-zinc-500 px-12">
+                            ¡No dejes que la distancia física limite tu
+                            creatividad musical! Únete a Harmony hoy mismo y
+                            descubre cómo la colaboración musical en tiempo real
+                            puede ser emocionante, eficiente y verdaderamente
+                            global. Regístrate ahora para comenzar tu viaje
+                            musical en equipo.
+                        </p>
+                        <div>
+                            <button className="rounded-md bg-fuchsia-900 text-white px-4 py-2">
+                                Registrate
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import 'dotenv/config'
 import { logger } from '../server';
 
-const pool = new Pool({
+const dbpool = new Pool({
     user: process.env.DB_USER,
     host: '127.0.0.1',
     database: process.env.DB_NAME,
@@ -11,7 +11,7 @@ const pool = new Pool({
 });
 
 const connectToDB = async () => {
-    await pool.connect()
+    await dbpool.connect()
         .then(() => {
             logger.info('Connected to ' + process.env.DB_NAME + ' database');
         })
@@ -21,4 +21,4 @@ const connectToDB = async () => {
         })
 }
 
-export { pool, connectToDB }
+export { dbpool, connectToDB }

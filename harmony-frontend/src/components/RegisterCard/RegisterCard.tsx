@@ -26,7 +26,7 @@ export const RegisterCard = () => {
         return getValues("terms") == true;
     };
 
-    const submitRegister =  (data: any) => {
+    const submitRegister = (data: any) => {
         console.log(data.name);
         console.log(data.lastname);
         console.log(data.mail);

@@ -17,7 +17,7 @@ export class UserService {
     }   
 
     public static async signUpWithUserAndPassword(name: string, email: string, password: string) {
-        const response = await fetch('/api/user', {
+        const response = await fetch(BASE_URL + '/api/user/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,7 +28,20 @@ export class UserService {
                 name: name
             })
         })
-        const data = await response.json()
-        return data
-    }   
+        return response
+    }  
+    
+    public static async signInWithUserAndPassword(email: string, password: string) {
+        const response = await fetch(BASE_URL + '/api/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        })
+        return response
+    }
 }

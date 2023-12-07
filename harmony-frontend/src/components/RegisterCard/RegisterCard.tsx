@@ -1,5 +1,5 @@
 import {useForm} from "react-hook-form";
-import { UserService } from "../../service/UserService";
+import { UserService } from "../../service/userService";
 
 export const RegisterCard = () => {
 
@@ -29,8 +29,13 @@ export const RegisterCard = () => {
 
     const submitRegister = async (data: any) => {
         console.log("ACA!")
-        const name = await UserService.getUserInfo(1)
-        console.log(name)
+        const fullname = data.name + " " + data.lastname
+        const rsp = await UserService.signUpWithUserAndPassword(fullname, data.mail, data.password)
+        let login = null
+        if (rsp != null && rsp != undefined)
+            login = await UserService.signInWithUserAndPassword(data.mail, data.password)
+        if (login != null)
+            console.log(login)
     }
 
     const invalidEmail = (email: String) => {

@@ -37,8 +37,16 @@ export class AuthService {
             email: email,
             password: password,
         })
-        if (error != undefined)
+        if (error != null) {
             logger.info("Log in failed with message: " + error.message)
+        }
+        return data
+    }
+
+    public static async getLoggedUser() {
+        const { data, error } = await supabase.auth.getUser()
+        if (error != undefined)
+            logger.info("Get logged user failed with message: " + error.message)
         return data
     }
 

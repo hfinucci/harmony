@@ -37,10 +37,11 @@ export default async function userController(fastify: FastifyInstance, opts: any
         return deleted != null;
     })
 
-    //TODO: Esta funcion funciona para los usarios que estan loggeados, asi que ni la probe...
-    server.put(BASE_URL + ':id', async (req: FastifyRequest<{Params: {id: number}, Body: {password: string}}> , rep) => {
-        const id = req.params.id;
-        const password = req.body.password
-        AuthService.updatePassword(password)
+    server.put(BASE_URL + ':id', async (req: FastifyRequest<{Params: {id: number}, Body: {url: string}}> , rep) => {
+        const new_img = req.body.url
+        const id = req.params.id
+        logger.info("Changeing image for user with id " + id)
+        const changed = UserService.changeIcon(id, new_img)
+        return changed != null
     })
 }

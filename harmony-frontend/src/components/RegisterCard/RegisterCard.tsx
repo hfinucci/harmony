@@ -1,5 +1,6 @@
 import {useForm} from "react-hook-form";
 import { UserService } from "../../service/userService";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterCard = () => {
 
@@ -23,19 +24,20 @@ export const RegisterCard = () => {
     watch("lastname")
     watch("name")
 
+    const nav = useNavigate()
+
     const validateTerms = () => {
         return getValues("terms") == true;
     };
 
     const submitRegister = async (data: any) => {
-        console.log("ACA!")
         const fullname = data.name + " " + data.lastname
         const rsp = await UserService.signUpWithUserAndPassword(fullname, data.mail, data.password)
         let login = null
         if (rsp != null && rsp != undefined)
             login = await UserService.signInWithUserAndPassword(data.mail, data.password)
-        if (login != null)
-            console.log(login)
+        if (login != "false")
+            nav("/home")
     }
 
     const invalidEmail = (email: String) => {

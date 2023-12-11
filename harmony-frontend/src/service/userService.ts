@@ -14,7 +14,18 @@ export class UserService {
         })
         const data = await response.json()
         return data
-    }   
+    }
+    
+    public static async getLoggedUser() {
+        const response = await fetch(BASE_URL + '/api/auth/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const data = await response.json()
+        return data
+    }
 
     public static async signUpWithUserAndPassword(name: string, email: string, password: string) {
         const response = await fetch(BASE_URL + '/api/user/', {
@@ -32,7 +43,7 @@ export class UserService {
     }  
     
     public static async signInWithUserAndPassword(email: string, password: string) {
-        const response = await fetch(BASE_URL + '/api/login/', {
+        return await fetch(BASE_URL + '/api/auth/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -41,7 +52,8 @@ export class UserService {
                 email: email,
                 password: password
             })
+        }).then((response) => {
+            return response.text()
         })
-        return response
     }
 }

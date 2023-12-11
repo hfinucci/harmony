@@ -4,6 +4,7 @@ import fastifyIO from "fastify-socket.io";
 import socketController from './controllers/sockerController';
 import userController from './controllers/userController';
 import pino from 'pino';
+import authController from './controllers/authController';
 
 const server = fastify()
     .register(cors, {
@@ -17,6 +18,7 @@ const server = fastify()
         }
     })
     .register(userController)
+    .register(authController)
     .register(socketController)
 
 const transport = pino.transport({

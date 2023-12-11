@@ -14,7 +14,14 @@ export class UserService {
         return deleted
     }
 
-    public static async changeIcon(id: number) {
-        //TODO: ver como manejar lo de la imagen
+    public static async changeIcon(id: number, url: string) {
+        const changed = await UserPersistence.changeImg(id, url)
+        return changed
+    }
+
+    public static async getUser(auth_id: string) {
+        logger.info("Getting user with auth_id " + auth_id);
+        const user = await UserPersistence.getUserWithAuthId(auth_id)
+        return user;
     }
 }

@@ -20,7 +20,7 @@ export class SongPersistence {
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows[0];
-        return song ? song : (() => {
+        return song ?? (() => {
             throw new Error("Song not found")
         })();
     }

@@ -1,4 +1,4 @@
-import {FastifyInstance, FastifyRequest, FastifyReply} from 'fastify'
+import {FastifyInstance, FastifyRequest} from 'fastify'
 import server, {logger} from "../server";
 import {SongService} from '../service/songService';
 import {parseCreateSongRequest} from "../models/createSongRequest";
@@ -24,6 +24,19 @@ export default async function songController(fastify: FastifyInstance, opts: any
                     .code(404)
                     .send()
             }
+        }
+    });
+
+    server.get('/api/song/:id', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        const id = req.params.id;
+        try {
+            logger.info("Fetching song with id: " + id);
+            return await SongService.getSongById(id);
+        } catch (err) {
+            logger.info(err);
+            return rep
+                .code(404)
+                .send();
         }
     });
 

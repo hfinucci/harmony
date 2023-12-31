@@ -6,6 +6,7 @@ const DeleteAccountModal = () => {
     return (
         <>
             <button
+                aria-label="delete account"
                 data-modal-target="delete-account-modal"
                 data-modal-toggle="delete-account-modal"
                 type="button"

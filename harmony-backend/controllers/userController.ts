@@ -14,9 +14,14 @@ export default async function userController(fastify: FastifyInstance, opts: any
     
     server.get(BASE_URL + '/:id', async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
         const id = req.params.id;
-        parseId(id)
-        logger.info("Getting user with id: " + id);
-        return {name:await UserPersistence.getUserName(id)};
+        try {
+            parseId(id)
+            logger.info("Getting user with id: " + id);
+            return {name:await UserPersistence.getUserName(id)};
+        } catch (error: any) {
+            logger.error(error)
+            return handleError(error, rep)
+        };
     });
 
     server.post(BASE_URL, async (req, rep) => {

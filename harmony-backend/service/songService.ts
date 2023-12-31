@@ -1,6 +1,5 @@
 import {CreateSongRequest} from "../models/createSongRequest";
 import {SongPersistence} from '../persistence/songPersistence';
-import {logger} from "../server";
 
 export class SongService {
 

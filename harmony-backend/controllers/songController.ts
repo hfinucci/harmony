@@ -1,8 +1,7 @@
-import {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify'
+import {FastifyInstance, FastifyRequest} from 'fastify'
 import server, {logger} from "../server";
 import {SongService} from '../service/songService';
 import {parseCreateSongRequest} from "../models/createSongRequest";
-import {z} from "zod";
 import {handleError, parseId} from "../utils";
 
 const BASE_URL = '/api/song'

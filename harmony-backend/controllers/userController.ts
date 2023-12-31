@@ -7,11 +7,11 @@ import { parseCreateUserRequest } from '../models/createUserRequest';
 import {z} from "zod";
 import { parseChangeIconRequest } from '../models/changeIconRequest';
 
-const BASE_URL = '/api/user/'
+const BASE_URL = '/api/user'
 
 export default async function userController(fastify: FastifyInstance, opts: any) {
     
-    server.get(BASE_URL + ':id', async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
+    server.get(BASE_URL + '/:id', async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
         const id = req.params.id;
         logger.info("Getting user with id: " + id);
         return {name:await UserPersistence.getUserName(id)};

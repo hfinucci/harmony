@@ -1,14 +1,22 @@
 import {dbpool} from './dbConfig';
 import {CreateSongRequest} from "../models/createSongRequest";
 import {QueryResult} from "pg";
-import {logger} from "../server";
 
 export class SongPersistence {
 
     public static async createSong(request: CreateSongRequest): Promise<any> {
         const query = {
-            text: 'INSERT INTO songs (name, author, createdAt, lastModifiedAt) VALUES ($1, $2, NOW(), NOW()) RETURNING (id)',
+            text: 'INSERT INTO songs (name, author, created, lastModified) VALUES ($1, $2, NOW(), NOW()) RETURNING (id)',
             values: [request.name, request.author],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        return result.rows[0] ?? null;
+    }
+
+    public static async updateSong(updatedSong: any): Promise<any> {
+        const query = {
+            text: 'UPDATE songs SET name = $1, author = $2, lastModified = NOW() WHERE id = $3 RETURNING (id)',
+            values: [updatedSong.name, updatedSong.author, updatedSong.id],
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;

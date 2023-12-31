@@ -1,12 +1,13 @@
 import {useForm} from "react-hook-form";
+import { UserService } from "../../service/userService";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export const LoginCard = () => {
 
     type FormData = {
         mail: string;
         password: string;
-        name: string;
-        lastname: string;
         remember: boolean;
     };
 
@@ -18,13 +19,18 @@ export const LoginCard = () => {
     } = useForm<FormData>();
 
     watch("password")
-    watch("lastname")
-    watch("name")
+    watch("mail")
 
-    const submitLogin =  (data: any) => {
-        console.log(data.mail);
-        console.log(data.password);
-        console.log(data.remember);
+    const nav = useNavigate()
+
+    const [loginError, setLoginError] : any = useState()
+
+    const submitLogin =  async (data: any) => {
+        const login = await UserService.signInWithUserAndPassword(data.mail, data.password)
+        if(login?.status == 200)
+            nav("/home")
+        else
+            setLoginError("Invalid login credentials")
     }
 
     const invalidEmail = (email: String) => {
@@ -79,6 +85,7 @@ export const LoginCard = () => {
                             Recordarme
                         </label>
                     </div>
+                    <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">{loginError}</p>
                     <button type="submit" className="text-fuchsia-950 hover:text-white border border-fuchsia-950 hover:bg-fuchsia-950 focus:ring-4 focus:outline-none focus:ring-fuchsia-950 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mt-3 mb-4">INICIAR SESIÓN</button>
                 </form>
             </div>

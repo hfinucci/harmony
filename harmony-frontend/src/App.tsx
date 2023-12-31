@@ -5,6 +5,7 @@ import './index.css';
 import LandingPage from './pages/LandingPage/LandingPage';
 import Navbar from './components/Navbar/Navbar';
 import SessionPage from './pages/SessionPage/SesionPage';
+import HomePage from './pages/HomePage/HomePage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/session" element={<SessionPage/>}/>
+          <Route path="/home" element={<HomePage/>}/>
         </Routes>
       </div>
     </BrowserRouter>

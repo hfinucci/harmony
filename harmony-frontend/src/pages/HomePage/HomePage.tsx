@@ -6,9 +6,11 @@ const HomePage = () => {
     const [user, setUser]: any = useState()
 
     useEffect(() => {
-        UserService.getLoggedUser().then((rsp) => {
-            if(rsp != null)
-                setUser(rsp)
+        UserService.getLoggedUser().then(async (rsp) => {
+            if(rsp?.status == 200){
+                const info = await rsp.json()
+                setUser(info)
+            }
         }) 
     }, [])
 

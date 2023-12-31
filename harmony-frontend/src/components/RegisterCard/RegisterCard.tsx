@@ -36,7 +36,7 @@ export const RegisterCard = () => {
         let login = null
         if (rsp != null && rsp != undefined)
             login = await UserService.signInWithUserAndPassword(data.mail, data.password)
-        if (login != "false")
+        if (login?.status == 200)
             nav("/home")
     }
 

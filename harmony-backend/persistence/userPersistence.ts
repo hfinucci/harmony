@@ -38,7 +38,7 @@ export class UserPersistence {
         };
 
         const result: QueryResult = await dbpool.query(query);
-        return result != null;
+        return result.rowCount != 0;
     }
 
     public static async deleteUser(id: number) : Promise<boolean | null> {
@@ -46,9 +46,8 @@ export class UserPersistence {
             text: 'DELETE FROM users WHERE id = $1;',
             values: [id]
         };
-
         const result: QueryResult = await dbpool.query(query);
-        return result != null;
+        return result.rowCount != 0;
     }
 
     public static async changeImg(id: number, url: string) : Promise<boolean | null> {
@@ -58,6 +57,6 @@ export class UserPersistence {
         };
 
         const result: QueryResult = await dbpool.query(query);
-        return result != null;
+        return result.rowCount != 0;
     }
 }

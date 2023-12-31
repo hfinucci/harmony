@@ -27,7 +27,7 @@ export const LoginCard = () => {
 
     const submitLogin =  async (data: any) => {
         const login = await UserService.signInWithUserAndPassword(data.mail, data.password)
-        if(login != "false")
+        if(login?.status == 200)
             nav("/home")
         else
             setLoginError("Invalid login credentials")

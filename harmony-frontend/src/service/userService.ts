@@ -6,29 +6,25 @@ const BASE_URL = "http://127.0.0.1:3000"
 export class UserService {
 
     public static async getUserInfo(userId: number) {
-        const response = await fetch(BASE_URL + '/api/user/' + userId, {
+        return await fetch(BASE_URL + '/api/user/' + userId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        const data = await response.json()
-        return data
     }
     
     public static async getLoggedUser() {
-        const response = await fetch(BASE_URL + '/api/auth/', {
+        return await fetch(BASE_URL + '/api/auth/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        const data = await response.json()
-        return data
     }
 
     public static async signUpWithUserAndPassword(name: string, email: string, password: string) {
-        const response = await fetch(BASE_URL + '/api/user/', {
+        return await fetch(BASE_URL + '/api/user/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -39,7 +35,6 @@ export class UserService {
                 name: name
             })
         })
-        return response
     }  
     
     public static async signInWithUserAndPassword(email: string, password: string) {
@@ -53,7 +48,7 @@ export class UserService {
                 password: password
             })
         }).then((response) => {
-            return response.text()
+            return response
         })
     }
 }

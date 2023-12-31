@@ -1,52 +1,58 @@
 import { createClient } from '@supabase/supabase-js'
 import 'dotenv/config'
 import { logger } from '../server'
+import { AuthUserRequest } from '../models/authUserRequest'
+import { NewPasswordRequest } from '../models/newPasswordRequest'
 
 const supabase = createClient("http://localhost:54321", process.env.AUTH_KEY || "")
 
 export class AuthService {
 
-    public static async signUpNewUser(email: string, password: string) {
+    public static async signUpNewUser(request: AuthUserRequest) {
         const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
+            email: request.email,
+            password: request.password,
         })
-        if (error != undefined)
-            logger.info("Sign up failed with message: " + error)
+        if (error != undefined) {
+            throw new Error(error.message)
+        }
         return data
     }
 
     public static async deleteUser(id:string) {
         logger.info("Deleting user with id " + id + " from auth table")
         const { data, error } = await supabase.auth.admin.deleteUser(id)
-        if (error != undefined)
-            logger.info("Delete failed with message: " + error)
+        if (error != undefined) {
+            throw new Error(error.message)
+        }
         return data
     }
 
-    //TODO: Esta funcion funciona para los usarios que estan loggeados, asi que ni la probe...
-    public static async updatePassword(password: string) {
-        const { data, error } = await supabase.auth.updateUser({ password: password })
-        if (error != undefined)
-            logger.info("Password update failed with message: " + error)
+    //TODO: mejorar el catcheo de error -> no pude hacer lo que queria
+    public static async updatePassword(request: NewPasswordRequest) {
+        const { data, error } = await supabase.auth.updateUser({ password: request.password })
+        if (error != undefined) {
+            throw new Error(error.message)
+        }
         return data
     }
 
-    public static async signInWithPassword(email: string, password: string) {
+    public static async signInWithPassword(request: AuthUserRequest) {
         const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
+            email: request.email,
+            password: request.password,
         })
         if (error != null) {
-            logger.info("Log in failed with message: " + error.message)
+            throw new Error(error.message)
         }
         return data
     }
 
     public static async getLoggedUser() {
         const { data, error } = await supabase.auth.getUser()
-        if (error != undefined)
-            logger.info("Get logged user failed with message: " + error.message)
+        if (error != undefined) {
+            throw new Error(error.message)
+        }
         return data
     }
 

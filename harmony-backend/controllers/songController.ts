@@ -27,7 +27,7 @@ export default async function songController(fastify: FastifyInstance, opts: any
         }
     });
 
-    server.get('/api/song/:id', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+    server.get(BASE_URL + '/:id', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
         const id = req.params.id;
         try {
             logger.info("Fetching song with id: " + id);

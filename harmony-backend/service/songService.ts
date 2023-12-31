@@ -11,4 +11,8 @@ export class SongService {
     public static async getSongById(id: number) {
         return await SongPersistence.getSongById(id);
     }
+
+    static async deleteSongById(id: number) {
+        return await SongPersistence.deleteSongById(id);
+    }
 }

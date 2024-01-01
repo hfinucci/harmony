@@ -1,8 +1,31 @@
 import { useState } from "react";
 import { FaPenToSquare, FaXmark } from "react-icons/fa6";
+import { UserService } from "../../service/userService";
+import { useForm } from "react-hook-form";
 
 const ChangePasswordModal = () => {
     const [showModal, setShowModal] = useState(false);
+    const [changePasswordError, setChangePasswordError] = useState<string>();
+
+    type ChangePasswordFormData = {
+        password: string;
+    };
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm<ChangePasswordFormData>();
+
+    watch("password");
+
+    const submitChangePassword = async (data: ChangePasswordFormData) => {
+        const response = await UserService.changePassword(data.password);
+        if (response?.status == 200) setShowModal(false);
+        else setChangePasswordError("Error al cambiar la contraseña");
+    };
+
     return (
         <>
             <button
@@ -41,7 +64,12 @@ const ChangePasswordModal = () => {
                                     </button>
                                 </div>
                                 <div className="p-4 md:p-5">
-                                    <form className="space-y-4" action="#">
+                                    <form
+                                        className="space-y-4"
+                                        onSubmit={handleSubmit(
+                                            submitChangePassword
+                                        )}
+                                    >
                                         <div>
                                             <label
                                                 htmlFor="password"
@@ -51,13 +79,27 @@ const ChangePasswordModal = () => {
                                             </label>
                                             <input
                                                 type="password"
-                                                name="password"
                                                 id="password"
                                                 placeholder="••••••••"
+                                                {...register("password", {
+                                                    required: true,
+                                                    minLength: 8,
+                                                })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                 required
                                             />
                                         </div>
+                                        {errors.password && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    La contraseña debe tener al
+                                                    menos 8 caracteres
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {changePasswordError}
+                                                </p>
+                                            </>
+                                        )}
                                         <button
                                             type="submit"
                                             className="w-full text-white bg-fuchsia-700 hover:bg-fuchsia-800 focus:ring-4 focus:outline-none focus:ring-fuchsia-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa6";
 
 const DeleteAccountModal = () => {
     const [showModal, setShowModal] = useState(false);

@@ -1,5 +1,5 @@
-import { FaEdit } from "react-icons/fa";
 import DeleteAccountModal from "../../components/DeleteAccountModal/DeleteAccountModal";
+import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
 
 const ConfigurationPage = () => {
     return (
@@ -16,12 +16,7 @@ const ConfigurationPage = () => {
                 <hr className="h-px my-8 bg-gray-200 border-0" />
                 <div className="flex flex-row justify-between">
                     <div className="text-slate-400">Cambiar la contraseña</div>
-                    <button
-                        type="button"
-                        className="text-fuchsia-900  bg-slate-200 hover:bg-purple-300 focus:ring-4 focus:outline-none focus:ring-fuchsia-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
-                    >
-                        <FaEdit />
-                    </button>
+                    <ChangePasswordModal />
                 </div>
                 <hr className="h-px my-8 bg-gray-200 border-0" />
                 <div className="flex flex-row justify-between">

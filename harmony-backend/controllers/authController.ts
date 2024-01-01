@@ -3,10 +3,10 @@ import server, { logger } from "../server";
 import { AuthService } from '../service/authService';
 import { UserService } from '../service/userService';
 import { parseAuthUserRequest } from '../models/authUserRequest';
-import {z} from "zod";
 import { parseNewPasswordRequest } from '../models/newPasswordRequest';
+import { handleError } from '../utils';
 
-//TODO: Ya se que asi no se deberia hacer pero es un fix del momento
+//TODO: Ya se que asi no se debería hacer pero es un fix del momento
 const BASE_URL = '/api/auth/'
 
 export default async function authController(fastify: FastifyInstance, opts: any) {
@@ -18,15 +18,18 @@ export default async function authController(fastify: FastifyInstance, opts: any
             return await AuthService.signInWithPassword(request);
         } catch (err) {
             logger.error(err)
-            if (err instanceof z.ZodError) {
-                return rep
-                    .code(400)
-                    .send()
-            } else {
-                return rep
-                    .code(409)
-                    .send()
-            }
+            return handleError(err, rep)
+        }
+        
+    });
+
+    server.post('/api/logout/', async (req, rep) => {
+        try {
+            logger.info("Signing out");
+            return await AuthService.signOutUser();
+        } catch (err) {
+            logger.error(err)
+            return handleError(err, rep)
         }
         
     });
@@ -35,15 +38,13 @@ export default async function authController(fastify: FastifyInstance, opts: any
         try {
             const auth_data = await AuthService.getLoggedUser();
             let data = null
-            if(auth_data != undefined && auth_data.user != null ) {
-                data = UserService.getUser(auth_data.user?.id)
+            if(auth_data.user != null ) {
+                data = UserService.getUser(auth_data.user.id)
             }
             return data
         } catch (err) {
             logger.error(err)
-            return rep
-                .code(404)
-                .send()
+            return handleError(err, rep)
         }  
     });
 
@@ -53,15 +54,7 @@ export default async function authController(fastify: FastifyInstance, opts: any
             await AuthService.updatePassword(request)
         } catch (err) {
             logger.error(err)
-            if (err instanceof z.ZodError) {
-                return rep
-                    .code(400)
-                    .send()
-            } else {
-                return rep
-                    .code(409)
-                    .send()
-            }
+            return handleError(err, rep)
         }
     })
 

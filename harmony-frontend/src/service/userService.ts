@@ -24,7 +24,7 @@ export class UserService {
     }
 
     public static async signUpWithUserAndPassword(name: string, email: string, password: string) {
-        return await fetch(BASE_URL + '/api/user/', {
+        return await fetch(BASE_URL + '/api/user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

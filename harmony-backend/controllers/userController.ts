@@ -1,12 +1,11 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
-import server, { logger } from "../server";
-import { UserPersistence } from '../persistence/userPersistence';
-import { AuthService } from '../service/authService';
-import { UserService } from '../service/userService';
-import { parseCreateUserRequest } from '../models/createUserRequest';
-import {z} from "zod";
-import { parseChangeIconRequest } from '../models/changeIconRequest';
-import { handleError, parseId } from '../utils';
+import {FastifyInstance, FastifyRequest} from 'fastify'
+import server, {logger} from "../server";
+import {UserPersistence} from '../persistence/userPersistence';
+import {AuthService} from '../service/authService';
+import {UserService} from '../service/userService';
+import {parseCreateUserRequest} from '../models/createUserRequest';
+import {parseChangeIconRequest} from '../models/changeIconRequest';
+import {handleError, parseId} from '../utils';
 
 const BASE_URL = '/api/user'
 
@@ -21,7 +20,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)
-        };
+        }
     });
 
     server.post(BASE_URL, async (req, rep) => {
@@ -35,12 +34,11 @@ export default async function userController(fastify: FastifyInstance, opts: any
                     .code(409)
                     .send()
             }
-            const rsp = await UserService.createUser(request.email, request.name, data.user.id);
-            return rsp;
+            return await UserService.createUser(request.email, request.name, data.user.id);
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)
-        };
+        }
         
     });
 
@@ -58,8 +56,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
             }
             else 
                 await AuthService.deleteUser(auth_id);
-            const deleted = await UserService.deleteUser(id);
-            return deleted;
+            return await UserService.deleteUser(id);
         } catch (err) {
             logger.info(err);
             return handleError(err, rep)
@@ -72,8 +69,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
             parseId(id)
             const request = parseChangeIconRequest(req.body)
             logger.info("Changing image for user with id " + id)
-            const changed = await UserService.changeIcon(id, request)
-            return changed != null
+            return await UserService.changeIcon(id, request)
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

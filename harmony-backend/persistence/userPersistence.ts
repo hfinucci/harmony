@@ -43,7 +43,7 @@ export class UserPersistence {
     public static async createUser(email: string, name: string, auth_id: string) : Promise<boolean | null> {
         const query = {
             text: 'INSERT INTO users (email, name, auth_id, image) VALUES ($1, $2, $3, $4)',
-            values: [email, name, auth_id, "http://localhost:54321/storage/v1/object/public/profile-images/cow.png?t=2023-12-11T20%3A56%3A30.874Z"]
+            values: [email, name, auth_id, "http://localhost:54321/storage/v1/object/sign/profile-images/cow%201.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLWltYWdlcy9jb3cgMS5wbmciLCJpYXQiOjE3MDQxMzA3ODcsImV4cCI6MTczNTY2Njc4N30.QpUYmyxkp3aw6O2ihDT6AaR2AfaKQESfMMbe1H8ClZw&t=2024-01-01T17%3A39%3A47.108Z"]
         };
 
         const result: QueryResult = await dbpool.query(query);

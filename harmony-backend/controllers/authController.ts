@@ -3,11 +3,10 @@ import server, { logger } from "../server";
 import { AuthService } from '../service/authService';
 import { UserService } from '../service/userService';
 import { parseAuthUserRequest } from '../models/authUserRequest';
-import {z} from "zod";
 import { parseNewPasswordRequest } from '../models/newPasswordRequest';
 import { handleError } from '../utils';
 
-//TODO: Ya se que asi no se deberia hacer pero es un fix del momento
+//TODO: Ya se que asi no se debería hacer pero es un fix del momento
 const BASE_URL = '/api/auth/'
 
 export default async function authController(fastify: FastifyInstance, opts: any) {
@@ -39,8 +38,8 @@ export default async function authController(fastify: FastifyInstance, opts: any
         try {
             const auth_data = await AuthService.getLoggedUser();
             let data = null
-            if(auth_data != undefined && auth_data.user != null ) {
-                data = UserService.getUser(auth_data.user?.id)
+            if(auth_data.user != null ) {
+                data = UserService.getUser(auth_data.user.id)
             }
             return data
         } catch (err) {

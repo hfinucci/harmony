@@ -10,7 +10,7 @@ import {handleError, parseId} from '../utils';
 const BASE_URL = '/api/user'
 
 export default async function userController(fastify: FastifyInstance, opts: any) {
-    
+
     server.get(BASE_URL + '/:id', async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
         const id = req.params.id;
         try {
@@ -74,6 +74,17 @@ export default async function userController(fastify: FastifyInstance, opts: any
             logger.error(err)
             return handleError(err, rep)
         }
-        
     })
+
+    server.get(BASE_URL + '/:id' + "/songs", async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
+        const id = req.params.id;
+        try {
+            parseId(id)
+            logger.info("Getting songs with id: " + id);
+            return await UserPersistence.getUserWithID(id);
+        } catch (error: any) {
+            logger.error(error)
+            return handleError(error, rep)
+        }
+    });
 }

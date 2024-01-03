@@ -5,16 +5,7 @@ import {parseAuthUserRequest} from '../models/authUserRequest';
 import {parseNewPasswordRequest} from '../models/newPasswordRequest';
 import {handleError} from '../utils';
 
-//TODO: Ya se que asi no se debería hacer pero es un fix del momento
 const BASE_URL = '/api/auth/'
-
-
-interface LogInResponse {
-    "accesss_token": string,
-    "user": {
-        "email": string,
-    }
-}
 
 export default async function authController(fastify: FastifyInstance, opts: any) {
 

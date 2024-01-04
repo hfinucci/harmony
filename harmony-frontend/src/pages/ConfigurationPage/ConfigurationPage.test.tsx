@@ -1,16 +1,25 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 import ConfigurationPage from "./ConfigurationPage";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Test ConfigurationPage", () => {
     test("renders correctly", () => {
-        render(<ConfigurationPage />);
+        render(
+            <BrowserRouter>
+                <ConfigurationPage />
+            </BrowserRouter>
+        );
 
         expect(screen.getByText("Configuración")).toBeInTheDocument();
     });
 
     test("opens and closes the modal", async () => {
-        render(<ConfigurationPage />);
+        render(
+            <BrowserRouter>
+                <ConfigurationPage />
+            </BrowserRouter>
+        );
 
         const button = screen.getByRole("button", {
             name: /delete account/i,

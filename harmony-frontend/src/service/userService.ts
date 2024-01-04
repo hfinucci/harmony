@@ -67,4 +67,13 @@ export class UserService {
             }),
         });
     }
+
+    public static async deleteAccount(userId: number) {
+        return await fetch(BASE_URL + "/api/user/" + userId, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
 }

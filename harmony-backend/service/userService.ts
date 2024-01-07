@@ -4,16 +4,20 @@ import { logger } from '../server'
 
 export class UserService {
 
-    public static async createUser(email: string, name: string, auth_id: string) {
-        const created = await UserPersistence.createUser(email, name, auth_id);
+    public static async createUser(email: string, name: string) {
+        const created = await UserPersistence.createUser(email, name);
         if(!created)
             throw new Error("Error creating user")
         return created
     }
 
-    public static async deleteUser(id:number) {
+    public static async getUserById(id: number) {
+        return await UserPersistence.getUserById(id);
+    }
+
+    public static async deleteUserById(id: number) {
         logger.info("Deleting user with id " + id + " from user table")
-        const deleted = await UserPersistence.deleteUser(id);
+        const deleted = await UserPersistence.deleteUserById(id);
         if(!deleted)
             throw new Error("Deletion of user with ID " + id + " failed")
         return deleted

@@ -13,7 +13,7 @@ export class UserPersistence {
         return result.rows[0]?.name ?? null;
     }
 
-    public static async getUserWithID(userId: number): Promise<string | null> {
+    public static async getUserById(userId: number): Promise<string | null> {
         const query = {
             text: 'SELECT * FROM users WHERE id = $1',
             values: [userId],
@@ -40,17 +40,17 @@ export class UserPersistence {
         return result.rows[0]?.auth_id ?? null;
     }
 
-    public static async createUser(email: string, name: string, auth_id: string) : Promise<boolean | null> {
+    public static async createUser(email: string, name: string) {
         const query = {
-            text: 'INSERT INTO users (email, name, auth_id, image) VALUES ($1, $2, $3, $4)',
-            values: [email, name, auth_id, "http://localhost:54321/storage/v1/object/sign/profile-images/cow%201.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLWltYWdlcy9jb3cgMS5wbmciLCJpYXQiOjE3MDQxMzA3ODcsImV4cCI6MTczNTY2Njc4N30.QpUYmyxkp3aw6O2ihDT6AaR2AfaKQESfMMbe1H8ClZw&t=2024-01-01T17%3A39%3A47.108Z"]
+            text: 'INSERT INTO users (email, name, image) VALUES ($1, $2, $3) RETURNING (id)',
+            values: [email, name, "http://localhost:54321/storage/v1/object/sign/profile-images/cow%201.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLWltYWdlcy9jb3cgMS5wbmciLCJpYXQiOjE3MDQxMzA3ODcsImV4cCI6MTczNTY2Njc4N30.QpUYmyxkp3aw6O2ihDT6AaR2AfaKQESfMMbe1H8ClZw&t=2024-01-01T17%3A39%3A47.108Z"]
         };
 
         const result: QueryResult = await dbpool.query(query);
-        return result.rowCount != 0;
+        return result.rows[0] ?? null;
     }
 
-    public static async deleteUser(id: number) : Promise<boolean | null> {
+    public static async deleteUserById(id: number) : Promise<boolean | null> {
         const query = {
             text: 'DELETE FROM users WHERE id = $1;',
             values: [id]

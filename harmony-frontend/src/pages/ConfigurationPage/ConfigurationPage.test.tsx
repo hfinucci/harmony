@@ -11,7 +11,7 @@ describe("Test ConfigurationPage", () => {
             </BrowserRouter>
         );
 
-        expect(screen.getByText("Configuración")).toBeInTheDocument();
+        expect(screen.getByText("Configuration")).toBeInTheDocument();
     });
 
     test("opens and closes the modal", async () => {

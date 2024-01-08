@@ -12,7 +12,7 @@ export interface UserAuth {
     payload: {
         name: string,
         email: string,
-        id: string
+        id: number
     } | null;
 }
 
@@ -83,7 +83,7 @@ export class AuthService {
         return {
             access_token: object.data.session?.access_token ?? null,
             payload: {
-                id: object.data.user?.user_metadata.id as string,
+                id: object.data.user?.user_metadata.id,
                 email: object.data.user?.user_metadata.email as string,
                 name: object.data.user?.user_metadata.name as string
             }

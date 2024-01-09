@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import guitarists from "../../assets/landing-guitarists.png";
 import jazzband from "../../assets/landing-jazz-band.png";
 import musicroom from "../../assets/landing-music-room.png";
 import rockband from "../../assets/landing-rock-band.png";
 
 const LandingPage = () => {
+    const { t } = useTranslation();
     return (
         <>
             <section className="relative">
@@ -12,78 +14,72 @@ const LandingPage = () => {
                     <img
                         src={guitarists}
                         className="max-w-md max-h-md"
-                        alt="Guitarists"
+                        alt={t("pages.landingPage.guitarists")}
                     />
                     <div className="flex flex-col">
                         <h1 className="text-7xl font-serif font-bold text-fuchsia-950">
                             Harmony
                         </h1>
                         <h2 className="text-4xl font-serif font-medium text-zinc-600 mb-2">
-                            Donde tu música y colaboración se unen
+                            {t("pages.landingPage.collaboration.title")}
                         </h2>
                         <p className="text-xl font-serif text-zinc-500">
-                            ¿Eres un músico que busca colaborar con otros
-                            artistas, sin importar la distancia? Harmony es tu
-                            solución. Desarrollada pensando en músicos de todo
-                            el mundo, nuestra plataforma te permite crear música
-                            de forma colaborativa y en tiempo real, sin importar
-                            dónde te encuentres. Ya no tendrás que lidiar con
-                            los obstáculos de la distancia física. Descubre cómo
-                            Harmony puede potenciar tu creatividad y hacer que
-                            tus ideas musicales cobren vida de manera eficiente
-                            y emocionante.
+                            {t("pages.landingPage.collaboration.description")}
                         </p>
                     </div>
                 </div>
             </section>
             <section className="relative">
                 <h1 className="text-center text-5xl font-serif font-bold text-fuchsia-950 pb-12">
-                    ¿Qué te ofrecemos?
+                    {t("pages.landingPage.offer.title")}
                 </h1>
                 <div className="grid grid-cols-3 gap-2 px-12 justify-center text-center">
                     <div className="grid grid-rows-2 grid-flow-col">
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
-                                Colaboración sin Fronteras
+                                {t(
+                                    "pages.landingPage.offer.collaboration.title"
+                                )}
                             </h1>
                             <p className="text-xl font-serif text-zinc-500">
-                                Trabaja con músicos de todo el mundo en un
-                                espacio virtual compartido.
+                                {t(
+                                    "pages.landingPage.offer.collaboration.description"
+                                )}
                             </p>
                         </div>
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
-                                Edición en Tiempo Real
+                                {t("pages.landingPage.offer.realtime.title")}
                             </h1>
                             <p className="text-xl font-serif text-zinc-500">
-                                Modifica y mejora tus composiciones al instante,
-                                mientras los demás las escuchan.
+                                {t(
+                                    "pages.landingPage.offer.realtime.description"
+                                )}
                             </p>
                         </div>
                     </div>
                     <img
                         src={jazzband}
                         className="max-w-md max-h-md"
-                        alt="Jazz band"
+                        alt={t("pages.landingPage.jazzband")}
                     />
                     <div className="grid grid-rows-2 grid-flow-col">
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
-                                Flujo de Trabajo Eficiente
+                                {t("pages.landingPage.offer.remote.title")}
                             </h1>
                             <p className="text-xl font-serif text-zinc-500">
-                                Olvídate de los desplazamientos y las reuniones
-                                presenciales; ahorra tiempo y recursos.
+                                {t(
+                                    "pages.landingPage.offer.remote.description"
+                                )}
                             </p>
                         </div>
                         <div>
                             <h1 className="text-3xl font-serif font-semibold text-fuchsia-900">
-                                Herramientas de Creatividad
+                                {t("pages.landingPage.offer.tools.title")}
                             </h1>
                             <p className="text-xl font-serif text-zinc-500">
-                                Accede a una gama de herramientas para dar vida
-                                a tus ideas musicales, desde la escritura de
-                                partituras hasta la grabación en línea.
+                                {t("pages.landingPage.offer.tools.description")}
                             </p>
                         </div>
                     </div>
@@ -93,28 +89,28 @@ const LandingPage = () => {
                 <div className="flex flex-row justify-center">
                     <div className="flex flex-col justify-around">
                         <h1 className="text-5xl font-serif font-bold text-fuchsia-950 pb-4">
-                            ¿Cómo funciona?
+                            {t("pages.landingPage.steps.title")}
                         </h1>
                         <p className="text-2xl font-serif text-zinc-500 indent-16">
-                            Crea tu proyecto musical.
+                            {t("pages.landingPage.steps.create")}
                         </p>
                         <p className="text-2xl font-serif text-zinc-500 indent-32">
-                            Invita a sus colaboradores.
+                            {t("pages.landingPage.steps.invite")}
                         </p>
                         <p className="text-2xl font-serif text-zinc-500 indent-60">
-                            Comienza a componer y modificar juntos.
+                            {t("pages.landingPage.steps.compose")}
                         </p>
                         <p className="text-2xl font-serif text-zinc-500 indent-80">
-                            Escucha y perfecciona tu música en tiempo real.
+                            {t("pages.landingPage.steps.improve")}
                         </p>
                         <h2 className="text-4xl font-serif font-bold text-fuchsia-950 indent-96">
-                            ¡Es muy fácil!
+                            {t("pages.landingPage.steps.easy")}
                         </h2>
                     </div>
                     <img
                         src={musicroom}
                         className="max-w-sm max-h-sm"
-                        alt="Listening to music in a room"
+                        alt={t("pages.landingPage.listening")}
                     />
                 </div>
             </section>
@@ -123,23 +119,18 @@ const LandingPage = () => {
                     <img
                         src={rockband}
                         className="max-w-md max-h-md"
-                        alt="Rock band"
+                        alt={t("pages.landingPage.rockBand")}
                     />
                     <div className="flex flex-col justify-evenly text-center">
                         <h1 className="text-5xl font-serif font-bold text-fuchsia-950">
-                            ¡Unite ahora!
+                            {t("pages.landingPage.join.title")}
                         </h1>
                         <p className="text-xl font-serif text-zinc-500 px-12">
-                            ¡No dejes que la distancia física limite tu
-                            creatividad musical! Únete a Harmony hoy mismo y
-                            descubre cómo la colaboración musical en tiempo real
-                            puede ser emocionante, eficiente y verdaderamente
-                            global. Regístrate ahora para comenzar tu viaje
-                            musical en equipo.
+                            {t("pages.landingPage.join.description")}
                         </p>
                         <div>
                             <button className="rounded-md bg-fuchsia-900 text-white px-4 py-2">
-                                Registrate
+                                {t("pages.landingPage.join.signUp")}
                             </button>
                         </div>
                     </div>

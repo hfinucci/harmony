@@ -21,11 +21,13 @@ const ConfigurationPage = () => {
     return (
         <div className="container h-screen mt-16 mx-auto max-w-4xl">
             <h1 className="text-fuchsia-950 text-4xl mb-4">
-                {t("configuration.title")}
+                {t("pages.configuration.title")}
             </h1>
             <div className="flex flex-col rounded-lg bg-white p-10">
                 <div className="flex flex-row justify-between">
-                    <div className="text-slate-400">Idioma</div>
+                    <div className="text-slate-400">
+                        {t("pages.configuration.language")}
+                    </div>
                     <select
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-purple-500 block"
                         onChange={handleLanguageChange}
@@ -40,12 +42,16 @@ const ConfigurationPage = () => {
                 </div>
                 <hr className="h-px my-8 bg-gray-200 border-0" />
                 <div className="flex flex-row justify-between">
-                    <div className="text-slate-400">Cambiar la contraseña</div>
+                    <div className="text-slate-400">
+                        {t("pages.configuration.changePassword")}
+                    </div>
                     <ChangePasswordModal />
                 </div>
                 <hr className="h-px my-8 bg-gray-200 border-0" />
                 <div className="flex flex-row justify-between">
-                    <div className="text-slate-400">Eliminar cuenta</div>
+                    <div className="text-slate-400">
+                        {t("pages.configuration.deleteAccount")}
+                    </div>
                     <DeleteAccountModal />
                 </div>
             </div>

@@ -8,9 +8,9 @@ export const TRANSLATIONS_ES = {
         },
         landingPage: {
             guitarists: "Guitarristas",
-            jazzBand: "Banda de Jazz",
+            jazzband: "Banda de Jazz",
             listening: "Escuchando música en una sala",
-            rockBand: "Banda de Rock",
+            rockband: "Banda de Rock",
             collaboration: {
                 title: "Donde tu música y colaboración se unen",
                 description:
@@ -52,6 +52,37 @@ export const TRANSLATIONS_ES = {
                 description:
                     "¡No dejes que la distancia física limite tu creatividad musical! Únete a Harmony hoy mismo y descubre cómo la colaboración musical en tiempo real puede ser emocionante, eficiente y verdaderamente global. Regístrate ahora para comenzar tu viaje musical en equipo.",
                 signUp: "Registrate",
+            },
+        },
+        login: {
+            title: "Iniciar sesión",
+            mail: "Dirección de Correo",
+            password: "Contraseña",
+            forget: "¿Te olvidaste la contraseña?",
+            remember: "Recordarme",
+            submit: "INICIAR SESIÓN",
+            error: {
+                mail: "Error en el mail",
+                password: "Error en la contraseña",
+                credentials: "Credenciales inválidas",
+            },
+        },
+        register: {
+            title: "Registrarse",
+            firstName: "Nombre",
+            lastName: "Apellido",
+            mail: "Dirección de Correo",
+            password: "Contraseña",
+            subscription:
+                "Al subscribirme, acepto los Terminos de Servicio y la Política de Privacidad",
+            submit: "REGISTRATE",
+            error: {
+                firstName: "Error en el nombre",
+                lastName: "Error en el apellido",
+                mail: "Error en el mail",
+                password: "Error la contraseña",
+                passwordLength: "Mínimo 8 caracteres",
+                subscription: "Debes aceptar los Terminos y Condiciones",
             },
         },
     },

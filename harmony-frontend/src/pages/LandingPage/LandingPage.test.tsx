@@ -7,11 +7,17 @@ describe("Test LandingPage", () => {
         render(<LandingPage />);
 
         expect(screen.getByText("Harmony")).toBeInTheDocument();
-        expect(screen.getByAltText("Guitarists")).toBeInTheDocument();
-        expect(screen.getByAltText("Jazz band")).toBeInTheDocument();
         expect(
-            screen.getByAltText("Listening to music in a room")
+            screen.getByAltText("pages.landingPage.guitarists")
         ).toBeInTheDocument();
-        expect(screen.getByAltText("Rock band")).toBeInTheDocument();
+        expect(
+            screen.getByAltText("pages.landingPage.jazzband")
+        ).toBeInTheDocument();
+        expect(
+            screen.getByAltText("pages.landingPage.listening")
+        ).toBeInTheDocument();
+        expect(
+            screen.getByAltText("pages.landingPage.rockband")
+        ).toBeInTheDocument();
     });
 });

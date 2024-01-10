@@ -119,7 +119,7 @@ const LandingPage = () => {
                     <img
                         src={rockband}
                         className="max-w-md max-h-md"
-                        alt={t("pages.landingPage.rockBand")}
+                        alt={t("pages.landingPage.rockband")}
                     />
                     <div className="flex flex-col justify-evenly text-center">
                         <h1 className="text-5xl font-serif font-bold text-fuchsia-950">

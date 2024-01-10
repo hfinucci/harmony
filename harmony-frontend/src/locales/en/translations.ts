@@ -8,9 +8,9 @@ export const TRANSLATIONS_EN = {
         },
         landingPage: {
             guitarists: "Guitarists",
-            jazzBand: "Jazz Band",
-            listening: "Listening to musi in a room",
-            rockBand: "Rock Band",
+            jazzband: "Jazz Band",
+            listening: "Listening to music in a room",
+            rockband: "Rock Band",
             collaboration: {
                 title: "Where your music and collaboration seamlessly blend",
                 description:
@@ -52,6 +52,37 @@ export const TRANSLATIONS_EN = {
                 description:
                     "Don't let physical distance limit your musical creativity! Join Harmony today and discover how real-time musical collaboration can be exciting, efficient, and truly global. Sign up now to start your team musical journey.",
                 signUp: "Sign up",
+            },
+        },
+        login: {
+            title: "Log In",
+            mail: "Email Address",
+            password: "Password",
+            forget: "Forgot your password?",
+            remember: "Remember me",
+            submit: "LOG IN",
+            error: {
+                mail: "Mail error",
+                password: "Password error",
+                credentials: "Invalid login credentials",
+            },
+        },
+        register: {
+            title: "Register",
+            firstName: "First Name",
+            lastName: "Last Name",
+            mail: "Email Address",
+            password: "Password",
+            subscription:
+                "By subscribing, I accept the Terms of Service and Privacy Policy",
+            submit: "REGISTER",
+            error: {
+                firstName: "Error in first name",
+                lastName: "Error in last name",
+                mail: "Error in mail",
+                password: "Error in password",
+                passwordLength: "8 characters minimum",
+                subscription: "You should accept the Terms and Conditions",
             },
         },
     },

@@ -16,7 +16,7 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
             logger.info("Creating organization: " + request.name);
             const create = await OrgService.createOrg(request);
             if (create != null) {
-                const user = parseJWT(req.headers.authorization)
+                const user = parseJWT(req.headers.authorization || "")
                 if (user.payload != null) {
                     logger.info("Adding user " + user.payload.name + " to organization: " + request.name);
                     await MemberService.createMember(user.payload.id, create.id)

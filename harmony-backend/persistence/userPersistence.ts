@@ -37,7 +37,7 @@ export class UserPersistence {
             values: [userId],
         };
         const result: QueryResult = await dbpool.query(query);
-        return result.rows[0]?.auth_id ?? null;
+        return result.rows[0] ?? null;
     }
 
     public static async createUser(email: string, name: string) {

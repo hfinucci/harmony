@@ -1,7 +1,6 @@
 import {z} from "zod";
 
 const Request = z.object({
-    user: z.number(),
     org: z.number(),
 }).strict();
 

@@ -1,7 +1,7 @@
 import {FastifyInstance, FastifyRequest} from 'fastify'
 import server, {logger} from "../server";
 import {MemberService} from '../service/memberService';
-import {handleError, parseId} from "../utils";
+import {handleError, parseId, parseJWT} from "../utils";
 import {parseCreateMemberRequest} from "../models/createMemberRequest";
 
 const BASE_URL = '/api/member'
@@ -11,8 +11,15 @@ export default async function memberController(fastify: FastifyInstance, opts: a
     server.post(BASE_URL, async (req, rep) => {
         try {
             const request = parseCreateMemberRequest(req.body);
-            logger.info("Creating membership of user with id " + request.user + " to org with id " + request.org);
-            return await MemberService.createMember(request.user, request.org);
+            const user = parseJWT(req.headers.authorization || "")
+            if (user.payload != null) {
+                logger.info("Adding user " + user.payload.name + " to organization: " + request.org);
+                return await MemberService.createMember(user.payload.id, request.org);
+            }
+            logger.info("No user logged in");
+            return rep
+                .code(403)
+                .send()
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

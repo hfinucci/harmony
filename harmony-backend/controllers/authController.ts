@@ -5,7 +5,7 @@ import {parseAuthUserRequest} from '../models/authUserRequest';
 import {parseNewPasswordRequest} from '../models/newPasswordRequest';
 import {handleError} from '../utils';
 
-const BASE_URL = '/api/auth/'
+const BASE_URL = '/api/auth'
 
 export default async function authController(fastify: FastifyInstance, opts: any) {
 

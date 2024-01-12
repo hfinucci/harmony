@@ -2,7 +2,7 @@ import {z} from "zod";
 
 const Request = z.object({
     name: z.string(),
-    author: z.string(),
+    org: z.number(),
 }).strict();
 
 export function parseCreateSongRequest(payload: any) {

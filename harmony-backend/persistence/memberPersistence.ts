@@ -6,7 +6,7 @@ export class MemberPersistence {
 
     public static async createMembership(user: number, org: number): Promise<any> {
         const query = {
-            text: 'INSERT INTO members (user, org) VALUES ($1) RETURNING (id)',
+            text: 'INSERT INTO members (user_id, org_id) VALUES ($1, $2) RETURNING (user_id, org_id)',
             values: [user, org],
         };
         const result: QueryResult = await dbpool.query(query);
@@ -15,11 +15,11 @@ export class MemberPersistence {
 
     static async getMembersByOrg(org: number) {
         const query = {
-            text: 'SELECT user FROM members WHERE org = $1',
+            text: 'SELECT user_id FROM members WHERE org_id = $1',
             values: [org],
         };
         const result: QueryResult = await dbpool.query(query);
-        const song = result.rows[0];
+        const song = result.rows;
         return song ?? (() => {
             throw new Error("Members not found")
         })();
@@ -27,11 +27,11 @@ export class MemberPersistence {
 
     static async getOrgsByUser(user: number) {
         const query = {
-            text: 'SELECT org FROM members WHERE user = $1',
+            text: 'SELECT org_id FROM members WHERE user_id = $1',
             values: [user],
         };
         const result: QueryResult = await dbpool.query(query);
-        const song = result.rows[0];
+        const song = result.rows;
         return song ?? (() => {
             throw new Error("Orgs not found")
         })();
@@ -39,7 +39,7 @@ export class MemberPersistence {
 
     static async deleteMembership(user: number, org: number) {
         const query = {
-            text: 'DELETE FROM member WHERE user = $1 and org = $2 RETURNING (user, org)',
+            text: 'DELETE FROM members WHERE user_id = $1 and org_id = $2 RETURNING (user_id, org_id)',
             values: [user, org],
         };
         const result: QueryResult = await dbpool.query(query);

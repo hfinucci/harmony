@@ -13,7 +13,7 @@ export class UserPersistence {
         return result.rows[0]?.name ?? null;
     }
 
-    public static async getUserById(userId: number): Promise<string | null> {
+    public static async getUserById(userId: number) {
         const query = {
             text: 'SELECT * FROM users WHERE id = $1',
             values: [userId],

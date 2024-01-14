@@ -1,30 +1,41 @@
 import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
 import SongCard from "../../components/SongCard/SongCard";
-import {UserService} from "../../service/userService";
 import {OrgService} from "../../service/orgService";
 
 const OrgPage = () => {
+    const [org, setOrg]: any = useState()
     const [members, setMembers]: any = useState()
     const [songs, setSongs]: any = useState()
 
-    //TODO: Cambiar el id por un número dynamic
+    const orgId = useParams();
+
     useEffect(() => {
-        OrgService.getOrgMembers(5).then(async (rsp) => {
+        OrgService.getOrg(orgId.id).then(async (rsp) => {
+            if(rsp?.status == 200){
+                const info = await rsp.json()
+                setOrg(info)
+            }
+        })
+    }, [])
+
+    useEffect(() => {
+        OrgService.getOrgMembers(orgId.id).then(async (rsp) => {
             if(rsp?.status == 200){
                 const info = await rsp.json()
                 setMembers(info)
             }
         })
-    }, [])
+    }, [org])
 
     useEffect(() => {
-        OrgService.getOrgSongs(5).then(async (rsp) => {
+        OrgService.getOrgSongs(orgId.id).then(async (rsp) => {
             if(rsp?.status == 200){
                 const info = await rsp.json()
                 setSongs(info)
             }
         })
-    }, [])
+    }, [org])
 
     return (
         <div>
@@ -33,14 +44,16 @@ const OrgPage = () => {
             <header
                 className="w-full -mt-24 h-96 bg-[url('http://localhost:54321/storage/v1/object/sign/org-images/8323271.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJvcmctaW1hZ2VzLzgzMjMyNzEuanBnIiwiaWF0IjoxNzA1MDg4MzI3LCJleHAiOjE3MzY2MjQzMjd9.ZsSGXqbz1GiiPhxun0zXq4M69gm7L6LkmLDL7Q_qpwU&t=2024-01-12T19%3A38%3A47.152Z')] bg-cover bg-center flex justify-start items-end">
                 <div className="flex flex-col">
-                    <h1 className=" m-5 text-center text-5xl text-white drop-shadow-lg">
-                        Welcome TO THE ORG PAGE
-                    </h1>
+                    {org  &&
+                        <h1 className=" m-5 text-center text-5xl text-white drop-shadow-lg">
+                            {org.name}
+                        </h1>
+                    }
                 </div>
             </header>
             <div className="grid grid-flow-col gap-4 my-10 justify-stretch">
                 <div className="flex flex-col grow gap-2 ml-10">
-                    <h1>Canciones</h1>
+                    <h1 className="text-2xl text-fuchsia-950">Canciones</h1>
                     <div className=" flex flex-col rounded-lg bg-white p-10">
                         {songs &&
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
@@ -73,17 +86,17 @@ const OrgPage = () => {
                     </div>
                 </div>
                 <div className="flex flex-col grow gap-2 mr-10">
-                    <h1>Integrantes</h1>
+                    <h1 className="text-2xl text-fuchsia-950">Integrantes</h1>
                     <div className=" flex flex-col grow rounded-lg bg-white p-5">
                         {members &&
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <tbody>
                                 {members.map((elem: any, index: number) => (
                                     <React.Fragment key={index}>
+                                        {elem}
                                         <tr>
                                             <td colSpan={8} style={{backgroundColor: '#f0f0f0'}}/>
                                         </tr>
-                                        {elem.user_id}
                                     </React.Fragment>
                                 ))}
                                 <tr>

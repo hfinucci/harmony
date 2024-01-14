@@ -6,6 +6,7 @@ import {parseUpdateOrgRequest} from "../models/updateOrgRequest";
 import {parseCreateOrgRequest} from "../models/createOrgRequest";
 import {MemberService} from "../service/memberService";
 import {SongService} from "../service/songService";
+import {UserService} from "../service/userService";
 
 const BASE_URL = '/api/org'
 
@@ -60,7 +61,12 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
         try {
             parseId(id)
             logger.info("Fetching members from org with id: " + id);
-            return await MemberService.getMembersByOrg(id);
+            const members = await MemberService.getMembersByOrg(id);
+            return await Promise.all(
+                members.map(async (m) => {
+                    const user = await UserService.getUserById(m.user_id);
+                    return user.name
+                }))
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

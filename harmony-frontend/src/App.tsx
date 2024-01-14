@@ -25,7 +25,7 @@ function App() {
                         path="/songs"
                         element={<SongsPage />}
                     />
-                    <Route path="org" element={<OrgPage />} />
+                    <Route path="/org/:id" element={<OrgPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

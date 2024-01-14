@@ -5,6 +5,7 @@ import {handleError, parseId, parseJWT} from "../utils";
 import {parseUpdateOrgRequest} from "../models/updateOrgRequest";
 import {parseCreateOrgRequest} from "../models/createOrgRequest";
 import {MemberService} from "../service/memberService";
+import {SongService} from "../service/songService";
 
 const BASE_URL = '/api/org'
 
@@ -60,6 +61,18 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
             parseId(id)
             logger.info("Fetching members from org with id: " + id);
             return await MemberService.getMembersByOrg(id);
+        } catch (err) {
+            logger.error(err)
+            return handleError(err, rep)
+        }
+    });
+
+    server.get(BASE_URL + '/:id/songs', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        const id = req.params.id;
+        try {
+            parseId(id)
+            logger.info("Fetching songs from org with id: " + id);
+            return await SongService.getSongsByOrg(id);
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

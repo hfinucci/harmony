@@ -106,7 +106,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
         try {
             parseId(id)
             logger.info("Getting songs with id: " + id);
-            return await UserPersistence.getUserWithID(id);
+            return await UserService.getUserById(id);
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)

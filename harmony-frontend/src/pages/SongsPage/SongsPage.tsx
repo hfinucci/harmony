@@ -4,7 +4,7 @@ import {UserService} from "../../service/userService.ts";
 
 export interface Song {
     name: string;
-    organization: string;
+    organization?: string;
     creationDate: string;
     lastModifiedDate: string;
 }

@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar/Navbar";
 import SessionPage from "./pages/SessionPage/SesionPage";
 import HomePage from "./pages/HomePage/HomePage";
 import ConfigurationPage from "./pages/ConfigurationPage/ConfigurationPage";
+import OrgPage from "./pages/OrgPage/OrgPage";
 import SongsPage from "./pages/SongsPage/SongsPage.tsx";
 
 function App() {
@@ -24,10 +25,7 @@ function App() {
                         path="/songs"
                         element={<SongsPage />}
                     />
-                    <Route
-                        path="/org"
-                        element={<ConfigurationPage />}
-                    />
+                    <Route path="org" element={<OrgPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

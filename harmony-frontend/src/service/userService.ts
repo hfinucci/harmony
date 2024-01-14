@@ -1,3 +1,5 @@
+import {Song} from "../pages/SongsPage/SongsPage.tsx";
+
 // const BASE_URL = process.env.REACT_APP_API_ENDPOINT || ''
 const BASE_URL = "http://127.0.0.1:3000";
 
@@ -75,5 +77,15 @@ export class UserService {
                 "Content-Type": "application/json",
             },
         });
+    }
+
+    public static async getSongsByUserId(userId: number): Promise<Song[]> {
+        const response = await fetch(BASE_URL + "/api/user/" + userId + "/songs", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return await response.json()
     }
 }

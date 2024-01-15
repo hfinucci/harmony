@@ -1,17 +1,26 @@
 import React, {useEffect, useState} from "react";
 import SongCard from "../../components/SongCard/SongCard.tsx";
-import {UserService} from "../../service/userService.ts";
+import {SongService} from "../../service/songService.ts";
 
 export interface Song {
     name: string;
-    organization?: string;
+    org?: string;
     creationDate: string;
     lastModifiedDate: string;
 }
 
 const SongsPage = () => {
 
-    const [songs, setSongs] = useState<Song[]>([]);
+    const [songs, setSongs] = useState();
+
+    useEffect(() => {
+        SongService.getSongsByUser(49).then(async (rsp) => {
+            if(rsp?.status == 200) {
+                const info = await rsp.json()
+                setSongs(info)
+            }
+        })
+    }, [])
 
     let elements: any = [
         {
@@ -40,20 +49,12 @@ const SongsPage = () => {
         }
     ];
 
-    useEffect(() => {
-        (async () => {
-            await UserService.getSongsByUserId(1)
-                .then((response: Song[]) => {
-                    setSongs(response);
-                })
-        })();
-    }, []);
-
     return (
 
         <div className="container h-screen mt-16 mx-auto max-w-12xl">
             <h1 className="text-fuchsia-950 text-4xl mb-4">Canciones en tus organizaciones</h1>
             <div className="flex flex-col rounded-lg bg-white p-10">
+                {songs &&
                 <table className="table table-bordered border-separate border-spacing-y-1.5">
                     <thead>
                     <tr>
@@ -64,20 +65,21 @@ const SongsPage = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {elements.map((elem: any, index: number) => (
+                    {songs.map((elem: any, index: number) => (
                         <React.Fragment key={index}>
                             <tr>
                                 <td colSpan={8} style={{backgroundColor: '#f0f0f0'}}/>
                             </tr>
                             <SongCard
-                                name={elem.name}
-                                organization={elem.organization}
-                                creationDate={elem.creationDate}
-                                lastModifiedDate={elem.lastModifiedDate}/>
+                                name={elem.song}
+                                org={elem.org}
+                                creationDate={elem.created}
+                                lastModifiedDate={elem.lastmodified}/>
                         </React.Fragment>
                     ))}
                     </tbody>
                 </table>
+                }
             </div>
         </div>
     );

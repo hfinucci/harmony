@@ -6,7 +6,7 @@ const SongCard = (
     return (
         <tr>
             <td className={"text-gray-500"}>{song.name}</td>
-            {song.organization && <td className={"text-gray-500"}>{song.organization}</td>}
+            {song.org && <td className={"text-gray-500"}>{song.org}</td>}
             <td className={"text-gray-500"}>{song.creationDate}</td>
             <td className={"text-gray-500"}>{song.lastModifiedDate}</td>
             <td>

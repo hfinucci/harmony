@@ -3,15 +3,15 @@ import SongCard from "../../components/SongCard/SongCard.tsx";
 import {SongService} from "../../service/songService.ts";
 
 export interface Song {
-    name: string;
+    song: string;
     org?: string;
-    creationDate: string;
-    lastModifiedDate: string;
+    created: string;
+    lastmodified: string;
 }
 
 const SongsPage = () => {
 
-    const [songs, setSongs] = useState();
+    const [songs, setSongs] = useState<Song[]>();
 
     useEffect(() => {
         SongService.getSongsByUser(49).then(async (rsp) => {
@@ -21,33 +21,6 @@ const SongsPage = () => {
             }
         })
     }, [])
-
-    let elements: any = [
-        {
-            name: "Stairway to Heaven",
-            organization: "Led Zeppelin",
-            creationDate: "1971-11-08",
-            lastModifiedDate: new Date().toISOString()
-        },
-        {
-            name: "Black Dog",
-            organization: "Led Zeppelin",
-            creationDate: "1980-12-18",
-            lastModifiedDate: new Date().toISOString()
-        },
-        {
-            name: "The Rain Song",
-            organization: "Led Zeppelin",
-            creationDate: "1980-12-18",
-            lastModifiedDate: new Date().toISOString()
-        },
-        {
-            name: "Whole Lotta Love",
-            organization: "Led Zeppelin",
-            creationDate: "1980-12-18",
-            lastModifiedDate: new Date().toISOString()
-        }
-    ];
 
     return (
 
@@ -71,10 +44,10 @@ const SongsPage = () => {
                                 <td colSpan={8} style={{backgroundColor: '#f0f0f0'}}/>
                             </tr>
                             <SongCard
-                                name={elem.song}
+                                song={elem.song}
                                 org={elem.org}
-                                creationDate={elem.created}
-                                lastModifiedDate={elem.lastmodified}/>
+                                created={elem.created}
+                                lastmodified={elem.lastmodified}/>
                         </React.Fragment>
                     ))}
                     </tbody>

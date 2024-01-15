@@ -72,9 +72,9 @@ const OrgPage = () => {
                                             <td colSpan={8} style={{backgroundColor: '#f0f0f0'}}/>
                                         </tr>
                                         <SongCard
-                                            name={elem.name}
-                                            creationDate={elem.created}
-                                            lastModifiedDate={elem.lastmodified}/>
+                                            song={elem.name}
+                                            created={elem.created}
+                                            lastmodified={elem.lastmodified}/>
                                     </React.Fragment>
                                 ))}
                                 </tbody>

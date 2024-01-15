@@ -48,7 +48,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
         const id = req.params.id;
         try {
             parseId(id)
-            const userAuth: UserAuth = parseJWT(req.headers.authorization || "")
+            const userAuth: UserAuth = await parseJWT(req.headers.authorization || "", rep)
             if (userAuth.access_token == null) {
                 return rep
                     .code(401)

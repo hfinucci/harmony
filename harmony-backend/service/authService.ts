@@ -89,4 +89,14 @@ export class AuthService {
             }
         };
     }
+
+    public static async refreshToken(token: string) {
+        logger.info(token)
+        const response = await supabase.auth.refreshSession({refresh_token: token})
+        if (response.error != undefined) {
+            logger.info(response.error)
+            throw new Error(response.error.message)
+        }
+        return response.data?.session?.access_token as string
+    }
 }

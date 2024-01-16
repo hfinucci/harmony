@@ -3,6 +3,8 @@ import { IoPersonAdd } from "react-icons/io5";
 import {useForm} from "react-hook-form";
 import {OrgService} from "../../service/orgService";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import {MemberService} from "../../service/memberService";
+import { useNavigate } from "react-router-dom";
 
 const AddMemberModal = ({org}) => {
     const [showModal, setShowModal] = useState(false);
@@ -36,9 +38,16 @@ const AddMemberModal = ({org}) => {
         setShowModal(false)
     };
 
-    const deleteMember = async (member: any) => {
+    const nav = useNavigate();
+
+    const deleteMember = async () => {
         console.log("Eliminar miembro...")
-        setShowModal(false)
+        const rsp = await MemberService.deleteMembership(org);
+        if (rsp?.status == 200) {
+            nav(`/home`);
+        } else {
+            setError("Error creating org");
+        }
     }
 
     return (

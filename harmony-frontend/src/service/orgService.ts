@@ -43,7 +43,7 @@ export class OrgService {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('harmony-jwt') as string
+                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
             },
             body: JSON.stringify({
                 name: name

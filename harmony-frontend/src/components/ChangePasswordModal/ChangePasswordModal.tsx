@@ -2,10 +2,13 @@ import { useState } from "react";
 import { FaPenToSquare, FaXmark } from "react-icons/fa6";
 import { UserService } from "../../service/userService";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const ChangePasswordModal = () => {
     const [showModal, setShowModal] = useState(false);
     const [changePasswordError, setChangePasswordError] = useState<string>();
+
+    const { t } = useTranslation();
 
     type ChangePasswordFormData = {
         password: string;
@@ -23,7 +26,10 @@ const ChangePasswordModal = () => {
     const submitChangePassword = async (data: ChangePasswordFormData) => {
         const response = await UserService.changePassword(data.password);
         if (response?.status == 200) setShowModal(false);
-        else setChangePasswordError("Error al cambiar la contraseña");
+        else
+            setChangePasswordError(
+                t("components.changePasswordModal.error.change")
+            );
     };
 
     return (
@@ -50,7 +56,9 @@ const ChangePasswordModal = () => {
                             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                 <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                        Cambiar contraseña
+                                        {t(
+                                            "components.changePasswordModal.title"
+                                        )}
                                     </h3>
                                     <button
                                         type="button"
@@ -59,7 +67,9 @@ const ChangePasswordModal = () => {
                                     >
                                         <FaXmark />
                                         <span className="sr-only">
-                                            Close modal
+                                            {t(
+                                                "components.changePasswordModal.close"
+                                            )}
                                         </span>
                                     </button>
                                 </div>
@@ -75,7 +85,9 @@ const ChangePasswordModal = () => {
                                                 htmlFor="password"
                                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                             >
-                                                Contraseña nueva
+                                                {t(
+                                                    "components.changePasswordModal.label"
+                                                )}
                                             </label>
                                             <input
                                                 type="password"
@@ -92,8 +104,9 @@ const ChangePasswordModal = () => {
                                         {errors.password && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    La contraseña debe tener al
-                                                    menos 8 caracteres
+                                                    {t(
+                                                        "components.changePasswordModal.error.length"
+                                                    )}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {changePasswordError}
@@ -104,7 +117,9 @@ const ChangePasswordModal = () => {
                                             type="submit"
                                             className="w-full text-white bg-fuchsia-700 hover:bg-fuchsia-800 focus:ring-4 focus:outline-none focus:ring-fuchsia-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                         >
-                                            Enviar
+                                            {t(
+                                                "components.changePasswordModal.send"
+                                            )}
                                         </button>
                                     </form>
                                 </div>

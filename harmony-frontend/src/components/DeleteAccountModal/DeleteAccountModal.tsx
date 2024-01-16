@@ -2,12 +2,14 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { UserService } from "../../service/userService";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DeleteAccountModal = () => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const submitDeleteAccount = async () => {
         const getLoggedUserRes = await UserService.getLoggedUser();
@@ -20,7 +22,7 @@ const DeleteAccountModal = () => {
             if (deleteAccountRes?.status == 200) {
                 setShowModal(false);
                 navigate("/");
-            } else setError("Error al eliminar la cuenta");
+            } else setError(t("components.deleteAccountModal.error"));
         } else {
             navigate("/");
         }
@@ -50,8 +52,9 @@ const DeleteAccountModal = () => {
                             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                 <div className="p-4 md:p-5 text-center">
                                     <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                        ¿Estás seguro que querés eliminar tu
-                                        cuenta?
+                                        {t(
+                                            "components.deleteAccountModal.title"
+                                        )}
                                     </h3>
                                     {error && (
                                         <div className="text-red-500">
@@ -64,7 +67,9 @@ const DeleteAccountModal = () => {
                                         onClick={() => setShowModal(false)}
                                         className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
                                     >
-                                        Cancelar
+                                        {t(
+                                            "components.deleteAccountModal.cancel"
+                                        )}
                                     </button>
                                     <button
                                         data-modal-hide="delete-account-modal"
@@ -72,7 +77,7 @@ const DeleteAccountModal = () => {
                                         onClick={submitDeleteAccount}
                                         className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                                     >
-                                        Sí
+                                        {t("components.deleteAccountModal.yes")}
                                     </button>
                                 </div>
                             </div>

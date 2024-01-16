@@ -15,7 +15,7 @@ export class MemberPersistence {
 
     static async getMembersByOrg(org: number) {
         const query = {
-            text: 'SELECT user_id FROM members WHERE org_id = $1',
+            text: 'SELECT name, id, image FROM members JOIN users ON members.user_id = users.id WHERE members.org_id = $1',
             values: [org],
         };
         const result: QueryResult = await dbpool.query(query);
@@ -27,7 +27,7 @@ export class MemberPersistence {
 
     static async getOrgsByUser(user: number) {
         const query = {
-            text: 'SELECT org_id FROM members WHERE user_id = $1',
+            text: 'SELECT id, name, image FROM members JOIN organizations ON members.org_id = organizations.id WHERE members.user_id = $1',
             values: [user],
         };
         const result: QueryResult = await dbpool.query(query);

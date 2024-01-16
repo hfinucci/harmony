@@ -30,12 +30,7 @@ export default async function userController(fastify: FastifyInstance, opts: any
         try {
             parseId(id)
             logger.info("Getting orgs from user with id: " + id);
-            const orgs = await MemberService.getOrgsByUser(id);
-            return Promise.all(
-                orgs.map(async (o) => {
-                    const org = await OrgService.getOrgById(o.org_id);
-                    return {"name": org.name, "id": org.id}
-                }))
+            return await MemberService.getOrgsByUser(id);
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)

@@ -7,6 +7,7 @@ import {parseChangeIconRequest} from '../models/changeIconRequest';
 import {handleError, parseId, parseJWT} from '../utils';
 import {UserResponse} from "@supabase/supabase-js";
 import {MemberService} from "../service/memberService";
+import {OrgService} from "../service/orgService";
 
 const BASE_URL = '/api/user'
 
@@ -29,7 +30,12 @@ export default async function userController(fastify: FastifyInstance, opts: any
         try {
             parseId(id)
             logger.info("Getting orgs from user with id: " + id);
-            return await MemberService.getOrgsByUser(id);
+            const orgs = await MemberService.getOrgsByUser(id);
+            return Promise.all(
+                orgs.map(async (o) => {
+                    const org = await OrgService.getOrgById(o.org_id);
+                    return {"name": org.name, "id": org.id}
+                }))
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)

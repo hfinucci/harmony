@@ -3,7 +3,9 @@ import {useParams} from "react-router-dom";
 import SongCard from "../../components/SongCard/SongCard";
 import {OrgService} from "../../service/orgService";
 import { FaMusic } from "react-icons/fa";
-import { IoAddSharp, IoPersonAdd } from "react-icons/io5";
+import { IoPersonAdd } from "react-icons/io5";
+import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
+import AddMemberModal from "../../components/AddMemberModal/AddMemberModal";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState()
@@ -34,10 +36,15 @@ const OrgPage = () => {
         OrgService.getOrgSongs(orgId.id).then(async (rsp) => {
             if(rsp?.status == 200){
                 const info = await rsp.json()
-                setSongs(info)
+                if (info.length > 0)
+                    setSongs(info)
             }
         })
     }, [org])
+
+    const addSong = (song: any) => {
+        setSongs([...songs, song])
+    }
 
     return (
         <div>
@@ -58,16 +65,13 @@ const OrgPage = () => {
                     <div className="flex justify-between">
                         <div className="flex items-center gap-3">
                             <FaMusic className="text-2xl text-fuchsia-950"/>
-                            <h1 className="text-2xl text-fuchsia-950">Canciones</h1>
+                            <h1 className="text-2xl text-fuchsia-950 font-semibold">Canciones</h1>
                         </div>
-                        <button className="bg-white flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
-                            <IoAddSharp className="font-bold"/>
-                            <h2>Add Song</h2>
-                        </button>
+                        <CreateSongModal org={orgId.id} callback={addSong}/>
 
                     </div>
-                    <div className=" flex flex-col rounded-lg bg-white p-10">
-                        {songs &&
+                    {songs &&
+                        <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
                                 <tr>
@@ -91,14 +95,18 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
-                        }
-                        {!songs &&
-                            <h1 className="text-2xl">No hay canciones</h1>
-                        }
-                    </div>
+                        </div>
+                    }
+                    {!songs &&
+                        <div className="flex items-center justify-center p-4 md:p-5">
+                            <h1 className="text-2xl text-fuchsia-950">
+                                Oops! No tenes canciones
+                            </h1>
+                        </div>
+                    }
                 </div>
                 <div className="flex flex-col shrink gap-2 mr-10 w-fit">
-                    <h1 className="text-2xl text-fuchsia-950">Integrantes</h1>
+                    <h1 className="text-2xl text-fuchsia-950 font-semibold">Integrantes</h1>
                     <div className=" flex flex-col grow rounded-lg bg-white p-5 justify-between">
                         {members &&
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
@@ -117,10 +125,7 @@ const OrgPage = () => {
                         {!members &&
                             <h1 className="text-2xl">No hay integrantes</h1>
                         }
-                        <button className="items-center bg-white w-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
-                            <IoPersonAdd />
-                            <h2>Agregar Integrante</h2>
-                        </button>
+                        <AddMemberModal org={orgId.id}/>
                     </div>
                 </div>
             </div>

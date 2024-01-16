@@ -37,4 +37,19 @@ export class OrgService {
             },
         });
     }
+
+    public static async createOrg(name: string) {
+        return await fetch(BASE_URL + "/api/org", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('harmony-jwt') as string
+            },
+            body: JSON.stringify({
+                name: name
+            }),
+        }).then((response) => {
+            return response;
+        });
+    }
 }

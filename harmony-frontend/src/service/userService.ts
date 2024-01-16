@@ -14,7 +14,7 @@ export class UserService {
     }
 
     public static async getLoggedUser() {
-        return await fetch(BASE_URL + "/api/auth/", {
+        return await fetch(BASE_URL + "/api/auth", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export class UserService {
         email: string,
         password: string
     ) {
-        return await fetch(BASE_URL + "/api/auth/", {
+        return await fetch(BASE_URL + "/api/auth", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export class UserService {
     }
 
     public static async changePassword(password: string) {
-        return await fetch(BASE_URL + "/api/auth/", {
+        return await fetch(BASE_URL + "/api/auth", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -87,5 +87,15 @@ export class UserService {
             },
         });
         return await response.json()
+    }
+
+    public static async getUserOrgs(){
+        const userId = localStorage.getItem('harmony-uid') as string
+        return await fetch(BASE_URL + "/api/user/" + userId + "/orgs", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
     }
 }

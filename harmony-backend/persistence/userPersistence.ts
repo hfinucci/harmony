@@ -13,7 +13,7 @@ export class UserPersistence {
         return result.rows[0]?.name ?? null;
     }
 
-    public static async getUserById(userId: number): Promise<string | null> {
+    public static async getUserById(userId: number) {
         const query = {
             text: 'SELECT * FROM users WHERE id = $1',
             values: [userId],
@@ -37,7 +37,7 @@ export class UserPersistence {
             values: [userId],
         };
         const result: QueryResult = await dbpool.query(query);
-        return result.rows[0]?.auth_id ?? null;
+        return result.rows[0] ?? null;
     }
 
     public static async createUser(email: string, name: string) {

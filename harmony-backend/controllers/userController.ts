@@ -6,8 +6,10 @@ import {parseCreateUserRequest} from '../models/createUserRequest';
 import {parseChangeIconRequest} from '../models/changeIconRequest';
 import {handleError, parseId, parseJWT} from '../utils';
 import {UserResponse} from "@supabase/supabase-js";
+import {MemberService} from "../service/memberService";
+import {OrgService} from "../service/orgService";
 
-const BASE_URL = '/api/user'
+const BASE_URL = '/api/users'
 
 export default async function userController(fastify: FastifyInstance, opts: any) {
 
@@ -17,6 +19,18 @@ export default async function userController(fastify: FastifyInstance, opts: any
             parseId(id)
             logger.info("Getting user with id: " + id);
             return await UserService.getUserById(id);
+        } catch (error: any) {
+            logger.error(error)
+            return handleError(error, rep)
+        }
+    });
+
+    server.get(BASE_URL + '/:id/orgs', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        const id = req.params.id;
+        try {
+            parseId(id)
+            logger.info("Getting orgs from user with id: " + id);
+            return await MemberService.getOrgsByUser(id);
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)
@@ -87,4 +101,16 @@ export default async function userController(fastify: FastifyInstance, opts: any
         }
 
     })
+
+    server.get(BASE_URL + '/:id' + "/songs", async (req: FastifyRequest<{Params: {id: number}}> , rep) => {
+        const id = req.params.id;
+        try {
+            parseId(id)
+            logger.info("Getting songs with id: " + id);
+            return await UserService.getUserById(id);
+        } catch (error: any) {
+            logger.error(error)
+            return handleError(error, rep)
+        }
+    });
 }

@@ -18,22 +18,31 @@ export const LoginCard = () => {
         formState: { errors },
     } = useForm<FormData>();
 
-    watch("password");
-    watch("mail");
+    watch();
 
     const nav = useNavigate();
     const { t } = useTranslation();
 
     const [loginError, setLoginError]: any = useState();
 
-    const submitLogin = async (data: any) => {
+    const submitLogin =  async (data: any) => {
         const login = await UserService.signInWithUserAndPassword(
             data.mail,
             data.password
         );
-        if (login?.status == 200) nav("/home");
+        if(login?.status == 200) {
+            let authJson = await login?.json()
+            if (authJson.access_token === undefined || authJson.payload?.id === undefined) {
+                setLoginError("Invalid login credentials")
+                return
+            }
+            localStorage['harmony-jwt'] = authJson.access_token
+            localStorage['harmony-uid'] = authJson.payload.id
+
+            nav("/home")
+        }
         else setLoginError(t("pages.login.error.credentials"));
-    };
+    }
 
     const invalidEmail = (email: string) => {
         if (email.length === 0) return false;

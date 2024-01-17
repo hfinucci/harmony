@@ -9,7 +9,7 @@ import {UserResponse} from "@supabase/supabase-js";
 import {MemberService} from "../service/memberService";
 import {OrgService} from "../service/orgService";
 
-const BASE_URL = '/api/user'
+const BASE_URL = '/api/users'
 
 export default async function userController(fastify: FastifyInstance, opts: any) {
 

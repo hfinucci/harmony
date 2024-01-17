@@ -5,7 +5,7 @@ import {parseCreateSongRequest} from "../models/createSongRequest";
 import {handleError, parseId} from "../utils";
 import {parseUpdateSongRequest} from "../models/updateSongRequest";
 
-const BASE_URL = '/api/song'
+const BASE_URL = '/api/songs'
 
 export default async function songController(fastify: FastifyInstance, opts: any) {
 

@@ -5,7 +5,7 @@ import {handleError, parseId, parseJWT} from "../utils";
 import {parseCreateMemberRequest} from "../models/createMemberRequest";
 import {OrgService} from "../service/orgService";
 
-const BASE_URL = '/api/member'
+const BASE_URL = '/api/members'
 
 export default async function memberController(fastify: FastifyInstance, opts: any) {
 

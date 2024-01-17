@@ -3,7 +3,6 @@ import {useParams} from "react-router-dom";
 import SongCard from "../../components/SongCard/SongCard";
 import {OrgService} from "../../service/orgService";
 import { FaMusic } from "react-icons/fa";
-import { IoPersonAdd } from "react-icons/io5";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import AddMemberModal from "../../components/AddMemberModal/AddMemberModal";
 
@@ -43,7 +42,11 @@ const OrgPage = () => {
     }, [org])
 
     const addSong = (song: any) => {
-        setSongs([...songs, song])
+        if (songs) {
+            setSongs([...songs, song])
+        } else {
+            setSongs([song])
+        }
     }
 
     return (

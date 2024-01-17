@@ -5,7 +5,7 @@ const BASE_URL = "http://127.0.0.1:3000";
 
 export class UserService {
     public static async getUserInfo(userId: number) {
-        return await fetch(BASE_URL + "/api/user/" + userId, {
+        return await fetch(BASE_URL + "/api/users/" + userId, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export class UserService {
         email: string,
         password: string
     ) {
-        return await fetch(BASE_URL + "/api/user", {
+        return await fetch(BASE_URL + "/api/users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,9 +53,7 @@ export class UserService {
                 email: email,
                 password: password,
             }),
-        }).then((response) => {
-            return response;
-        });
+        })
     }
 
     public static async changePassword(password: string) {
@@ -71,7 +69,7 @@ export class UserService {
     }
 
     public static async deleteAccount(userId: number) {
-        return await fetch(BASE_URL + "/api/user/" + userId, {
+        return await fetch(BASE_URL + "/api/users/" + userId, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -80,7 +78,7 @@ export class UserService {
     }
 
     public static async getSongsByUserId(userId: number): Promise<Song[]> {
-        const response = await fetch(BASE_URL + "/api/user/" + userId + "/songs", {
+        const response = await fetch(BASE_URL + "/api/users/" + userId + "/songs", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -91,7 +89,7 @@ export class UserService {
 
     public static async getUserOrgs(){
         const userId = localStorage.getItem('harmony-uid') as string
-        return await fetch(BASE_URL + "/api/user/" + userId + "/orgs", {
+        return await fetch(BASE_URL + "/api/users/" + userId + "/orgs", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

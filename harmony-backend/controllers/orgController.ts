@@ -6,9 +6,8 @@ import {parseUpdateOrgRequest} from "../models/updateOrgRequest";
 import {parseCreateOrgRequest} from "../models/createOrgRequest";
 import {MemberService} from "../service/memberService";
 import {SongService} from "../service/songService";
-import {UserService} from "../service/userService";
 
-const BASE_URL = '/api/org'
+const BASE_URL = '/api/orgs'
 
 export default async function orgController(fastify: FastifyInstance, opts: any) {
 

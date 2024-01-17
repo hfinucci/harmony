@@ -10,7 +10,8 @@ const CreateSongModal = ({org, callback}) => {
     const [orgs, setOrgs] = useState<any>();
 
     useEffect(() => {
-        UserService.getUserOrgs().then(async (rsp) => {
+        const userId = localStorage.getItem('harmony-uid') as string
+        UserService.getUserOrgs(userId).then(async (rsp) => {
             if(rsp?.status == 200){
                 const info = await rsp.json()
                 setOrgs(info)

@@ -87,8 +87,7 @@ export class UserService {
         return await response.json()
     }
 
-    public static async getUserOrgs(){
-        const userId = localStorage.getItem('harmony-uid') as string
+    public static async getUserOrgs(userId: string){
         return await fetch(BASE_URL + "/api/users/" + userId + "/orgs", {
             method: "GET",
             headers: {

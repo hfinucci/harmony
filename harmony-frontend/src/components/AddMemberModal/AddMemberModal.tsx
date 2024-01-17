@@ -34,14 +34,13 @@ const AddMemberModal = ({org}) => {
     watch();
 
     const onSubmit = async (data:any, e: any) => {
-        console.log("Mandar mail...")
+        console.info("Mandar mail...")
         setShowModal(false)
     };
 
     const nav = useNavigate();
 
     const deleteMember = async () => {
-        console.log("Eliminar miembro...")
         const rsp = await MemberService.deleteMembership(org);
         if (rsp?.status == 200) {
             nav(`/home`);

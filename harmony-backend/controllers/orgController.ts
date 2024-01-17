@@ -13,15 +13,18 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
 
     server.post(BASE_URL, async (req, rep) => {
         try {
+            const user = parseJWT(req.headers.authorization || "")
+            if (user.payload == null) {
+                return rep
+                    .code(403)
+                    .send()
+            }
             const request = parseCreateOrgRequest(req.body);
             logger.info("Creating organization: " + request.name);
             const create = await OrgService.createOrg(request);
             if (create != null) {
-                const user = parseJWT(req.headers.authorization || "")
-                if (user.payload != null) {
-                    logger.info("Adding user " + user.payload.name + " to organization: " + request.name);
-                    await MemberService.createMember(user.payload.id, create.id)
-                }
+                logger.info("Adding user " + user.payload.name + " to organization: " + request.name);
+                await MemberService.createMember(user.payload.id, create.id)
             }
             return create;
         } catch (err) {

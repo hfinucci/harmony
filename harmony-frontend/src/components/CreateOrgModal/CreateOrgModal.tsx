@@ -28,7 +28,7 @@ const CreateOrgModal = () => {
         const org = await OrgService.createOrg(data.name);
         if (org?.status == 200) {
             const orgJson = await org.json();
-            nav(`/org/${orgJson.id}`);
+            nav(`/orgs/${orgJson.id}`);
         } else {
             setError("Error creating org");
         }

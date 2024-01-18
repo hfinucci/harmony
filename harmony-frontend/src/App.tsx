@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import ConfigurationPage from "./pages/ConfigurationPage/ConfigurationPage";
 import OrgPage from "./pages/OrgPage/OrgPage";
 import SongsPage from "./pages/SongsPage/SongsPage.tsx";
+import OrgsPage from "./pages/OrgsPage/OrgsPage";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                         element={<SongsPage />}
                     />
                     <Route path="/orgs/:id" element={<OrgPage />} />
+                    <Route path="/orgs" element={<OrgsPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

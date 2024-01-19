@@ -68,8 +68,8 @@ export class SongPersistence {
                 lastmodified as lastmodified
                 FROM organizations o
                 INNER JOIN members m
-                ON o.id = m.org
-                INNER JOIN songs s on m.org = s.org
+                ON o.id = m.org_id
+                INNER JOIN songs s on m.org_id = s.org
                 WHERE m.user_id = $1;`,
             values: [id],
         };

@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {OrgService} from "../../service/orgService";
+import "./OrgCard.css"
 
 export interface Org {
     name: string;
@@ -28,7 +29,7 @@ const OrgCard = (
     }, [])
     return (
         <a href={`/orgs/${org.id}`}
-            className="w-1/4 flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow">
+            className="width flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow">
             <div className="max-h-52 flex justify-center">
                 <img className="h-full object-contain rounded-t-lg justify-center" src={org.image} alt="org image"/>
             </div>

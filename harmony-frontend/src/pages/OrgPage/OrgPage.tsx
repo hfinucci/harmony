@@ -121,7 +121,7 @@ const OrgPage = () => {
                         {members &&
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <tbody>
-                                {members.map((elem: Song, index: number) => (
+                                {members.map((elem: any, index: number) => (
                                     <React.Fragment key={index}>
                                         {elem.name}
                                         <tr>

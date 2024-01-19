@@ -1,8 +1,9 @@
 import {z} from "zod";
 
 export const FetchSongsByUserResponse = z.object({
-    org: z.string(),
-    song: z.string().nullable(),
+    id: z.number(),
+    organization: z.string(),
+    name: z.string().nullable(),
     created: z.date(),
     lastmodified: z.date(),
 }).strict();

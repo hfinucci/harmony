@@ -60,10 +60,12 @@ export class SongPersistence {
 
     static async getSongsByUser(id: number) {
         const query = {
-            text: `SELECT o.name as org,
-                s.name as song,
-                created,
-                lastmodified
+            text: `SELECT
+                s.id as id,
+                o.name as organization,
+                s.name as name,
+                created as created,
+                lastmodified as lastmodified
                 FROM organizations o
                 INNER JOIN members m
                 ON o.id = m.org

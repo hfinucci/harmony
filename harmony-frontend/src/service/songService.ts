@@ -23,4 +23,14 @@ export class SongService {
             },
         })
     }
+
+    public static async deleteSongs(id: number) {
+        console.log(id);
+        return await fetch(BASE_URL + "/api/songs/" + id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+    }
 }

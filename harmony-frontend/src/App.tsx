@@ -8,6 +8,8 @@ import ConfigurationPage from "./pages/ConfigurationPage/ConfigurationPage";
 import OrgPage from "./pages/OrgPage/OrgPage";
 import SongsPage from "./pages/SongsPage/SongsPage.tsx";
 
+export const BASE_URL = "http://127.0.0.1:3000";
+
 function App() {
     return (
         <BrowserRouter>

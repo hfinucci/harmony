@@ -6,23 +6,25 @@ import {parseUpdateOrgRequest} from "../models/updateOrgRequest";
 import {parseCreateOrgRequest} from "../models/createOrgRequest";
 import {MemberService} from "../service/memberService";
 import {SongService} from "../service/songService";
-import {UserService} from "../service/userService";
 
-const BASE_URL = '/api/org'
+const BASE_URL = '/api/orgs'
 
 export default async function orgController(fastify: FastifyInstance, opts: any) {
 
     server.post(BASE_URL, async (req, rep) => {
         try {
+            const user = parseJWT(req.headers.authorization || "")
+            if (user.payload == null) {
+                return rep
+                    .code(403)
+                    .send()
+            }
             const request = parseCreateOrgRequest(req.body);
             logger.info("Creating organization: " + request.name);
             const create = await OrgService.createOrg(request);
             if (create != null) {
-                const user = parseJWT(req.headers.authorization || "")
-                if (user.payload != null) {
-                    logger.info("Adding user " + user.payload.name + " to organization: " + request.name);
-                    await MemberService.createMember(user.payload.id, create.id)
-                }
+                logger.info("Adding user " + user.payload.name + " to organization: " + request.name);
+                await MemberService.createMember(user.payload.id, create.id)
             }
             return create;
         } catch (err) {
@@ -61,12 +63,7 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
         try {
             parseId(id)
             logger.info("Fetching members from org with id: " + id);
-            const members = await MemberService.getMembersByOrg(id);
-            return await Promise.all(
-                members.map(async (m) => {
-                    const user = await UserService.getUserById(m.user_id);
-                    return {"name": user.name, "id": user.id}
-                }))
+            return await MemberService.getMembersByOrg(id);
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

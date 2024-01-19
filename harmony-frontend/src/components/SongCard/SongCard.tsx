@@ -5,10 +5,10 @@ const SongCard = (
 ) => {
     return (
         <tr>
-            <td className={"text-gray-500"}>{song.song}</td>
-            {song.org && <td className={"text-gray-500"}>{song.org}</td>}
-            <td className={"text-gray-500"}>{song.created}</td>
-            <td className={"text-gray-500"}>{song.lastmodified}</td>
+            <td className={"text-gray-500"}>{song.name}</td>
+            {song.organization && <td className={"text-gray-500"}>{song.organization}</td>}
+            <td className={"text-gray-500"}>{song.creationDate}</td>
+            <td className={"text-gray-500"}>{song.lastModifiedDate}</td>
             <td>
                 <button>Delete</button>
             </td>

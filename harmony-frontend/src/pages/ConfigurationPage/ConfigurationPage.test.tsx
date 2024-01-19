@@ -11,7 +11,7 @@ describe("Test ConfigurationPage", () => {
             </BrowserRouter>
         );
 
-        expect(screen.getByText("Configuración")).toBeInTheDocument();
+        expect(screen.getByText("Configuration")).toBeInTheDocument();
     });
 
     test("opens and closes the modal", async () => {
@@ -28,18 +28,18 @@ describe("Test ConfigurationPage", () => {
 
         fireEvent.click(button);
         const modal = await screen.findByText(
-            "¿Estás seguro que querés eliminar tu cuenta?"
+            "Are you sure you want to delete your account?"
         );
         expect(modal).toBeInTheDocument();
 
         const cancelButton = await screen.findByRole("button", {
-            name: /Cancelar/i,
+            name: /Cancel/i,
         });
         expect(cancelButton).toBeInTheDocument();
 
         fireEvent.click(cancelButton);
         expect(
-            screen.queryByText(/¿Estás seguro que querés eliminar tu cuenta?/i)
+            screen.queryByText(/Are you sure you want to delete your account?/i)
         ).not.toBeInTheDocument();
     });
 });

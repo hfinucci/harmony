@@ -6,12 +6,8 @@ import {parseCreateUserRequest} from '../models/createUserRequest';
 import {parseChangeIconRequest} from '../models/changeIconRequest';
 import {handleError, parseId, parseJWT} from '../utils';
 import {UserResponse} from "@supabase/supabase-js";
-import {MemberService} from "../service/memberService";
-import {SongService} from "../service/songService";
-import {z} from "zod";
-import {FetchSongsByUserResponse} from "../models/dto/fetchSongsByUserResponse";
 
-const BASE_URL = '/api/user'
+const BASE_URL = '/api/users'
 
 export default async function userController(fastify: FastifyInstance, opts: any) {
 

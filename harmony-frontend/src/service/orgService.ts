@@ -1,9 +1,9 @@
-import {BASE_URL} from "../App.tsx";
+const BASE_URL = "http://127.0.0.1:3000";
 
 export class OrgService {
 
     public static async getOrg(id: number) {
-        return await fetch(BASE_URL + "/api/org/" + id, {
+        return await fetch(BASE_URL + "/api/orgs/" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +12,7 @@ export class OrgService {
     }
 
     public static async getOrgMembers(id: number) {
-        return await fetch(BASE_URL + "/api/org/" + id + "/members", {
+        return await fetch(BASE_URL + "/api/orgs/" + id + "/members", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export class OrgService {
     }
 
     public static async getOrgSongs(id: number) {
-        return await fetch(BASE_URL + "/api/org/" + id + "/songs", {
+        return await fetch(BASE_URL + "/api/orgs/" + id + "/songs", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -30,11 +30,25 @@ export class OrgService {
     }
 
     public static async deleteOrg(id: number) {
-        return await fetch(BASE_URL + "/api/org/" + id, {
+        return await fetch(BASE_URL + "/api/orgs/" + id, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
         });
     }
+
+    public static async createOrg(name: string) {
+        return await fetch(BASE_URL + "/api/orgs", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
+            },
+            body: JSON.stringify({
+                name: name
+            }),
+        })
+    }
+>>>>>>> main
 }

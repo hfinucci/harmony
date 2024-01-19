@@ -3,8 +3,9 @@ import server, {logger} from "../server";
 import {MemberService} from '../service/memberService';
 import {handleError, parseId, parseJWT} from "../utils";
 import {parseCreateMemberRequest} from "../models/createMemberRequest";
+import {OrgService} from "../service/orgService";
 
-const BASE_URL = '/api/member'
+const BASE_URL = '/api/members'
 
 export default async function memberController(fastify: FastifyInstance, opts: any) {
 
@@ -33,7 +34,11 @@ export default async function memberController(fastify: FastifyInstance, opts: a
             parseId(user)
             parseId(org)
             logger.info("Deleting membership of user with id " + user + " from org with id " + org);
-            return await MemberService.deleteMemberById(user, org);
+            const info = await MemberService.deleteMemberById(user, org);
+            const members = await MemberService.getMembersByOrg(org);
+            if(members.length === 0)
+                return await OrgService.deleteOrgById(org)
+            return info;
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

@@ -1,4 +1,4 @@
-import {Song} from "../pages/SongsPage/SongsPage.tsx";
+import { Song } from "../pages/SongsPage/SongsPage.tsx";
 
 // const BASE_URL = process.env.REACT_APP_API_ENDPOINT || ''
 const BASE_URL = "http://127.0.0.1:3000";
@@ -53,7 +53,7 @@ export class UserService {
                 email: email,
                 password: password,
             }),
-        })
+        });
     }
 
     public static async changePassword(password: string) {
@@ -78,20 +78,25 @@ export class UserService {
     }
 
     public static async getSongsByUserId(userId: number): Promise<Song[]> {
-        const response = await fetch(BASE_URL + "/api/users/" + userId + "/songs", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        return await response.json()
+        const response = await fetch(
+            BASE_URL + "/api/users/" + userId + "/songs",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return await response.json();
     }
 
-    public static async getUserOrgs(userId: string){
+    public static async getUserOrgs(userId: string) {
         return await fetch(BASE_URL + "/api/users/" + userId + "/orgs", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: ("Bearer " +
+                    localStorage.getItem("harmony-jwt")) as string,
             },
         });
     }

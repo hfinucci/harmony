@@ -6,6 +6,9 @@ export const TRANSLATIONS_ES = {
             changePassword: "Cambiar la contraseña",
             deleteAccount: "Eliminar cuenta",
         },
+        home: {
+            myOrgs: "Mis organizaciones",
+        },
         landingPage: {
             guitarists: "Guitarristas",
             jazzband: "Banda de Jazz",

@@ -1,23 +1,30 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
-import {SongService} from "../../service/songService";
-import {useForm} from "react-hook-form";
-import {UserService} from "../../service/userService";
+import { SongService } from "../../service/songService";
+import { useForm } from "react-hook-form";
+import { UserService } from "../../service/userService";
+import { Song } from "../../pages/SongsPage/SongsPage";
 
-const CreateSongModal = ({org, callback}) => {
+const CreateSongModal = ({
+    org,
+    callback,
+}: {
+    org?: number;
+    callback: (song: Song) => void;
+}) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
     const [orgs, setOrgs] = useState<any>();
 
     useEffect(() => {
-        const userId = localStorage.getItem('harmony-uid') as string
+        const userId = localStorage.getItem("harmony-uid") as string;
         UserService.getUserOrgs(userId).then(async (rsp) => {
-            if(rsp?.status == 200){
-                const info = await rsp.json()
-                setOrgs(info)
+            if (rsp?.status == 200) {
+                const info = await rsp.json();
+                setOrgs(info);
             }
-        })
-    }, [])
+        });
+    }, []);
 
     type CreateSongFormData = {
         name: string;
@@ -33,17 +40,17 @@ const CreateSongModal = ({org, callback}) => {
 
     watch();
 
-    const onSubmit = async (data:any, e: any) => {
+    const onSubmit = async (data: any, e: any) => {
         const song = await SongService.createSong(data.name, data.org);
         if (song?.status == 200) {
             setShowModal(false);
             const body = await song.json();
             SongService.getSongById(body.id).then(async (rsp) => {
                 if (rsp?.status == 200) {
-                    const info = await rsp.json()
-                    callback(info)
+                    const info = await rsp.json();
+                    callback(info);
                 }
-            })
+            });
         } else {
             setError("Error creating song");
         }
@@ -57,8 +64,9 @@ const CreateSongModal = ({org, callback}) => {
                 data-modal-toggle="create-song-modal"
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="bg-white flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
-                <IoAddSharp className="font-bold"/>
+                className="bg-white flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+            >
+                <IoAddSharp className="font-bold" />
                 Add Song
             </button>
             {showModal && (
@@ -79,9 +87,7 @@ const CreateSongModal = ({org, callback}) => {
                                 <div className="p-4 md:p-5">
                                     <form
                                         className="space-y-4"
-                                        onSubmit={handleSubmit(
-                                            onSubmit
-                                        )}
+                                        onSubmit={handleSubmit(onSubmit)}
                                     >
                                         <div>
                                             <input
@@ -90,7 +96,7 @@ const CreateSongModal = ({org, callback}) => {
                                                 placeholder="Name"
                                                 {...register("name", {
                                                     required: true,
-                                                    minLength: 8
+                                                    minLength: 8,
                                                 })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
@@ -99,32 +105,47 @@ const CreateSongModal = ({org, callback}) => {
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    El nombre de la organización debe tener al menos 8 caracteres
+                                                    El nombre de la organización
+                                                    debe tener al menos 8
+                                                    caracteres
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
                                                 </p>
                                             </>
                                         )}
-                                        {orgs &&
+                                        {orgs && (
                                             <div>
                                                 <select
                                                     id="name"
                                                     defaultValue={org}
                                                     {...register("org", {
                                                         required: true,
-                                                        min: 1
+                                                        min: 1,
                                                     })}
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                    required>
+                                                    required
+                                                >
                                                     {orgs.map((o: any) => (
-                                                        <option value={o.id}
-                                                                label={o.name} selected={org == o}/>
+                                                        <option
+                                                            value={o.id}
+                                                            label={o.name}
+                                                            selected={org == o}
+                                                        />
                                                     ))}
-                                                    {!org && <option value={0} label={"Select an organization"} disabled={true} selected={true}/>}
+                                                    {!org && (
+                                                        <option
+                                                            value={0}
+                                                            label={
+                                                                "Select an organization"
+                                                            }
+                                                            disabled={true}
+                                                            selected={true}
+                                                        />
+                                                    )}
                                                 </select>
                                             </div>
-                                        }
+                                        )}
                                         {errors.org && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
@@ -138,7 +159,9 @@ const CreateSongModal = ({org, callback}) => {
                                         <div className="flex flex-row gap-5 justify-end">
                                             <button
                                                 type="button"
-                                                onClick={() => setShowModal(false)}
+                                                onClick={() =>
+                                                    setShowModal(false)
+                                                }
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
                                                 Cancelar
@@ -150,7 +173,6 @@ const CreateSongModal = ({org, callback}) => {
                                                 Crear
                                             </button>
                                         </div>
-
                                     </form>
                                 </div>
                             </div>

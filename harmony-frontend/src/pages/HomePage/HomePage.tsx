@@ -5,6 +5,9 @@ import { Organization } from "../../types/dtos/Organization";
 import { Song } from "../SongsPage/SongsPage";
 import { useTranslation } from "react-i18next";
 import CreateOrgModal from "../../components/CreateOrgModal/CreateOrgModal";
+import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
+import React from "react";
+import SongCard from "../../components/SongCard/SongCard";
 
 const HomePage = () => {
     const [orgs, setOrgs] = useState<Organization[]>([]);
@@ -12,20 +15,34 @@ const HomePage = () => {
 
     const { t } = useTranslation();
 
-    // TODO: Ask about CreateSongModal -> problem with orgId being required
     // TODO: Add org card when finished
 
+    const addSong = (song: Song) => {
+        if (songs) {
+            setSongs([...songs, song]);
+        } else {
+            setSongs([song]);
+        }
+    };
+
+    const fetchSongs = async () => {
+        await UserService.getSongsByUserId(
+            Number(localStorage.getItem("harmony-uid"))
+        ).then((response: Song[]) => {
+            setSongs(response);
+        });
+    };
+
     useEffect(() => {
-        UserService.getUserOrgs("1").then((res) => {
+        const userId = localStorage.getItem("harmony-uid") as string;
+        UserService.getUserOrgs(userId).then((res) => {
             if (res?.status == 200) {
                 res.json().then((data) => {
                     setOrgs(data);
                 });
             }
         });
-        UserService.getSongsByUserId(1).then((res: Song[]) => {
-            setSongs(res);
-        });
+        fetchSongs();
     }, []);
 
     return (
@@ -51,17 +68,60 @@ const HomePage = () => {
                 <div className="flex flex-row justify-between mb-4">
                     <h1 className="text-fuchsia-950 text-4xl flex flex-row">
                         <FaMusic />
-                        Canciones Recientes
+                        {t("pages.home.recentSongs")}
                     </h1>
+                    <CreateSongModal callback={addSong} />
                 </div>
 
                 <div className="flex flex-col rounded-lg bg-white p-10">
-                    {songs.length != 0 ? (
-                        songs.map((song) => (
-                            <p>Organization name: {song.name}</p>
-                        ))
+                    {songs.length !== 0 ? (
+                        <table className="table table-bordered border-separate border-spacing-y-1.5">
+                            <thead>
+                                <tr>
+                                    <th className={"text-left text-gray-500"}>
+                                        Nombre
+                                    </th>
+                                    <th className={"text-left text-gray-500"}>
+                                        Organización
+                                    </th>
+                                    <th className={"text-left text-gray-500"}>
+                                        Fecha de Creación
+                                    </th>
+                                    <th className={"text-left text-gray-500"}>
+                                        Fecha de Modificación
+                                    </th>
+                                    <th className={"text-left text-gray-500"}>
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {songs.map((elem: Song, index: number) => (
+                                    <React.Fragment key={index}>
+                                        <tr>
+                                            <td
+                                                colSpan={8}
+                                                style={{
+                                                    backgroundColor: "#f0f0f0",
+                                                }}
+                                            />
+                                        </tr>
+                                        <SongCard
+                                            song={elem}
+                                            fetchSongs={fetchSongs}
+                                        />
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+                        </table>
                     ) : (
-                        <p>No tienes canciones</p>
+                        songs.length == 0 && (
+                            <div className="flex items-center justify-center p-4 md:p-5">
+                                <h1 className="text-2xl text-fuchsia-950">
+                                    Oops! No tenes canciones
+                                </h1>
+                            </div>
+                        )
                     )}
                 </div>
             </div>

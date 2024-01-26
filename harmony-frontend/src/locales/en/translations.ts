@@ -7,7 +7,8 @@ export const TRANSLATIONS_EN = {
             deleteAccount: "Delete account",
         },
         home: {
-            myOrgs: "My organizations",
+            myOrgs: "My Organizations",
+            recentSongs: "Recent Songs",
         },
         landingPage: {
             guitarists: "Guitarists",

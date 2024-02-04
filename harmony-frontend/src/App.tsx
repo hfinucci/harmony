@@ -9,6 +9,8 @@ import OrgPage from "./pages/OrgPage/OrgPage";
 import SongsPage from "./pages/SongsPage/SongsPage.tsx";
 import OrgsPage from "./pages/OrgsPage/OrgsPage";
 
+export const BASE_URL = "http://127.0.0.1:3000";
+
 function App() {
     return (
         <BrowserRouter>

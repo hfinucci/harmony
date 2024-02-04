@@ -57,4 +57,26 @@ export class SongPersistence {
             throw new Error("Song not found")
         })();
     }
+
+    static async getSongsByUser(id: number) {
+        const query = {
+            text: `SELECT
+                s.id as id,
+                o.name as organization,
+                s.name as name,
+                created as created,
+                lastmodified as lastmodified
+                FROM organizations o
+                INNER JOIN members m
+                ON o.id = m.org_id
+                INNER JOIN songs s on m.org_id = s.org
+                WHERE m.user_id = $1;`,
+            values: [id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const song = result.rows;
+        return song ?? (() => {
+            throw new Error("Songs not found")
+        })();
+    }
 }

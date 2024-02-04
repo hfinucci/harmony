@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import { IoPersonAdd } from "react-icons/io5";
+import {IoPersonAdd} from "react-icons/io5";
 import {useForm} from "react-hook-form";
 import {OrgService} from "../../service/orgService";
-import { RiDeleteBin5Fill } from "react-icons/ri";
+import {RiDeleteBin5Fill} from "react-icons/ri";
 import {MemberService} from "../../service/memberService";
+
 import { useNavigate } from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
@@ -34,7 +35,7 @@ const AddMemberModal = ({org}) => {
 
     watch();
 
-    const onSubmit = async (data:any, e: any) => {
+    const onSubmit = async (data: any, e: any) => {
         console.info("Mandar mail...")
         setShowModal(false)
     };

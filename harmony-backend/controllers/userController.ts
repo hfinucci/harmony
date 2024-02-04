@@ -7,7 +7,9 @@ import {parseChangeIconRequest} from '../models/changeIconRequest';
 import {handleError, parseId, parseJWT} from '../utils';
 import {UserResponse} from "@supabase/supabase-js";
 import {MemberService} from "../service/memberService";
-import {OrgService} from "../service/orgService";
+import {SongService} from "../service/songService";
+import {FetchSongsByUserResponse} from "../models/dto/fetchSongsByUserResponse";
+import {z} from "zod";
 
 const BASE_URL = '/api/users'
 
@@ -107,7 +109,8 @@ export default async function userController(fastify: FastifyInstance, opts: any
         try {
             parseId(id)
             logger.info("Getting songs with id: " + id);
-            return await UserService.getUserById(id);
+            const songs = await SongService.getSongsByUser(id)
+            return z.array(FetchSongsByUserResponse).parse(songs)
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)

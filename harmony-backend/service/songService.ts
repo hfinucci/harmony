@@ -22,6 +22,10 @@ export class SongService {
         return await SongPersistence.getSongsByOrg(id);
     }
 
+    public static async getSongsByUser(id: number) {
+        return await SongPersistence.getSongsByUser(id);
+    }
+
     static async deleteSongById(id: number) {
         return await SongPersistence.deleteSongById(id);
     }

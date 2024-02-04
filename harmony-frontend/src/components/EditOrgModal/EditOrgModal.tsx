@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { IoAddSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
-import {OrgService} from "../../service/orgService";
+import { FaRegEdit } from "react-icons/fa";
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
+import {OrgService} from "../../service/orgService";
+import {Org} from "../OrgCard/OrgCard";
 
-const CreateOrgModal = () => {
+interface EditOrgModalProps {
+    org: Org;
+    callback: (org: Org) => void;
+}
+
+const EditOrgModal = ({org, callback}: EditOrgModalProps) => {
 
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
 
-    type CreateOrgFormData = {
+    type EditOrgFormData = {
         name: string;
     };
 
@@ -19,35 +24,37 @@ const CreateOrgModal = () => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<CreateOrgFormData>();
+    } = useForm<EditOrgFormData>();
 
     watch();
 
-    const nav = useNavigate();
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
     const onSubmit = async (data:any, e: any) => {
-        const org = await OrgService.createOrg(data.name);
-        if (org?.status == 200) {
-            const orgJson = await org.json();
-            nav(`/orgs/${orgJson.id}`);
-        } else {
-            setError(t("components.createOrgModal.error.create"));
+        if(data.name == org.name) {
+            setShowModal(false);
+            return
         }
+        const edit = await OrgService.editOrg(org.id, data.name);
+        if (edit?.status == 200) {
+            setShowModal(false);
+            edit.json().then((rsp) => {
+                callback(rsp)
+            })
+        } else setError(t("components.editOrgModal.error.edit"));
     };
 
     return (
         <>
             <button
-                aria-label="create org"
-                data-modal-target="create-org-modal"
-                data-modal-toggle="create-org-modal"
+                aria-label="create song"
+                data-modal-target="create-song-modal"
+                data-modal-toggle="create-song-modal"
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="bg-white flex w-fit h-fit items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
-            >
-                <IoAddSharp className="font-bold"/>
-                {t("components.createOrgModal.title")}
+                className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
+                <FaRegEdit />
+                {t("pages.orgs.edit")}
             </button>
             {showModal && (
                 <>
@@ -61,7 +68,7 @@ const CreateOrgModal = () => {
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        {t("components.createOrgModal.title")}
+                                        {t("components.editOrgModal.title")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -75,7 +82,7 @@ const CreateOrgModal = () => {
                                             <input
                                                 type="text"
                                                 id="name"
-                                                placeholder="Name"
+                                                defaultValue={org.name}
                                                 {...register("name", {
                                                     required: true,
                                                     maxLength: 20
@@ -87,7 +94,7 @@ const CreateOrgModal = () => {
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createOrgModal.error.name")}
+                                                    {t("components.editOrgModal.error.name")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -100,13 +107,13 @@ const CreateOrgModal = () => {
                                                 onClick={() => setShowModal(false)}
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createOrgModal.cancel")}
+                                                {t("components.editOrgModal.cancel")}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createOrgModal.create")}
+                                                {t("components.editOrgModal.edit")}
                                             </button>
                                         </div>
 
@@ -121,4 +128,4 @@ const CreateOrgModal = () => {
     );
 };
 
-export default CreateOrgModal;
+export default EditOrgModal;

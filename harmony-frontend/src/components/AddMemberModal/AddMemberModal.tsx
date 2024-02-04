@@ -4,7 +4,9 @@ import {useForm} from "react-hook-form";
 import {OrgService} from "../../service/orgService";
 import {RiDeleteBin5Fill} from "react-icons/ri";
 import {MemberService} from "../../service/memberService";
-import {useNavigate} from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const AddMemberModal = ({org}) => {
     const [showModal, setShowModal] = useState(false);
@@ -39,13 +41,14 @@ const AddMemberModal = ({org}) => {
     };
 
     const nav = useNavigate();
+    const { t } = useTranslation();
 
     const deleteMember = async () => {
         const rsp = await MemberService.deleteMembership(org);
         if (rsp?.status == 200) {
             nav(`/home`);
         } else {
-            setError("Error creating org");
+            setError("Error deleting member. Please try again.");
         }
     }
 
@@ -59,7 +62,7 @@ const AddMemberModal = ({org}) => {
                 onClick={() => setShowModal(true)}
                 className="items-center bg-white w-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
                 <IoPersonAdd />
-                Add member
+                {t("components.addMember.button")}
             </button>
             {showModal && (
                 <>
@@ -73,7 +76,7 @@ const AddMemberModal = ({org}) => {
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        Invitar Miembro
+                                        {t("components.addMember.button")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -97,9 +100,6 @@ const AddMemberModal = ({org}) => {
                                         </div>
                                         {errors.name && (
                                             <>
-                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    Debe escribir un nombre
-                                                </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
                                                 </p>
@@ -140,13 +140,13 @@ const AddMemberModal = ({org}) => {
                                                 onClick={() => setShowModal(false)}
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                Cancelar
+                                                {t("components.addMember.cancel")}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                Enviar Invitación
+                                                {t("components.addMember.send")}
                                             </button>
                                         </div>
 

@@ -42,7 +42,7 @@ const CreateOrgModal = () => {
                 data-modal-toggle="create-org-modal"
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="bg-white flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+                className="bg-white flex w-fit h-fit items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
             >
                 <IoAddSharp className="font-bold"/>
                 Create Org

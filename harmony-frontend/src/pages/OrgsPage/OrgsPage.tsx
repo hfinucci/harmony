@@ -2,12 +2,15 @@ import React, {useEffect, useState} from "react";
 import {UserService} from "../../service/userService.ts";
 import OrgCard, {Org} from "../../components/OrgCard/OrgCard";
 import { IoPeopleSharp } from "react-icons/io5";
+import {useTranslation} from "react-i18next";
+import CreateOrgModal from "../../components/CreateOrgModal/CreateOrgModal";
 
 
 const OrgsPage = () => {
 
     const [orgs, setOrgs] = useState<Org[]>();
 
+    const { t } = useTranslation()
 
     useEffect(() => {
         (async () => {
@@ -21,12 +24,15 @@ const OrgsPage = () => {
     return (
 
         <div className="container h-screen mt-8 mx-auto max-w-12xl">
-            <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3">
-                <IoPeopleSharp />
-                <h1>Mis Organizaciones</h1>
+            <div className="flex flex-row justify-between items-center">
+                <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3">
+                    <IoPeopleSharp />
+                    <h1>{t("pages.orgs.title")}</h1>
+                </div>
+                <CreateOrgModal/>
             </div>
             {orgs &&
-                <div className="flex flex-row flex-wrap gap-5 justify-evenly rounded-lg p-5">
+                <div className="flex flex-row flex-wrap gap-5 justify-start w-fit rounded-lg p-5">
                     {orgs.map((elem: Org, index: number) => (
                         <OrgCard key={index} name={elem.name} image={elem.image} id={elem.id}/>
                     ))}

@@ -85,6 +85,9 @@ export const TRANSLATIONS_EN = {
                 subscription: "You should accept the Terms and Conditions",
             },
         },
+        orgs: {
+            title: "My Organizations"
+        }
     },
     components: {
         changePasswordModal: {
@@ -103,9 +106,32 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: "Error deleting account",
         },
+        deleteOrgModal: {
+            title: "Are you sure you want to delete the organization?",
+            yes: "Yes",
+            cancel: "Cancel",
+            error: "Error deleting the organization",
+        },
+        editOrgModal: {
+            title: "Edit Organization",
+            edit: "Edit",
+            cancel: "Cancel",
+            error: "The name of the organization must be al least 8 characters"
+        },
         navbar: {
             login: "Log In",
             register: "Register",
         },
+        orgCard: {
+            members: "Members: ",
+            edit: "Edit",
+            delete: "Delete"
+        },
+        addMember: {
+            button: "Add Member",
+            title: "Invite Member",
+            cancel: "Cancel",
+            send: "Send Invite"
+        }
     },
 };

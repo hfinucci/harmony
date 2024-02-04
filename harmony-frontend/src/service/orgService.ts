@@ -38,6 +38,18 @@ export class OrgService {
         });
     }
 
+    public static async editOrg(id: number, name: string) {
+        return await fetch(BASE_URL + "/api/orgs/" + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: name
+            }),
+        });
+    }
+
     public static async createOrg(name: string) {
         return await fetch(BASE_URL + "/api/orgs", {
             method: "POST",

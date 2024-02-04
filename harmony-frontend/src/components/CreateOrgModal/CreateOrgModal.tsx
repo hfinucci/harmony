@@ -3,6 +3,7 @@ import { IoAddSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import {OrgService} from "../../service/orgService";
 import {useForm} from "react-hook-form";
+import {useTranslation} from "react-i18next";
 
 const CreateOrgModal = () => {
 
@@ -23,6 +24,7 @@ const CreateOrgModal = () => {
     watch();
 
     const nav = useNavigate();
+    const { t } = useTranslation()
 
     const onSubmit = async (data:any, e: any) => {
         const org = await OrgService.createOrg(data.name);
@@ -30,7 +32,7 @@ const CreateOrgModal = () => {
             const orgJson = await org.json();
             nav(`/orgs/${orgJson.id}`);
         } else {
-            setError("Error creating org");
+            setError(t("components.createOrgModal.error.create"));
         }
     };
 
@@ -45,7 +47,7 @@ const CreateOrgModal = () => {
                 className="bg-white flex w-fit h-fit items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
             >
                 <IoAddSharp className="font-bold"/>
-                Create Org
+                {t("components.createOrgModal.title")}
             </button>
             {showModal && (
                 <>
@@ -59,7 +61,7 @@ const CreateOrgModal = () => {
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        Crear Organización
+                                        {t("components.createOrgModal.title")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -76,7 +78,7 @@ const CreateOrgModal = () => {
                                                 placeholder="Name"
                                                 {...register("name", {
                                                     required: true,
-                                                    minLength: 8
+                                                    maxLength: 20
                                                 })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
@@ -85,7 +87,7 @@ const CreateOrgModal = () => {
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    El nombre de la organización debe tener al menos 8 caracteres
+                                                    {t("components.createOrgModal.error.name")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -98,13 +100,13 @@ const CreateOrgModal = () => {
                                                 onClick={() => setShowModal(false)}
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                Cancelar
+                                                {t("components.createOrgModal.cancel")}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                Crear
+                                                {t("components.createOrgModal.create")}
                                             </button>
                                         </div>
 

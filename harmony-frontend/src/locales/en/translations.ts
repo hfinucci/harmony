@@ -86,7 +86,21 @@ export const TRANSLATIONS_EN = {
             },
         },
         orgs: {
-            title: "My Organizations"
+            title: "My Organizations",
+            edit: "Edit",
+            delete: "Delete",
+            noSongs: "Oops! You don't have any organizations yet"
+        },
+        org: {
+            songs: {
+                title: "Songs",
+                name: "Name",
+                creationDate: "Date of Creation",
+                lastModified: "Last Modification",
+                actions: "Actions",
+                none: "Oops! You have no songs"
+            },
+            members: "Members"
         }
     },
     components: {
@@ -116,16 +130,27 @@ export const TRANSLATIONS_EN = {
             title: "Edit Organization",
             edit: "Edit",
             cancel: "Cancel",
-            error: "The name of the organization must be al least 8 characters"
+            error: {
+                name: "The name of the organization cannot be longer than 20 characters",
+                edit: "Error editing organization, please try again"
+            }
+        },
+        createOrgModal: {
+            title: "Create Organization",
+            create: "Create",
+            cancel: "Cancel",
+            error: {
+                name: "The name of the organization cannot be longer than 20 characters",
+                create: "Error creating organization, please try again"
+            }
+
         },
         navbar: {
             login: "Log In",
             register: "Register",
         },
         orgCard: {
-            members: "Members: ",
-            edit: "Edit",
-            delete: "Delete"
+            members: "Members: "
         },
         addMember: {
             button: "Add Member",

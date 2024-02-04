@@ -8,6 +8,7 @@ import AddMemberModal from "../../components/AddMemberModal/AddMemberModal";
 import DeleteOrgModal from "../../components/DeleteOrgModal/DeleteOrgModal";
 import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import {Org} from "../../components/OrgCard/OrgCard";
+import {useTranslation} from "react-i18next";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState()
@@ -15,6 +16,8 @@ const OrgPage = () => {
     const [songs, setSongs]: any = useState()
 
     const orgId = useParams();
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         OrgService.getOrg(orgId.id).then(async (rsp) => {
@@ -79,7 +82,7 @@ const OrgPage = () => {
                     <div className="flex justify-between">
                         <div className="flex items-center gap-3">
                             <FaMusic className="text-2xl text-fuchsia-950"/>
-                            <h1 className="text-2xl text-fuchsia-950 font-semibold">Canciones</h1>
+                            <h1 className="text-2xl text-fuchsia-950 font-semibold">{t("pages.org.songs.title")}</h1>
                         </div>
                         <CreateSongModal org={orgId.id} callback={addSong}/>
 
@@ -89,10 +92,10 @@ const OrgPage = () => {
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
                                 <tr>
-                                    <th className={"text-left text-gray-500"}>Nombre</th>
-                                    <th className={"text-left text-gray-500"}>Fecha de Creación</th>
-                                    <th className={"text-left text-gray-500"}>Fecha de Modificación</th>
-                                    <th className={"text-left text-gray-500"}>Acciones</th>
+                                    <th className={"text-left text-gray-500"}>{t("pages.org.songs.name")}</th>
+                                    <th className={"text-left text-gray-500"}>{t("pages.org.songs.creationDate")}</th>
+                                    <th className={"text-left text-gray-500"}>{t("pages.org.songs.lastModified")}</th>
+                                    <th className={"text-left text-gray-500"}>{t("pages.org.songs.actions")}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -114,13 +117,13 @@ const OrgPage = () => {
                     {!songs &&
                         <div className="flex items-center justify-center p-4 md:p-5">
                             <h1 className="text-2xl text-fuchsia-950">
-                                Oops! No tenes canciones
+                                {t("pages.org.songs.none")}
                             </h1>
                         </div>
                     }
                 </div>
                 <div className="flex flex-col shrink gap-2 mr-10 w-fit">
-                    <h1 className="text-2xl text-fuchsia-950 font-semibold">Integrantes</h1>
+                    <h1 className="text-2xl text-fuchsia-950 font-semibold">{t("pages.org.members")}</h1>
                     <div className=" flex flex-col grow rounded-lg bg-white p-5 justify-between">
                         {members &&
                             <table className="table table-bordered border-separate border-spacing-y-1.5">

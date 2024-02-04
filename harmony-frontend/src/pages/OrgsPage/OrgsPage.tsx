@@ -31,11 +31,18 @@ const OrgsPage = () => {
                 </div>
                 <CreateOrgModal/>
             </div>
-            {orgs &&
+            {orgs && orgs.length > 0 &&
                 <div className="flex flex-row flex-wrap gap-5 justify-start w-fit rounded-lg p-5">
                     {orgs.map((elem: Org, index: number) => (
                         <OrgCard key={index} name={elem.name} image={elem.image} id={elem.id}/>
                     ))}
+                </div>
+            }
+            {orgs && orgs.length == 0 &&
+                <div className="flex items-center justify-center p-4 md:p-5">
+                    <h1 className="text-2xl text-fuchsia-950">
+                        {t("pages.orgs.noSongs")}
+                    </h1>
                 </div>
             }
         </div>

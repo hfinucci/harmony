@@ -41,7 +41,7 @@ const EditOrgModal = ({org, callback}: EditOrgModalProps) => {
             edit.json().then((rsp) => {
                 callback(rsp)
             })
-        } else setError(t("components.editOrgModal.error"));
+        } else setError(t("components.editOrgModal.error.edit"));
     };
 
     return (
@@ -54,7 +54,7 @@ const EditOrgModal = ({org, callback}: EditOrgModalProps) => {
                 onClick={() => setShowModal(true)}
                 className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
                 <FaRegEdit />
-                {t("components.orgCard.edit")}
+                {t("pages.orgs.edit")}
             </button>
             {showModal && (
                 <>
@@ -85,7 +85,7 @@ const EditOrgModal = ({org, callback}: EditOrgModalProps) => {
                                                 defaultValue={org.name}
                                                 {...register("name", {
                                                     required: true,
-                                                    minLength: 8
+                                                    maxLength: 20
                                                 })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
@@ -94,7 +94,7 @@ const EditOrgModal = ({org, callback}: EditOrgModalProps) => {
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.editOrgModal.error")}
+                                                    {t("components.editOrgModal.error.name")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}

@@ -30,7 +30,7 @@ const DeleteOrgModal = ({id}) => {
                 onClick={() => setShowModal(true)}
                 className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
                 <RiDeleteBin5Fill />
-                {t("components.orgCard.delete")}
+                {t("pages.orgs.delete")}
             </button>
             {showModal && (
                 <>

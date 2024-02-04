@@ -47,7 +47,7 @@ const AddMemberModal = ({org}) => {
         if (rsp?.status == 200) {
             nav(`/home`);
         } else {
-            setError("Error creating org");
+            setError("Error deleting member. Please try again.");
         }
     }
 

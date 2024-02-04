@@ -86,7 +86,21 @@ export const TRANSLATIONS_ES = {
             },
         },
         orgs: {
-            title: "Mis Organizaciones"
+            title: "Mis Organizaciones",
+            edit: "Editar",
+            delete: "Eliminar",
+            noSongs: "¡Oops! No tienes ninguna organización"
+        },
+        org: {
+            songs: {
+                title: "Canciones",
+                name: "Nombre",
+                creationDate: "Fecha de Creación",
+                lastModified: "Última de Modificación",
+                actions: "Acciones",
+                none: "¡Oops! No tienes canciones"
+            },
+            members: "Integrantes"
         }
     },
     components: {
@@ -116,7 +130,20 @@ export const TRANSLATIONS_ES = {
             title: "Editar Organización",
             edit: "Editar",
             cancel: "Cancelar",
-            error: "El nombre de la organización debe tener al menos 8 caracteres"
+            error: {
+                name: "El nombre de la organización debe tener menos de 20 caracteres",
+                edit: "Error al editar organización, por favor volver a intentar"
+            }
+        },
+        createOrgModal: {
+            title: "Crear Organización",
+            create: "Crear",
+            cancel: "Cancelar",
+            error: {
+                name: "El nombre de la organización debe tener menos de 20 caracteres",
+                create: "Error al crear organización, por favor volver a intentar"
+            }
+
         },
         navbar: {
             login: "Iniciar sesión",

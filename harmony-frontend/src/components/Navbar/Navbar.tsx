@@ -20,14 +20,14 @@ export const Navbar = () => {
                 >
                     <ul className="flex flex-col p-4 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
                         <li>
-                            <Link to="/session">
+                            <Link to="/login">
                                 <h1 className="bg-white text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-2 px-4 rounded-full">
                                     {t("components.navbar.login")}
                                 </h1>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/session">
+                            <Link to="/register">
                                 <h1 className="hover:bg-white hover:text-fuchsia-950 text-white border border-fuchsia-950 bg-fuchsia-950 py-2 px-4 rounded-full">
                                     {t("components.navbar.register")}
                                 </h1>

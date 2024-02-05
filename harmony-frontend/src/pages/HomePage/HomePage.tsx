@@ -50,7 +50,7 @@ const HomePage = () => {
         <div className="container h-screen mx-auto flex flex-col">
             <div className="my-4">
                 <div className="flex flex-row justify-between mb-4">
-                    <h1 className="text-fuchsia-950 text-4xl flex flex-row">
+                    <h1 className="text-fuchsia-950 text-4xl flex flex-row gap-2">
                         <FaPeopleGroup />
                         {t("pages.home.myOrgs")}
                     </h1>
@@ -60,12 +60,14 @@ const HomePage = () => {
                 <div className="flex flex-col rounded-lg bg-white p-10">
                     {orgs.length != 0 ? (
                         orgs.map((org) => (
-                            <OrgCard
-                                key={org.id}
-                                name={org.name}
-                                image={org.image}
-                                id={org.id}
-                            />
+                            <div className="flex flex-row gap-5 justify-start w-fit rounded-lg p-5">
+                                <OrgCard
+                                    key={org.id}
+                                    name={org.name}
+                                    image={org.image}
+                                    id={org.id}
+                                />
+                            </div>
                         ))
                     ) : (
                         <p>{t("pages.home.noOrgs")}</p>
@@ -74,7 +76,7 @@ const HomePage = () => {
             </div>
             <div className="my-4">
                 <div className="flex flex-row justify-between mb-4">
-                    <h1 className="text-fuchsia-950 text-4xl flex flex-row">
+                    <h1 className="text-fuchsia-950 text-4xl flex flex-row gap-2">
                         <FaMusic />
                         {t("pages.home.recentSongs")}
                     </h1>

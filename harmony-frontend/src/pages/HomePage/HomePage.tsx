@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { UserService } from "../../service/userService";
 import { FaMusic, FaPeopleGroup } from "react-icons/fa6";
-import { Organization } from "../../types/dtos/Organization";
+import { Org } from "../../types/dtos/Org";
 import { Song } from "../SongsPage/SongsPage";
 import { useTranslation } from "react-i18next";
 import CreateOrgModal from "../../components/CreateOrgModal/CreateOrgModal";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import React from "react";
 import SongCard from "../../components/SongCard/SongCard";
+import OrgCard from "../../components/OrgCard/OrgCard";
 
 const HomePage = () => {
-    const [orgs, setOrgs] = useState<Organization[]>([]);
+    const [orgs, setOrgs] = useState<Org[]>([]);
     const [songs, setSongs] = useState<Song[]>([]);
 
     const { t } = useTranslation();
-
-    // TODO: Add org card when finished
 
     const addSong = (song: Song) => {
         if (songs) {
@@ -32,6 +31,8 @@ const HomePage = () => {
             setSongs(response);
         });
     };
+
+    // TODO: Pagination
 
     useEffect(() => {
         const userId = localStorage.getItem("harmony-uid") as string;
@@ -58,7 +59,14 @@ const HomePage = () => {
 
                 <div className="flex flex-col rounded-lg bg-white p-10">
                     {orgs.length != 0 ? (
-                        orgs.map((org) => <p>Organization name: {org.name}</p>)
+                        orgs.map((org) => (
+                            <OrgCard
+                                key={org.id}
+                                name={org.name}
+                                image={org.image}
+                                id={org.id}
+                            />
+                        ))
                     ) : (
                         <p>No tienes organizaciones</p>
                     )}

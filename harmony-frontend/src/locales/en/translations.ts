@@ -89,6 +89,23 @@ export const TRANSLATIONS_EN = {
                 subscription: "You should accept the Terms and Conditions",
             },
         },
+        orgs: {
+            title: "My Organizations",
+            edit: "Edit",
+            delete: "Delete",
+            noSongs: "Oops! You don't have any organizations yet"
+        },
+        org: {
+            songs: {
+                title: "Songs",
+                name: "Name",
+                creationDate: "Date of Creation",
+                lastModified: "Last Modification",
+                actions: "Actions",
+                none: "Oops! You have no songs"
+            },
+            members: "Members"
+        }
     },
     components: {
         changePasswordModal: {
@@ -107,9 +124,43 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: "Error deleting account",
         },
+        deleteOrgModal: {
+            title: "Are you sure you want to delete the organization?",
+            yes: "Yes",
+            cancel: "Cancel",
+            error: "Error deleting the organization",
+        },
+        editOrgModal: {
+            title: "Edit Organization",
+            edit: "Edit",
+            cancel: "Cancel",
+            error: {
+                name: "The name of the organization cannot be longer than 20 characters",
+                edit: "Error editing organization, please try again"
+            }
+        },
+        createOrgModal: {
+            title: "Create Organization",
+            create: "Create",
+            cancel: "Cancel",
+            error: {
+                name: "The name of the organization cannot be longer than 20 characters",
+                create: "Error creating organization, please try again"
+            }
+
+        },
         navbar: {
             login: "Log In",
             register: "Register",
         },
+        orgCard: {
+            members: "Members: "
+        },
+        addMember: {
+            button: "Add Member",
+            title: "Invite Member",
+            cancel: "Cancel",
+            send: "Send Invite"
+        }
     },
 };

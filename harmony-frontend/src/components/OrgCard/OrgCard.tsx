@@ -3,7 +3,7 @@ import { OrgService } from "../../service/orgService";
 import "./OrgCard.css";
 import { useTranslation } from "react-i18next";
 import image from "../../assets/org-default-image.jpg";
-import { Org } from "../../types/dtos/Organization";
+import { Org } from "../../types/dtos/Org";
 
 const OrgCard = (org: Org) => {
     const [members, setMembers] = useState<string>();

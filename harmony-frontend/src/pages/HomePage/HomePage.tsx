@@ -68,7 +68,7 @@ const HomePage = () => {
                             />
                         ))
                     ) : (
-                        <p>No tienes organizaciones</p>
+                        <p>{t("pages.home.noOrgs")}</p>
                     )}
                 </div>
             </div>
@@ -87,19 +87,19 @@ const HomePage = () => {
                             <thead>
                                 <tr>
                                     <th className={"text-left text-gray-500"}>
-                                        Nombre
+                                        {t("pages.home.song.name")}
                                     </th>
                                     <th className={"text-left text-gray-500"}>
-                                        Organización
+                                        {t("pages.home.song.org")}
                                     </th>
                                     <th className={"text-left text-gray-500"}>
-                                        Fecha de Creación
+                                        {t("pages.home.song.creationDate")}
                                     </th>
                                     <th className={"text-left text-gray-500"}>
-                                        Fecha de Modificación
+                                        {t("pages.home.song.lastModified")}
                                     </th>
                                     <th className={"text-left text-gray-500"}>
-                                        Acciones
+                                        {t("pages.home.song.actions")}
                                     </th>
                                 </tr>
                             </thead>
@@ -126,7 +126,7 @@ const HomePage = () => {
                         songs.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
-                                    Oops! No tenes canciones
+                                    {t("pages.home.noSongs")}
                                 </h1>
                             </div>
                         )

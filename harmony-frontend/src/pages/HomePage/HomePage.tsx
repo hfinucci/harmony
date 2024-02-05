@@ -9,12 +9,14 @@ import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import React from "react";
 import SongCard from "../../components/SongCard/SongCard";
 import OrgCard from "../../components/OrgCard/OrgCard";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [songs, setSongs] = useState<Song[]>([]);
 
     const { t } = useTranslation();
+    const nav = useNavigate();
 
     const addSong = (song: Song) => {
         if (songs) {
@@ -31,8 +33,6 @@ const HomePage = () => {
             setSongs(response);
         });
     };
-
-    // TODO: Pagination
 
     useEffect(() => {
         const userId = localStorage.getItem("harmony-uid") as string;
@@ -57,22 +57,36 @@ const HomePage = () => {
                     <CreateOrgModal />
                 </div>
 
-                <div className="flex flex-col rounded-lg bg-white p-10">
-                    {orgs.length != 0 ? (
-                        orgs.map((org) => (
-                            <div className="flex flex-row gap-5 justify-start w-fit rounded-lg p-5">
+                {orgs.length != 0 ? (
+                    <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
+                        {orgs.slice(0, 3).map((org) => (
+                            <>
                                 <OrgCard
                                     key={org.id}
                                     name={org.name}
                                     image={org.image}
                                     id={org.id}
                                 />
-                            </div>
-                        ))
-                    ) : (
-                        <p>{t("pages.home.noOrgs")}</p>
-                    )}
-                </div>
+                            </>
+                        ))}
+                        {orgs.length > 3 && (
+                            <button
+                                onClick={() => nav("/orgs")}
+                                aria-label="see more orgs"
+                                type="button"
+                                className="bg-white flex w-fit h-fit items-center self-center text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+                            >
+                                {t("pages.home.more")}
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center p-4 md:p-5">
+                        <h1 className="text-2xl text-fuchsia-950">
+                            {t("pages.home.noOrgs")}
+                        </h1>
+                    </div>
+                )}
             </div>
             <div className="my-4">
                 <div className="flex flex-row justify-between mb-4">
@@ -106,22 +120,35 @@ const HomePage = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {songs.map((elem: Song, index: number) => (
-                                    <React.Fragment key={index}>
-                                        <tr>
-                                            <td
-                                                colSpan={8}
-                                                style={{
-                                                    backgroundColor: "#f0f0f0",
-                                                }}
+                                {songs
+                                    .slice(0, 5)
+                                    .map((elem: Song, index: number) => (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td
+                                                    colSpan={8}
+                                                    style={{
+                                                        backgroundColor:
+                                                            "#f0f0f0",
+                                                    }}
+                                                />
+                                            </tr>
+                                            <SongCard
+                                                song={elem}
+                                                fetchSongs={fetchSongs}
                                             />
-                                        </tr>
-                                        <SongCard
-                                            song={elem}
-                                            fetchSongs={fetchSongs}
-                                        />
-                                    </React.Fragment>
-                                ))}
+                                        </React.Fragment>
+                                    ))}
+                                {songs.length > 5 && (
+                                    <button
+                                        onClick={() => nav("/songs")}
+                                        aria-label="see more songs"
+                                        type="button"
+                                        className="bg-white flex w-fit h-fit items-center text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+                                    >
+                                        {t("pages.home.more")}
+                                    </button>
+                                )}
                             </tbody>
                         </table>
                     ) : (

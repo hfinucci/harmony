@@ -18,6 +18,7 @@ export const TRANSLATIONS_ES = {
                 lastModified: "Última de Modificación",
                 actions: "Acciones",
             },
+            more: "Ver más",
         },
         landingPage: {
             guitarists: "Guitarristas",

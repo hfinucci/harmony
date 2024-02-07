@@ -6,6 +6,20 @@ export const TRANSLATIONS_EN = {
             changePassword: "Change password",
             deleteAccount: "Delete account",
         },
+        home: {
+            myOrgs: "My Organizations",
+            noOrgs: "Oops! You don't have any organizations yet",
+            recentSongs: "Recent Songs",
+            noSongs: "Oops! You don't have any songs yet",
+            song: {
+                name: "Name",
+                org: "Organization",
+                creationDate: "Creation Date",
+                lastModified: "Last Modification",
+                actions: "Actions",
+            },
+            more: "See more",
+        },
         landingPage: {
             guitarists: "Guitarists",
             jazzband: "Jazz Band",
@@ -89,7 +103,7 @@ export const TRANSLATIONS_EN = {
             title: "My Organizations",
             edit: "Edit",
             delete: "Delete",
-            noSongs: "Oops! You don't have any organizations yet"
+            noSongs: "Oops! You don't have any organizations yet",
         },
         org: {
             songs: {
@@ -98,10 +112,10 @@ export const TRANSLATIONS_EN = {
                 creationDate: "Date of Creation",
                 lastModified: "Last Modification",
                 actions: "Actions",
-                none: "Oops! You have no songs"
+                none: "Oops! You have no songs",
             },
-            members: "Members"
-        }
+            members: "Members",
+        },
     },
     components: {
         changePasswordModal: {
@@ -132,8 +146,8 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: {
                 name: "The name of the organization cannot be longer than 20 characters",
-                edit: "Error editing organization, please try again"
-            }
+                edit: "Error editing organization, please try again",
+            },
         },
         createOrgModal: {
             title: "Create Organization",
@@ -141,22 +155,21 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: {
                 name: "The name of the organization cannot be longer than 20 characters",
-                create: "Error creating organization, please try again"
-            }
-
+                create: "Error creating organization, please try again",
+            },
         },
         navbar: {
             login: "Log In",
             register: "Register",
         },
         orgCard: {
-            members: "Members: "
+            members: "Members: ",
         },
         addMember: {
             button: "Add Member",
             title: "Invite Member",
             cancel: "Cancel",
-            send: "Send Invite"
-        }
+            send: "Send Invite",
+        },
     },
 };

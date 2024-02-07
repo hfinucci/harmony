@@ -6,6 +6,20 @@ export const TRANSLATIONS_ES = {
             changePassword: "Cambiar la contraseña",
             deleteAccount: "Eliminar cuenta",
         },
+        home: {
+            myOrgs: "Mis Organizaciones",
+            noOrgs: "¡Oops! No tienes ninguna organización",
+            recentSongs: "Canciones Recientes",
+            noSongs: "¡Oops! No tienes ninguna canción",
+            song: {
+                name: "Nombre",
+                org: "Organización",
+                creationDate: "Fecha de Creación",
+                lastModified: "Última de Modificación",
+                actions: "Acciones",
+            },
+            more: "Ver más",
+        },
         landingPage: {
             guitarists: "Guitarristas",
             jazzband: "Banda de Jazz",
@@ -89,7 +103,7 @@ export const TRANSLATIONS_ES = {
             title: "Mis Organizaciones",
             edit: "Editar",
             delete: "Eliminar",
-            noSongs: "¡Oops! No tienes ninguna organización"
+            noSongs: "¡Oops! No tienes ninguna organización",
         },
         org: {
             songs: {
@@ -98,10 +112,10 @@ export const TRANSLATIONS_ES = {
                 creationDate: "Fecha de Creación",
                 lastModified: "Última de Modificación",
                 actions: "Acciones",
-                none: "¡Oops! No tienes canciones"
+                none: "¡Oops! No tienes canciones",
             },
-            members: "Integrantes"
-        }
+            members: "Integrantes",
+        },
     },
     components: {
         changePasswordModal: {
@@ -132,8 +146,8 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             error: {
                 name: "El nombre de la organización debe tener menos de 20 caracteres",
-                edit: "Error al editar organización, por favor volver a intentar"
-            }
+                edit: "Error al editar organización, por favor volver a intentar",
+            },
         },
         createOrgModal: {
             title: "Crear Organización",
@@ -141,9 +155,8 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             error: {
                 name: "El nombre de la organización debe tener menos de 20 caracteres",
-                create: "Error al crear organización, por favor volver a intentar"
-            }
-
+                create: "Error al crear organización, por favor volver a intentar",
+            },
         },
         navbar: {
             login: "Iniciar sesión",
@@ -152,13 +165,13 @@ export const TRANSLATIONS_ES = {
         orgCard: {
             members: "Miembros: ",
             edit: "Editar",
-            delete: "Eliminar"
+            delete: "Eliminar",
         },
         addMember: {
             button: "Agregar Miembro",
             title: "Invitar Miembro",
             cancel: "Cancelar",
-            send: "Enviar Invitación"
-        }
+            send: "Enviar Invitación",
+        },
     },
 };

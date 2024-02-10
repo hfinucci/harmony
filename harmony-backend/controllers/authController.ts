@@ -1,6 +1,6 @@
 import {FastifyInstance} from 'fastify'
 import server, {logger} from "../server";
-import {AuthService} from '../service/authService';
+import {AuthService, UserAuth} from '../service/authService';
 import {parseAuthUserRequest} from '../models/authUserRequest';
 import {parseNewPasswordRequest} from '../models/newPasswordRequest';
 import {handleError} from '../utils';
@@ -13,31 +13,19 @@ export default async function authController(fastify: FastifyInstance, opts: any
         try {
             const request = parseAuthUserRequest(req.body)
             logger.info("Signing in user with email: " + request.email);
-            return await AuthService.signInWithPassword(request);
+            return await AuthService.login(request);
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)
         }
     });
 
-    // TODO: FIX
-    server.post('/api/logout/', async (req, rep) => {
+    server.post(BASE_URL + '/password', async (req, rep) => {
         try {
-            logger.info("Signing out");
-            return await AuthService.signOutUser();
+            const request = parseNewPasswordRequest(req.body);
+            const userAuth: UserAuth = AuthService.parseJWT(req.headers.authorization)
+            await AuthService.updatePassword(request, userAuth)
         } catch (err) {
-            logger.error(err)
-            return handleError(err, rep)
-        }
-    });
-
-    // TODO: FIX
-    server.put(BASE_URL, async (req, rep) => {
-        try {
-            const request = parseNewPasswordRequest(req.body)
-            await AuthService.updatePassword(request)
-        } catch (err) {
-            logger.error(err)
             return handleError(err, rep)
         }
     })

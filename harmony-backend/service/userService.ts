@@ -1,12 +1,15 @@
-import { ChangeIconRequest } from "../models/changeIconRequest";
-import { UserPersistence } from "../persistence/userPersistence";
-import { logger } from '../server'
+import {ChangeIconRequest} from "../models/changeIconRequest";
+import {UserPersistence} from "../persistence/userPersistence";
+import {logger} from '../server'
+import {AuthService} from "./authService";
+import {CreateUserRequest} from "../models/createUserRequest";
 
 export class UserService {
 
-    public static async createUser(email: string, name: string) {
-        const created = await UserPersistence.createUser(email, name);
-        if(!created)
+    public static async createUser(request: CreateUserRequest) {
+        const hashedPassword = await AuthService.generateHashedPassword(request.password)
+        const created = await UserPersistence.createUser(request.email, request.name, hashedPassword);
+        if (!created)
             throw new Error("Error creating user")
         return created
     }

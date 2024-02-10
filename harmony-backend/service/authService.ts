@@ -1,92 +1,98 @@
-import {AuthResponse, AuthTokenResponse, createClient, UserResponse} from '@supabase/supabase-js'
+import {createClient, UserResponse} from '@supabase/supabase-js'
 import 'dotenv/config'
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import {logger} from '../server'
 import {AuthUserRequest} from '../models/authUserRequest'
 import {NewPasswordRequest} from '../models/newPasswordRequest'
-import {CreateUserRequest} from "../models/createUserRequest";
+import {UserPersistence} from "../persistence/userPersistence";
+import {AuthenticationError} from "../models/errors/AuthenticationError";
 
 const supabase = createClient("http://localhost:54321", process.env.AUTH_KEY || "")
 
 export interface UserAuth {
-    access_token: string | null
-    payload: {
-        name: string,
-        email: string,
-        id: number
-    } | null;
+    access_token: string;
+    person: Person;
+}
+
+export interface Person {
+    id: number,
+    name: string,
+    email: string
 }
 
 export class AuthService {
 
-    public static async signUpNewUser(request: CreateUserRequest, userId: number): Promise<UserAuth> {
-        const response = await supabase.auth.signUp({
-            email: request.email,
-            password: request.password,
-            options: {
-                data: {
-                    email: request.email,
-                    name: request.name,
-                    id: userId
-                }
+    public static async generateHashedPassword(password: string): Promise<string> {
+        const saltRounds = 10; // Cost factor for the bcrypt algorithm
+        try {
+            const salt = await bcrypt.genSalt(saltRounds);
+            return await bcrypt.hash(password, salt);
+        } catch (error) {
+            throw new Error('Error while registering user');
+        }
+    }
+
+    public static async login(request: AuthUserRequest): Promise<UserAuth | null> {
+        try {
+            const user = await UserPersistence.getUserByEmail(request.email);
+            const match = await bcrypt.compare(request.password, user.password);
+            if (!match) {
+                throw new AuthenticationError('Invalid password');
             }
-        })
-        if (response.error != undefined) {
-            throw new Error(response.error.message)
+            delete user.password
+            const person = {...user} as Person
+            return {
+                access_token: this.generateJWT(person),
+                person: person
+            };
+        } catch (error) {
+            logger.error(error);
+            throw new AuthenticationError('Error while authenticating user');
         }
-        return this.parseSupabaseTokenResponse(response)
     }
 
-    public static async deleteUser(id: string) {
-        logger.info("Deleting user with id " + id + " from auth table")
-        const { data, error } = await supabase.auth.admin.deleteUser(id)
-        if (error != undefined) {
-            throw new Error(error.message)
+    public static generateJWT(user: Person) {
+        try {
+            return jwt.sign(user, process.env.JWTSecretKey || "", {expiresIn: '1y'});
+        } catch (error) {
+            throw new AuthenticationError('Error while generating JWT');
         }
-        return data
     }
 
-    //TODO: mejorar el catcheo de error -> no pude hacer lo que queria
-    public static async updatePassword(request: NewPasswordRequest) {
-        const { data, error } = await supabase.auth.updateUser({ password: request.password })
-        if (error != undefined) {
-            throw new Error(error.message)
+    public static async updatePassword(request: NewPasswordRequest, userAuth: UserAuth) {
+        const hashedPassword = await this.generateHashedPassword(request.password)
+        return await UserPersistence.updatePasswordById(userAuth.person.id, hashedPassword)
+    }
+
+    public static parseJWT(bearerAuth?: string): UserAuth {
+        if (bearerAuth == null) {
+            throw new AuthenticationError("No token provided");
         }
-        return data
-    }
-
-    public static async signInWithPassword(request: AuthUserRequest) {
-        const response = await supabase.auth.signInWithPassword({
-            email: request.email,
-            password: request.password,
-        })
-        if (response.error != null) {
-            throw new Error(response.error.message)
+        const token = bearerAuth.split(' ')[1];
+        const jwtParts = token.split('.');
+        if (jwtParts.length !== 3) {
+            throw new AuthenticationError("Invalid token");
         }
-        return this.parseSupabaseTokenResponse(response)
-    }
-
-    public static async getLoggedUser(token: string): Promise<UserResponse> {
-        const response = await supabase.auth.getUser(token)
-        if (response.error != undefined) {
-            throw new Error(response.error.message)
+        let payload;
+        try {
+            payload = JSON.parse(atob(jwtParts[1]));
+        } catch (error) {
+            logger.error(error)
+            throw new AuthenticationError("Could not authenticate token");
         }
-        return response
+        if (payload == null) {
+            throw new AuthenticationError("No user metadata found");
+        }
+        const person = this.validateJWT(token)
+        return {access_token: token, person: person};
     }
 
-    public static async signOutUser() {
-        const { error } = await supabase.auth.signOut()
-        if (error != null)
-            throw new Error(error.message)
-    }
-
-    private static parseSupabaseTokenResponse(object: AuthTokenResponse | AuthResponse): UserAuth {
-        return {
-            access_token: object.data.session?.access_token ?? null,
-            payload: {
-                id: object.data.user?.user_metadata.id,
-                email: object.data.user?.user_metadata.email as string,
-                name: object.data.user?.user_metadata.name as string
-            }
-        };
+    public static validateJWT(token: string): Person {
+        try {
+            return jwt.verify(token, process.env.JWTSecretKey || "") as Person;
+        } catch (error) {
+            throw new AuthenticationError('Invalid token');
+        }
     }
 }

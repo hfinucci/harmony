@@ -4,8 +4,7 @@ import {AuthService, UserAuth} from '../service/authService';
 import {UserService} from '../service/userService';
 import {parseCreateUserRequest} from '../models/createUserRequest';
 import {parseChangeIconRequest} from '../models/changeIconRequest';
-import {handleError, parseId, parseJWT} from '../utils';
-import {UserResponse} from "@supabase/supabase-js";
+import {handleError, parseId} from '../utils';
 import {MemberService} from "../service/memberService";
 import {SongService} from "../service/songService";
 import {FetchSongsByUserResponse} from "../models/dto/fetchSongsByUserResponse";
@@ -43,14 +42,8 @@ export default async function userController(fastify: FastifyInstance, opts: any
         try {
             const request = parseCreateUserRequest(req.body)
             logger.info("Signing up user with email: " + request.email);
-            const userData = await UserService.createUser(request.email, request.name);
-            const data = await AuthService.signUpNewUser(request, userData.id);
-            if (data.access_token == null) {
-                return rep
-                    .code(409)
-                    .send()
-            }
-            return data
+            await UserService.createUser(request);
+            return await AuthService.login(request);
         } catch (error: any) {
             logger.error(error)
             return handleError(error, rep)
@@ -60,30 +53,10 @@ export default async function userController(fastify: FastifyInstance, opts: any
 
 
     // TODO FIX DELETE USER
-    server.delete(BASE_URL + '/:id', async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
-        const id = req.params.id;
+    server.delete(BASE_URL, async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
         try {
-            parseId(id)
-            const userAuth: UserAuth = parseJWT(req.headers.authorization || "")
-            if (userAuth.access_token == null) {
-                return rep
-                    .code(401)
-                    .send()
-            }
-            const supabaseReponse: UserResponse = await AuthService.getLoggedUser(userAuth.access_token)
-            logger.info(supabaseReponse)
-            const auth_id = supabaseReponse.data.user?.id;
-            if (auth_id == null) {
-                logger.info("User with supabase Id " + id + " not found")
-                return rep
-                    .code(404)
-                    .send()
-            } else {
-                await AuthService.deleteUser(auth_id);
-            }
-            logger.info("Successfully delete supabase user")
-            logger.info("Trying to delete user from database")
-            return await UserService.deleteUserById(id);
+            const userAuth: UserAuth = AuthService.parseJWT(req.headers.authorization)
+            return await UserService.deleteUserById(userAuth.person.id);
         } catch (err) {
             logger.info(err);
             return handleError(err, rep)

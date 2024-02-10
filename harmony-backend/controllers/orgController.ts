@@ -19,8 +19,8 @@ export default async function orgController(fastify: FastifyInstance, opts: any)
             logger.info("Creating organization: " + request.name);
             const create = await OrgService.createOrg(request);
             if (create != null) {
-                logger.info("Adding user " + user.person?.name + " to organization: " + request.name);
-                await MemberService.createMember(user.person?.id || 0, create.id)
+                logger.info("Adding user " + user.person.name + " to organization: " + request.name);
+                await MemberService.createMember(user.person.id, create.id)
             }
             return create;
         } catch (err) {

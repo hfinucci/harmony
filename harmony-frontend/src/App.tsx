@@ -9,6 +9,7 @@ import SongsPage from "./pages/SongsPage/SongsPage.tsx";
 import OrgsPage from "./pages/OrgsPage/OrgsPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import PianoPage from "./pages/PianoPage/PianoPage.tsx";
 
 export const BASE_URL = "http://127.0.0.1:3000";
 
@@ -32,6 +33,7 @@ function App() {
                     />
                     <Route path="/orgs/:id" element={<OrgPage />} />
                     <Route path="/orgs" element={<OrgsPage />} />
+                    <Route path="/piano" element={<PianoPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

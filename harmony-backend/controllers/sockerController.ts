@@ -22,7 +22,11 @@ export default async function socketController(fastify: FastifyInstance, opts: a
             })
             socket.on("presskey", (payload) => {
                 logger.info(payload)
-                socket.broadcast.emit("presskey", payload);
+                socket.emit("presskey", payload);
+            });
+            socket.on("clientMidi", (payload) => {
+                logger.info(payload);
+                socket.broadcast.emit("serverMidi", payload);
             });
         });
     });

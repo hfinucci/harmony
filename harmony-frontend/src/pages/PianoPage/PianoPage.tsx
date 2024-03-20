@@ -1,5 +1,8 @@
 import {useEffect, useState} from "react";
 import {socket} from "../../socket.ts";
+import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
+import 'react-piano/dist/styles.css';
+import {log} from "tone/build/esm/core/util/Debug";
 
 interface Note {
     on: number;
@@ -17,6 +20,9 @@ const PianoPage = () => {
     // const [oscillators, setOscillators] = useState<OscillatorNode>();
 
     const [isConnected, setIsConnected] = useState(socket.connected);
+
+    const [activeNotes, setActiveNotes] = useState<number[]>([]);
+    const [colorId, setColorId] = useState(1);
 
     let midi: MIDIAccess | undefined;
 
@@ -47,7 +53,7 @@ const PianoPage = () => {
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('color_id', (value) => {
-            // setColorId(value)
+            setColorId(value)
         })
         socket.on('presskey', (noteToPlay: string) => {
             console.log(`reproduciendo ${noteToPlay}`)
@@ -62,8 +68,6 @@ const PianoPage = () => {
     }, [socket]);
 
     function gotExternalMidiMessage(data: Note) {
-        console.log("me llego!")
-        console.log(data)
         play(data)
     }
 
@@ -73,6 +77,7 @@ const PianoPage = () => {
             pitch: messageData.data[1],
             velocity: messageData.data[2]
         }
+        // play(note);
         socket.emit('clientMidi', note);
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
     }
@@ -81,10 +86,10 @@ const PianoPage = () => {
         const pitch = note.pitch;
         switch(note.on) {
             case 144:
-                noteOn(calculateFrequency(pitch));
+                noteOn(pitch, calculateFrequency(pitch));
                 break;
             case 128:
-                noteOff(calculateFrequency(pitch));
+                noteOff(pitch, calculateFrequency(pitch));
                 break;
         }
     }
@@ -93,12 +98,15 @@ const PianoPage = () => {
         return Math.pow(2, ((pitch - 69) / 12)) * 440;
     }
 
-    function noteOn(frequency: number) {
+    function noteOn(pitch: number, frequency: number) {
         const osc = new OscillatorNode(context);
         setOscillators(prevOscillators => ({
             ...prevOscillators,
             [frequency]: osc
         }));
+        setActiveNotes(prevState => {
+            return [...prevState, pitch]
+        });
         context.resume();
         osc.type = 'sawtooth';
         osc.frequency.value = frequency;
@@ -108,9 +116,10 @@ const PianoPage = () => {
     }
 
     // TODO arreglar el useState para que oscilators se carge correctamente
-    function noteOff(frequency: number) {
+    function noteOff(pitch: number, frequency: number) {
+        setActiveNotes(prevState => prevState.filter(note => note !== pitch));
         context.resume();
-        // oscillators?.stop(context.currentTime + 0.1);
+        // oscillators?.stop(context.currentTime + 0.1);z
         console.log(oscillators)
         const currentOscillator = oscillators[frequency];
         if (currentOscillator) {
@@ -121,6 +130,7 @@ const PianoPage = () => {
 
     function onMIDISuccess(midiData: MIDIAccess) {
         midi = midiData;
+        console.log(midi)
         const allInputs = midi.inputs.values();
         for (let input = allInputs.next(); input && !input.done; input = allInputs.next()) {
             input.value.onmidimessage = onMIDImessage;
@@ -131,9 +141,26 @@ const PianoPage = () => {
         console.log("No puede haber tiki tiki porque no se encontro un MIDI.");
     }
 
+    const firstNote = MidiNumbers.fromNote('c3');
+    const lastNote = MidiNumbers.fromNote('b4');
+    const keyboardShortcuts = KeyboardShortcuts.create({
+        firstNote: firstNote,
+        lastNote: lastNote,
+        keyboardConfig: KeyboardShortcuts.HOME_ROW,
+    });
     return (
         <div>
-            from piano import *
+            <Piano
+                noteRange={{ first: firstNote, last: lastNote }}
+                playNote={(midiNumber) => {
+                    console.log(midiNumber)
+                }}
+                stopNote={(midiNumber) => {
+                    // Stop playing a given note - see notes below
+                }}
+                width={1000}
+                activeNotes={activeNotes}
+            />
         </div>
     );
 };

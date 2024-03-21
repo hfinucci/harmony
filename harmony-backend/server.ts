@@ -1,7 +1,7 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors'
 import fastifyIO from "fastify-socket.io";
-import socketController from './controllers/sockerController';
+import composeController from './controllers/composeController';
 import userController from './controllers/userController';
 import songController from './controllers/songController';
 import pino from 'pino';
@@ -22,7 +22,7 @@ const server = fastify()
     })
     .register(userController)
     .register(authController)
-    .register(socketController)
+    .register(composeController)
     .register(songController)
     .register(orgController)
     .register(memberController)

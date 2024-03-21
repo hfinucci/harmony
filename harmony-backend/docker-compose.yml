@@ -1,13 +1,25 @@
+# para correr -> docker compose up --build
+
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+#    expose:
+#      - "3000"
+#      - "54322"
+    network_mode: host # Resolverlo de otra forma
     ports:
       - "3000:3000"
-    environment:
-      - ADDRESS=0.0.0.0
-      - PORT=3000
 
-  redis:
-    image: redis:7.2.4
+  mongodb:
+    image: mongo:4.4.6
+    platform: linux/amd64
     ports:
-      - "6379:6379"
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

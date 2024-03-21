@@ -1,8 +1,7 @@
 import {logger} from "../server";
-import {connectToRedis, redis} from "../persistence/redisConfig";
+import {connectToMongoDB} from "../persistence/mongoConfig";
 export class ComposeService {
 
     static async initializeSession() {
-        // await connectToRedis()
     }
 }

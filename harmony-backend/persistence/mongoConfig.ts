@@ -1,8 +1,7 @@
 import { MongoClient } from 'mongodb';
 import {logger} from "../server";
 
-const uri = 'mongodb://localhost:27017'; // Assuming MongoDB is running locally on the default port
-
+const uri = 'mongodb://localhost:27017';
 const dbName = 'myDatabase';
 
 const mongo = new MongoClient(uri);

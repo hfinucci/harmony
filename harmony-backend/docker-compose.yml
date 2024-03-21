@@ -15,6 +15,7 @@ services:
 
   mongodb:
     image: mongo:4.4.6
+    command: mongod --quiet --logpath /dev/null # No mostrar logs
     platform: linux/amd64
     ports:
       - "27017:27017"

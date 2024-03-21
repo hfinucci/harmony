@@ -1,6 +1,7 @@
 import server, { logger } from "./server";
 import { connectToDB } from './persistence/dbConfig';
 import {connectToMongoDB} from "./persistence/mongoConfig";
+import {ComposePersistence} from "./persistence/composePersistence";
 
 const ADDRESS = process.env.ADDRESS || '127.0.0.1'
 const PORT = process.env.PORT || '3000'
@@ -14,5 +15,12 @@ server.listen({ host: ADDRESS, port: parseInt(PORT, 10) }, async function (err: 
   }
   await connectToDB()
   await connectToMongoDB()
+
+  await ComposePersistence.initializeSession()
+  await ComposePersistence.insertBlock(
+      "65fcbef8461488dff268d070",
+      3,
+      2,
+      {chord: "Bb", lyrics: "otro bloque"})
   logger.info(`Server listening at ${address}`)
 })

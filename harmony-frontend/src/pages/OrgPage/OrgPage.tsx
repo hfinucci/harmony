@@ -142,7 +142,7 @@ const OrgPage = () => {
                                                 />
                                             </tr>
                                             <SongCard
-                                                song={elem}
+                                                song={{name: elem.name, id: elem.id, created: elem.created, lastmodified: elem.lastmodified} as Song}
                                                 fetchSongs={fetchSongs}
                                             />
                                         </React.Fragment>
@@ -170,7 +170,9 @@ const OrgPage = () => {
                                 <tbody>
                                     {members.map((elem: any, index: number) => (
                                         <React.Fragment key={index}>
-                                            <td>{elem.name}</td>
+                                            <tr>
+                                                <td>{elem.name}</td>
+                                            </tr>
                                             <tr>
                                                 <td
                                                     colSpan={8}

@@ -116,6 +116,12 @@ export const TRANSLATIONS_EN = {
             },
             members: "Members",
         },
+        edit: {
+            view: {
+                edit: "Edit",
+                preview: "Preview"
+            }
+        }
     },
     components: {
         changePasswordModal: {

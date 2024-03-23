@@ -1,21 +1,17 @@
 import { FastifyInstance } from "fastify";
 import server, { logger } from "../server";
+import {ComposeService} from "../service/composeService";
+import {ComposePersistence} from "../persistence/composePersistence";
 
 const BASE_URL = '/api/socket'
 
-export default async function socketController(fastify: FastifyInstance, opts: any) {
-    let color_id = 2
-
-    server.get('/chau', async (request, reply) => {
-        return 'chau!\n'
-    })
+export default async function composeController(fastify: FastifyInstance, opts: any) {
 
     server.ready().then(() => {
-        server.io.on("connect", (socket) => {
+        server.io.on("connect", async (socket) => {
             logger.info("a new client has connected!")
-            logger.info(`sending color_id = ${color_id}`)
-            socket.emit("color_id", color_id);
-            color_id += 1
+            // await ComposePersistence.initializeSession()
+            // await ComposePersistence.insertBlock({chord: "F#", lyrics: "hola mundo"})
             logger.info(socket.id)
             socket.on("disconnect", () => {
                 logger.info("a client has disconnected!")

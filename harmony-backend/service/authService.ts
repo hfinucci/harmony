@@ -1,12 +1,12 @@
-import { createClient, UserResponse } from "@supabase/supabase-js";
-import "dotenv/config";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { logger } from "../server";
-import { AuthUserRequest } from "../models/authUserRequest";
-import { NewPasswordRequest } from "../models/newPasswordRequest";
-import { UserPersistence } from "../persistence/userPersistence";
-import { AuthenticationError } from "../models/errors/AuthenticationError";
+import {createClient, UserResponse} from '@supabase/supabase-js'
+import 'dotenv/config'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import {logger} from '../server'
+import {AuthUserRequest} from '../models/authUserRequest'
+import {NewPasswordRequest} from '../models/newPasswordRequest'
+import {UserPersistence} from "../persistence/userPersistence";
+import {AuthenticationError} from "../models/errors/AuthenticationError";
 
 // const supabase = createClient("http://localhost:54321", process.env.AUTH_KEY || "")
 

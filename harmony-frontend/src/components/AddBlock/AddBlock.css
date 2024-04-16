@@ -1,0 +1,15 @@
+#hide {
+    position: absolute;
+    opacity: 0;
+    z-index: -100;
+    white-space: pre;
+}
+
+input {
+    min-width: 1px;
+    padding: -1px;
+    margin: 0;
+    outline: none;
+    border: 0;
+    vertical-align: baseline;
+}

@@ -60,11 +60,9 @@ const CreateSongModal = ({
         <>
             <button
                 aria-label="create song"
-                data-modal-target="create-song-modal"
-                data-modal-toggle="create-song-modal"
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="bg-white flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+                className="bg-white flex justify-center items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
             >
                 <IoAddSharp className="font-bold" />
                 Add Song
@@ -73,7 +71,6 @@ const CreateSongModal = ({
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div
-                        id="create-song-modal"
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
                     >
@@ -126,8 +123,9 @@ const CreateSongModal = ({
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                     required
                                                 >
-                                                    {orgs.map((o: any) => (
+                                                    {orgs.map((o: any, index) => (
                                                         <option
+                                                            key={index}
                                                             value={o.id}
                                                             label={o.name}
                                                             selected={org == o}

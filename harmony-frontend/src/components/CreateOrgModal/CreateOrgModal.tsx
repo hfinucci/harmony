@@ -40,8 +40,6 @@ const CreateOrgModal = () => {
         <>
             <button
                 aria-label="create org"
-                data-modal-target="create-org-modal"
-                data-modal-toggle="create-org-modal"
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="bg-white flex w-fit h-fit items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
@@ -53,7 +51,6 @@ const CreateOrgModal = () => {
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div
-                        id="create-org-modal"
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
                     >

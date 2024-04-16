@@ -1,6 +1,6 @@
 import {createClient, UserResponse} from '@supabase/supabase-js'
 import 'dotenv/config'
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {logger} from '../server'
 import {AuthUserRequest} from '../models/authUserRequest'

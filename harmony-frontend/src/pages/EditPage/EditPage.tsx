@@ -3,8 +3,10 @@ import {Song} from "../SongsPage/SongsPage";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
 import { useParams, useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {SongService} from "../../service/songService";
 import { IoPeopleSharp } from "react-icons/io5";
+import { IoAddCircleSharp } from "react-icons/io5";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import { FaRegHeart } from "react-icons/fa";
 import { CgExport } from "react-icons/cg";
@@ -12,7 +14,7 @@ import { FaHeart } from "react-icons/fa";
 import {useTranslation} from "react-i18next";
 import {Block} from "../../types/dtos/Block";
 import PreviewSongComponent from "../../components/PreviewSongComponent/PreviewSongComponent";
-import EditableLyricComponent from "../../components/EditableLyricComponent/EditableLyricComponent";
+import {AddBlock} from "../../components/AddBlock/AddBlock";
 
 
 const EditPage = () => {
@@ -39,7 +41,7 @@ const EditPage = () => {
                 })
             }
         });
-    }, []);
+    }, [songId]);
 
     useEffect(() => {
         if (song != undefined) {
@@ -58,8 +60,6 @@ const EditPage = () => {
         }
     }, [song]);
 
-
-
     const navToSong = (song: Song) => {
         nav("/songs/" + song.id);
     };
@@ -71,6 +71,35 @@ const EditPage = () => {
         console.log("addBlock")
         console.log(blocks)
     }
+
+    function handleUpdateBlock(rowIndex: number, blockIndex: number, block: Block) {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[rowIndex][blockIndex] = block;
+        setBlocks(updatedBlocks);
+    }
+
+    const handleAddBlockInRow = (rowIndex: number) => {
+        if (blocks[rowIndex].length < 4) {
+            const updatedBlocks = [...blocks];
+            updatedBlocks[rowIndex] = [...updatedBlocks[rowIndex], { note: '', lyric: '' }];
+            setBlocks(updatedBlocks);
+        }
+    }
+
+    const handleAddBlockNewRow = () => {
+        setBlocks([...blocks, [{ note: '', lyric: '' }]]);
+    };
+
+    function handleDeleteBlock(rowIndex: number, blockIndex: number) {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[rowIndex].splice(blockIndex, 1);
+        setBlocks(updatedBlocks);
+    }
+
+    const submit = () => {
+        // Handle submission of blocks, for example, send to server or process locally
+        console.log(blocks);
+    };
 
     return (
         <div className="container h-screen">
@@ -90,8 +119,8 @@ const EditPage = () => {
                                     <ul id="songs" className="py-2 divide-y">
                                         {songs.map((song, index) => (
                                             <li key={index}>
-                                                <a href={"/songs/" + song.id}
-                                                   className={song.id == songId.id ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</a>
+                                                <Link to={"/songs/" + song.id}
+                                                   className={song.id == songId.id ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</Link>
                                             </li>
                                         ))}
                                     </ul>
@@ -103,42 +132,75 @@ const EditPage = () => {
                 </div>
             </aside>
             {song &&
-                <p className="ml-72 py-5 text-4xl text-fuchsia-800">{song?.name}</p>
-            }
-            <div className="ml-72 flex justify-between items-center">
-                <ul className=" text-sm font-medium text-center text-fuchsia-500 w-1/2 rounded-lg shadow sm:flex">
-                    <li className="w-full focus-within:z-10">
-                        <button onClick={() => setView(1)}
-                           className={view == 1 ? "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-300"
-                               : "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-100 hover:bg-fuchsia-300"}
-                           >{t("pages.edit.view.edit")}</button>
-                    </li>
-                    <li className="w-full focus-within:z-10">
-                        <button onClick={() => setView(2)}
-                                className={view == 2 ? "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-300"
-                                    : "inline-block w-full p-4 text-fuchsia-900 bg-fuchsia-100 border-r border-fuchsia-200 hover:bg-fuchsia-300"}
-                        >{t("pages.edit.view.preview")}</button>
-                    </li>
-                </ul>
-                <div className="flex items-center space-x-3">
-                    {like &&
-                        <button onClick={() => setLike(false)} className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"><FaHeart /></button>
+                <div key={songId} className="h-full">
+                    <p className="ml-72 py-5 text-4xl text-fuchsia-800">{song?.name}</p>
+                    <div className="ml-72 flex justify-between items-center">
+                        <ul className=" text-sm font-medium text-center text-fuchsia-500 w-1/2 rounded-lg shadow sm:flex">
+                            <li className="w-full focus-within:z-10">
+                                <button onClick={() => setView(1)}
+                                        className={view == 1 ? "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-300"
+                                            : "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-100 hover:bg-fuchsia-300"}
+                                >{t("pages.edit.view.edit")}</button>
+                            </li>
+                            <li className="w-full focus-within:z-10">
+                                <button onClick={() => setView(2)}
+                                        className={view == 2 ? "inline-block w-full p-4 text-fuchsia-900 border-r border-fuchsia-200 bg-fuchsia-300"
+                                            : "inline-block w-full p-4 text-fuchsia-900 bg-fuchsia-100 border-r border-fuchsia-200 hover:bg-fuchsia-300"}
+                                >{t("pages.edit.view.preview")}</button>
+                            </li>
+                        </ul>
+                        <div className="flex items-center space-x-3">
+                            {like &&
+                                <button onClick={() => setLike(false)}
+                                        className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                    <FaHeart/></button>
+                            }
+                            {!like &&
+                                <button onClick={() => setLike(true)}
+                                        className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                    <FaRegHeart/></button>
+                            }
+                            <button
+                                className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                <CgExport/>
+                            </button>
+                        </div>
+                    </div>
+                    {view == 1 &&
+                        <div className="p-2 ml-72 mt-5 w-4/5 h-full bg-white">
+                            <div>
+                                {blocks.map((row, rowIndex) => (
+                                    <div key={rowIndex} className="block flex flex-row flex-wrap"
+                                         style={{position: 'relative'}}>
+                                        {row.map((block, blockIndex) => (
+                                            <div key={blockIndex}>
+                                                <AddBlock
+                                                    key={rowIndex + "_" + blockIndex + "_" + block.note + "_" + block.lyric}
+                                                    rowIndex={rowIndex} blockIndex={blockIndex}
+                                                    submit={handleUpdateBlock}
+                                                    defaultBlock={block} deleteBlock={handleDeleteBlock}/>
+                                            </div>
+                                        ))}
+                                        {blocks[rowIndex].length < 4 && (
+                                            <button onClick={() => handleAddBlockInRow(rowIndex)}
+                                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
+                                                <IoAddCircleSharp className="h-10 w-10"/>
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button onClick={handleAddBlockNewRow}
+                                        className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
+                                    <IoAddCircleSharp className="h-10 w-10"/>
+                                </button>
+                                <button onClick={submit}>submit</button>
+                            </div>
+                        </div>
                     }
-                    {!like &&
-                        <button onClick={() => setLike(true)} className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"><FaRegHeart /></button>
+                    {view == 2 &&
+                        <PreviewSongComponent blocks={blocks}/>
                     }
-                    <button className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                        <CgExport />
-                    </button>
                 </div>
-            </div>
-            {view == 1 &&
-                <div className="p-2 ml-72 mt-5 w-4/5 h-full bg-white">
-                    <EditableLyricComponent />
-                </div>
-            }
-            {view == 2 &&
-                <PreviewSongComponent blocks={blocks} />
             }
         </div>
     )

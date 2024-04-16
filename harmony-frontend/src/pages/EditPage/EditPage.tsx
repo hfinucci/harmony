@@ -11,8 +11,8 @@ import { CgExport } from "react-icons/cg";
 import { FaHeart } from "react-icons/fa";
 import {useTranslation} from "react-i18next";
 import {Block} from "../../types/dtos/Block";
-import {AddBlock} from "../../components/AddBlock/AddBlock";
-import { IoAddCircleSharp } from "react-icons/io5";
+import PreviewSongComponent from "../../components/PreviewSongComponent/PreviewSongComponent";
+import EditableLyricComponent from "../../components/EditableLyricComponent/EditableLyricComponent";
 
 
 const EditPage = () => {
@@ -63,21 +63,6 @@ const EditPage = () => {
     const navToSong = (song: Song) => {
         nav("/songs/" + song.id);
     };
-
-    async function addLine() {
-        setBlocks([...blocks, [null]]);
-        await console.log(blocks)
-    }
-
-    function addEmptyBlock(x, y) {
-        console.log("X", x)
-        console.log("Y", y)
-
-        let copy = [...blocks];
-        copy[x][y] = null;
-        setBlocks(copy);
-        console.log(blocks)
-    }
 
     function addBlock(block: Block, x:number, y:number){
         let copy = [...blocks];
@@ -142,29 +127,19 @@ const EditPage = () => {
                     {!like &&
                         <button onClick={() => setLike(true)} className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"><FaRegHeart /></button>
                     }
-                    <button className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"><CgExport /></button>
+                    <button className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                        <CgExport />
+                    </button>
                 </div>
             </div>
-            <div className="p-2 ml-72 mt-5 w-4/5 h-full bg-white">
-                {blocks.map((lines, index_l) => (
-                    <div key={index_l} className="flex flex-row flex-wrap">
-                        {lines.map((block, index_b) => (
-                            <div key={index_l + "_" + index_b}>
-                                <AddBlock x={index_l} y={index_b} submit={addBlock} add={addEmptyBlock} defaultBlock={block}/>
-                            </div>
-                        ))}
-                        {lines.length < 4 &&
-                            <button onClick={() => addEmptyBlock(index_l, lines.length)}
-                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
-                                <IoAddCircleSharp className="h-10 w-10"/>
-                            </button>
-                        }
-                    </div>
-                ))}
-                <button onClick={addLine} className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
-                    <IoAddCircleSharp className="h-10 w-10"/>
-                </button>
-            </div>
+            {view == 1 &&
+                <div className="p-2 ml-72 mt-5 w-4/5 h-full bg-white">
+                    <EditableLyricComponent />
+                </div>
+            }
+            {view == 2 &&
+                <PreviewSongComponent blocks={blocks} />
+            }
         </div>
     )
 }

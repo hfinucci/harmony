@@ -1,47 +1,43 @@
-import { IoAddCircleSharp } from "react-icons/io5";
 import React, {useEffect, useRef, useState} from "react";
 import "./AddBlock.css";
 import {useForm} from "react-hook-form";
 import {Block} from "../../types/dtos/Block";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
-export const AddBlock = ({x, y, submit, add, defaultBlock}: {
-    x: number;
-    y: number;
-    submit: (block: Block, x:number, y:number) => void;
-    add: (x:number, y:number) => void;
-    defaultBlock?: Block
+export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBlock}: {
+    rowIndex: number;
+    blockIndex: number;
+    deleteBlock: (rowIndex: number, blockIndex: number) =>void
+    submit: (rowIndex: number, blockIndex: number, block: Block)=> void;
+    defaultBlock: Block
 }) => {
     const [width, setWidth] = useState<number>(0)
-    const [content, setContent] = useState(defaultBlock? defaultBlock.lyric : '');
+    const [content, setContent] = useState(defaultBlock.lyric);
     const span = useRef(null);
 
     const {
         register,
-        handleSubmit,
         watch,
-        formState: { errors },
     } = useForm<Block>();
 
     watch();
 
-    const submitBlock =  async (data: any) => {
-        console.log(data)
-        console.log("submit")
-
-        const name = "form" + x + "_" + y
+    const submitBlock = () => {
+        const name = "form" + rowIndex + "_" + blockIndex
         const form = document.forms[name]
-        form.elements[1].blur()
-
-        await submit(data, x, y)
+        submit(rowIndex, blockIndex, {note: form.elements[0].value, lyric: form.elements[1].value})
     }
 
     function handleEnter(event) {
         if (event.key==="Enter") {
-            const name = "form" + x + "_" + y
+            const name = "form" + rowIndex + "_" + blockIndex
             const form = document.forms[name]
             if(event.target.id == "note") {
                 form.elements[1].focus()
                 event.preventDefault();
+            } else if(event.target.id == "lyric") {
+                form.elements[1].blur()
+                event.preventDefault()
             }
         } else if(event.key !== "Backspace" && event.target.id == "note" && event.target.value.length >=2) {
             event.preventDefault()
@@ -68,18 +64,23 @@ export const AddBlock = ({x, y, submit, add, defaultBlock}: {
     return (
         <div className="">
             <div className="flex">
-                <form name={"form" + x + "_" + y} onSubmit={handleSubmit(submitBlock)} className={"flex flex-col gap-4 h-24 w-fit"}>
-                    <input
-                        autoFocus={defaultBlock == null}
-                        id="note"
-                        defaultValue={defaultBlock? defaultBlock.note : undefined}
-                        {...register("note", {
-                            required: true,
-                            validate: { invalidNote },
-                        })}
-                        onKeyDown={handleEnter}
-                        type="text"
-                        className="rounded-lg bg-gray-300 border-0 w-10 px-2 focus:ring-0"></input>
+                <form name={"form" + rowIndex + "_" + blockIndex} autoComplete="off" className={"flex flex-col gap-4 h-24 w-fit"}>
+                    <div className="flex flex-row justify-between">
+                        <input
+                            autoFocus={defaultBlock.note == '' && defaultBlock.lyric == '' }
+                            id="note"
+                            defaultValue={defaultBlock? defaultBlock.note : undefined}
+                            {...register("note", {
+                                required: true,
+                                validate: { invalidNote },
+                            })}
+                            onKeyDown={handleEnter}
+                            type="text"
+                            className="rounded-lg bg-gray-300 border-0 w-10 px-2 focus:ring-0" />
+                        <div className="opacity-0 hover:opacity-100 w-10 inline-flex items-top justify-end text-fuchsia-950 pr-2">
+                            <RiDeleteBin5Fill className="cursor-pointer" onClick={() => deleteBlock(rowIndex, blockIndex)}/>
+                        </div>
+                    </div>
                     <span id="hide" ref={span}>{content}</span>
                     <input
                         id="lyric"
@@ -91,7 +92,8 @@ export const AddBlock = ({x, y, submit, add, defaultBlock}: {
                         type="text"
                         style={{ width: width + 25 }}
                         onChange={changeHandler}
-                        className="rounded-lg border-0 w-full"/>
+                        onBlur={submitBlock}
+                        className="rounded-lg border-0 w-full focus:ring-0" />
                     <input hidden type="submit"/>
                 </form>
 

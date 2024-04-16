@@ -1,0 +1,12 @@
+.deleteButton {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 10;
+    opacity: 0;
+}
+
+.block:hover .deleteButton {
+    opacity: 100;
+}

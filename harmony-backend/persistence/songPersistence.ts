@@ -62,7 +62,7 @@ export class SongPersistence {
         const query = {
             text: `SELECT
                 s.id as id,
-                o.name as organization,
+                o.name as org,
                 s.name as name,
                 created as created,
                 lastmodified as lastmodified

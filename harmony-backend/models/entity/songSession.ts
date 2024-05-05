@@ -3,11 +3,11 @@ import {logger} from "../../server";
 import {BlockMutex} from "./blockMutex";
 
 export class SongSession {
-    songId: number;
+    songId: string;
     blockMutex: Map<string, BlockMutex>
     rowCount: number
 
-    constructor(songId: number) {
+    constructor(songId: string) {
         this.songId = songId;
         this.blockMutex = new Map<string, BlockMutex>();
         this.rowCount = 0;
@@ -18,16 +18,13 @@ export class SongSession {
             const blockMutex = new BlockMutex();
             await blockMutex.acquire(userId);
             this.blockMutex.set(position, blockMutex);
-            logger.info("Block mutex created")
-            logger.info(`Position ${position} mutex of song ${this.songId} acquired by user ${userId}`)
             return true
         }
-        if (this.blockMutex.get(position)?.notMine(userId)) {
+        if (this.blockMutex.get(position)?.isLocked(userId)) {
             logger.info(`Song ${this.songId} mutex is already in use`)
             return false;
         }
         await this.blockMutex.get(position)?.acquire(userId);
-        logger.info(`Position ${position} mutex of song ${this.songId} acquired by user ${userId}`)
         return true;
     }
 

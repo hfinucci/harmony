@@ -3,10 +3,10 @@ import {ComposeRequestParser} from "../models/entity/composeRequestParser";
 
 class SessionHandler {
     private static instance: SessionHandler;
-    private sessions: Map<number, SongSession>
+    private sessions: Map<string, SongSession>
 
     private constructor() {
-        this.sessions = new Map<number, SongSession>();
+        this.sessions = new Map<string, SongSession>();
     }
 
     public static getInstance(): SessionHandler {
@@ -16,13 +16,13 @@ class SessionHandler {
         return SessionHandler.instance;
     }
 
-    private async createSession(songId: number): Promise<SongSession> {
+    private async createSession(songId: string): Promise<SongSession> {
         const session = new SongSession(songId);
         this.sessions.set(songId, session);
         return session;
     }
 
-    public async getSession(songId: number): Promise<SongSession | undefined> {
+    public async getSession(songId: string): Promise<SongSession | undefined> {
         if (!this.sessions.has(songId)) {
             return await this.createSession(songId)
         }

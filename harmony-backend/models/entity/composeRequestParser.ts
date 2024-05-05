@@ -1,5 +1,6 @@
 import {z} from "zod";
 import {AppendBlock, AppendRow, ComposeUseCase, EditBlock} from "./useCases";
+import {logger} from "../../server";
 
 const useCases = [
     new AppendRow(),

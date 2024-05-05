@@ -38,7 +38,7 @@ export class ComposePersistence {
                 song.blocks[row][col] = block;
             }
             await this.collection.updateOne({_id: new ObjectId(songId)}, {$set: {blocks: song.blocks}});
-            console.log(`Block saved to Song ${songId} at row ${row} and column ${col}`);
+            logger.info(`Block saved to Song ${songId} at row ${row} and column ${col}`);
         } else {
             const newSong: Song = {
                 _id: null,
@@ -47,7 +47,7 @@ export class ComposePersistence {
             newSong.blocks[row] = [];
             newSong.blocks[row][col] = block;
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
-            console.log(`Song ${insertOneResult.insertedId} created with block at row ${row} and column ${col}`);
+            logger.info(`Song ${insertOneResult.insertedId} created with block at row ${row} and column ${col}`);
         }
     }
 
@@ -56,14 +56,14 @@ export class ComposePersistence {
         if (song) {
             song.blocks.push([block]);
             await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
-            console.log(`New row appended to Song ${songId}`);
+            logger.info(`New row appended to Song ${songId}`);
         } else {
             const newSong: Song = {
                 _id: null,
                 blocks: [[block]]
             };
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
-            console.log(`Song ${insertOneResult.insertedId} created with appended block`);
+            logger.info(`Song ${insertOneResult.insertedId} created with appended block`);
         }
     }
 
@@ -76,7 +76,7 @@ export class ComposePersistence {
                 song.blocks[row] = [block];
             }
             await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
-            console.log(`Block appended to Song ${songId} at row ${row}`);
+            logger.info(`Block appended to Song ${songId} at row ${row}`);
         } else {
             const newSong: Song = {
                 _id: null,
@@ -84,7 +84,7 @@ export class ComposePersistence {
             };
             newSong.blocks[row] = [block];
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
-            console.log(`Song ${insertOneResult.insertedId} created with block at row ${row}`);
+            logger.info(`Song ${insertOneResult.insertedId} created with block at row ${row}`);
         }
     }
 }

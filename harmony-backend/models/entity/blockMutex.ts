@@ -17,7 +17,7 @@ export class BlockMutex {
         this.userId = userId;
     }
 
-    public async notMine(userId: number): Promise<boolean> {
+    public isLocked(userId: number): boolean {
         return this.userId !== userId && this.mutex.isLocked()
     }
 

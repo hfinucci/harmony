@@ -1,6 +1,7 @@
 import {z} from "zod";
 import {ComposePersistence} from "../../persistence/composePersistence";
 import {SongSession} from "./songSession";
+import {logger} from "../../server";
 
 const AppendRowValidator = z.object({
     operation: z.string().startsWith("appendRow"),
@@ -32,6 +33,12 @@ const EditBlockValidator = z.object({
 }).strict();
 export type EditBlockRequest = z.infer<typeof EditBlockValidator>
 
+const InitializeRoomValidator = z.object({
+    operation: z.string().startsWith("initializeRoom"),
+    songId: z.string()
+}).strict();
+export type InitializeRoomRequest = z.infer<typeof InitializeRoomValidator>
+
 export interface ComposeUseCase {
     execute: (session: SongSession) => void;
     songId: string | undefined;
@@ -51,6 +58,7 @@ export class AppendRow implements ComposeUseCase {
     }
 
     public async execute(session: SongSession) {
+        initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
@@ -60,8 +68,10 @@ export class AppendRow implements ComposeUseCase {
         if (!couldLock) {
             return
         }
-        await ComposePersistence.appendRow(this.request?.songId!, block)
-        session.rowCount++
+        const rowCount = await ComposePersistence.appendRow(this.request?.songId!, block)
+        if (rowCount) {
+            session.rowCount = rowCount
+        }
         await session.releaseLock(this.request?.userId!, position)
     }
 }
@@ -80,6 +90,7 @@ export class AppendBlock implements ComposeUseCase {
     }
 
     public async execute(session: SongSession) {
+        initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
@@ -109,6 +120,7 @@ export class EditBlock implements ComposeUseCase {
     }
 
     public async execute(session: SongSession) {
+        initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
@@ -125,5 +137,33 @@ export class EditBlock implements ComposeUseCase {
             block
         )
         await session.releaseLock(this.request?.userId!, position)
+    }
+}
+
+export class InitializeRoom implements ComposeUseCase {
+    private request: InitializeRoomRequest | undefined;
+    public songId: string | undefined;
+
+    public parse(rawRequest: string): ComposeUseCase | undefined {
+        const response = InitializeRoomValidator.safeParse(rawRequest);
+        if (response.success) {
+            this.request = response.data
+            this.songId = response.data.songId;
+            return this
+        }
+    }
+
+    public async execute(session: SongSession) {
+        const rowCount = await ComposePersistence.getRowCount(this.request?.songId!)
+        if (rowCount) {
+            session.rowCount = rowCount
+        }
+    }
+}
+
+function initializeRoomIfNecessary(session: SongSession, songId: string) {
+    if (!session.rowCount) {
+        const initializeRoom = new InitializeRoom();
+        initializeRoom.execute(session)
     }
 }

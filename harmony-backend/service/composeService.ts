@@ -43,6 +43,6 @@ export class ComposeService {
             throw new Error("Invalid operation")
         }
         const session = await this.sessionHandler.getSession(operation.songId!)
-        operation.execute(session!);
+        await operation.execute(session!);
     }
 }

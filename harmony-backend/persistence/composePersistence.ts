@@ -51,12 +51,15 @@ export class ComposePersistence {
         }
     }
 
-    public static async appendRow(songId: string, block: Block): Promise<any> {
+    public static async appendRow(songId: string, block: Block): Promise<number> {
         const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        let rowCount = 1
         if (song) {
             song.blocks.push([block]);
             await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
             logger.info(`New row appended to Song ${songId}`);
+            rowCount = song.blocks.length
+            return rowCount
         } else {
             const newSong: Song = {
                 _id: null,
@@ -64,6 +67,7 @@ export class ComposePersistence {
             };
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
             logger.info(`Song ${insertOneResult.insertedId} created with appended block`);
+            return rowCount
         }
     }
 
@@ -75,6 +79,7 @@ export class ComposePersistence {
             } else {
                 song.blocks[row] = [block];
             }
+            const rowCount = song.blocks[row].length
             await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
             logger.info(`Block appended to Song ${songId} at row ${row}`);
         } else {
@@ -85,6 +90,15 @@ export class ComposePersistence {
             newSong.blocks[row] = [block];
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
             logger.info(`Song ${insertOneResult.insertedId} created with block at row ${row}`);
+        }
+    }
+
+    public static async getRowCount(songId: string): Promise<number> {
+        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        if (song) {
+            return song.blocks.length;
+        } else {
+            return 0;
         }
     }
 }

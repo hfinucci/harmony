@@ -7,6 +7,8 @@ const BASE_URL = '/api/socket'
 
 export default async function composeController(fastify: FastifyInstance, opts: any) {
 
+    const composeService = new ComposeService()
+
     server.ready().then(() => {
         server.io.on("connect", async (socket) => {
             logger.info("a new client has connected!")
@@ -15,6 +17,9 @@ export default async function composeController(fastify: FastifyInstance, opts: 
             logger.info(socket.id)
             socket.on("disconnect", () => {
                 logger.info("a client has disconnected!")
+            })
+            socket.on("compose", async (payload) => {
+                await composeService.processRequest(payload)
             })
             socket.on("presskey", (payload) => {
                 logger.info(payload)

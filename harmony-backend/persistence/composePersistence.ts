@@ -25,7 +25,7 @@ export class ComposePersistence {
     }
 
     public static async insertBlock(songId: string, row: number, col: number, block: Block,): Promise<any> {
-        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        const song = await this.collection.findOne({_id: new ObjectId(songId)});
         if (song) {
             if (song.blocks[row]) {
                 if (song.blocks[row][col]) {
@@ -37,7 +37,7 @@ export class ComposePersistence {
                 song.blocks[row] = [];
                 song.blocks[row][col] = block;
             }
-            await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
+            await this.collection.updateOne({_id: new ObjectId(songId)}, {$set: {blocks: song.blocks}});
             console.log(`Block saved to Song ${songId} at row ${row} and column ${col}`);
         } else {
             const newSong: Song = {
@@ -49,6 +49,42 @@ export class ComposePersistence {
             const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
             console.log(`Song ${insertOneResult.insertedId} created with block at row ${row} and column ${col}`);
         }
+    }
 
+    public static async appendRow(songId: string, block: Block): Promise<any> {
+        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        if (song) {
+            song.blocks.push([block]);
+            await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
+            console.log(`New row appended to Song ${songId}`);
+        } else {
+            const newSong: Song = {
+                _id: null,
+                blocks: [[block]]
+            };
+            const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
+            console.log(`Song ${insertOneResult.insertedId} created with appended block`);
+        }
+    }
+
+    public static async appendBlock(songId: string, row: number, block: Block): Promise<any> {
+        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        if (song) {
+            if (song.blocks[row]) {
+                song.blocks[row].push(block);
+            } else {
+                song.blocks[row] = [block];
+            }
+            await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
+            console.log(`Block appended to Song ${songId} at row ${row}`);
+        } else {
+            const newSong: Song = {
+                _id: null,
+                blocks: [[]]
+            };
+            newSong.blocks[row] = [block];
+            const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
+            console.log(`Song ${insertOneResult.insertedId} created with block at row ${row}`);
+        }
     }
 }

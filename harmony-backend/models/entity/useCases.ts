@@ -56,12 +56,13 @@ export class AppendRow implements ComposeUseCase {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
         }
-        const position = "1"
+        const position = String(session.rowCount)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
             return
         }
         await ComposePersistence.appendRow(String(this.request?.songId), block)
+        session.rowCount++
         await session.releaseLock(this.request?.userId!, position)
     }
 }
@@ -89,6 +90,7 @@ export class AppendBlock implements ComposeUseCase {
         // Para saber que position, primero bloqueo row/col y luego valido contra el mongo si es la posición correcta.
         //  Si no lo es, releaseo el lock y vuelvo a intentar con la prox
         // Por otro lado, tambien puedo bloquear toda la row y a la mierda, pero en el caso del append row que hago?
+        // Podria lockear la tabla entera?
         const position = String(this.request?.row!)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
@@ -97,6 +99,7 @@ export class AppendBlock implements ComposeUseCase {
         await ComposePersistence.appendBlock(String(this.request?.songId), this.request?.row!, block)
         await session.releaseLock(this.request?.userId!, position)
     }
+
 }
 
 export class EditBlock implements ComposeUseCase {

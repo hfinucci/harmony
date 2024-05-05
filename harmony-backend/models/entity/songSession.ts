@@ -5,10 +5,12 @@ import {BlockMutex} from "./blockMutex";
 export class SongSession {
     songId: number;
     blockMutex: Map<string, BlockMutex>
+    rowCount: number
 
     constructor(songId: number) {
         this.songId = songId;
         this.blockMutex = new Map<string, BlockMutex>();
+        this.rowCount = 0;
     }
 
     async acquireIfPossible(userId: number, position: string): Promise<boolean> {
@@ -32,4 +34,6 @@ export class SongSession {
     async releaseLock(userId: number, position: string): Promise<void> {
         this.blockMutex.get(position)?.release(userId);
     }
+
+
 }

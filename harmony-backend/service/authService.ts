@@ -36,6 +36,9 @@ export class AuthService {
     public static async login(request: AuthUserRequest): Promise<UserAuth | null> {
         try {
             const user = await UserPersistence.getUserByEmail(request.email);
+            if (!user) {
+                throw new AuthenticationError('Invalid email')
+            }
             const match = await bcrypt.compare(request.password, user.password);
             if (!match) {
                 throw new AuthenticationError('Invalid password');

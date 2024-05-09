@@ -12,8 +12,6 @@ export default async function composeController(fastify: FastifyInstance, opts: 
     server.ready().then(() => {
         server.io.on("connect", async (socket) => {
             logger.info("a new client has connected!")
-            // await ComposePersistence.initializeSession()
-            // await ComposePersistence.insertBlock({chord: "F#", lyrics: "hola mundo"})
             logger.info(socket.id)
             socket.on("disconnect", () => {
                 logger.info("a client has disconnected!")

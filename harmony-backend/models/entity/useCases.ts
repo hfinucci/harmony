@@ -1,7 +1,6 @@
 import {z} from "zod";
 import {Block, ComposePersistence} from "../../persistence/composePersistence";
 import {SongSession} from "./songSession";
-import {logger} from "../../server";
 import {buildLockedMutexResponse} from "../errors/composeErrors";
 
 const AppendRowValidator = z.object({
@@ -72,7 +71,7 @@ export class AppendRow implements ComposeUseCase {
         const blocks = await ComposePersistence.appendRow(this.request?.songId!, block)
         session.rowCount = blocks?.length
         await session.releaseLock(this.request?.userId!, position)
-        return buildOperationReponse(blocks)
+        return buildOperationResponse(blocks)
     }
 }
 
@@ -102,7 +101,7 @@ export class AppendBlock implements ComposeUseCase {
         }
         const blocks = await ComposePersistence.appendBlock(this.request?.songId!, this.request?.row!, block)
         await session.releaseLock(this.request?.userId!, position)
-        return buildOperationReponse(blocks)
+        return buildOperationResponse(blocks)
     }
 
 }
@@ -138,7 +137,7 @@ export class EditBlock implements ComposeUseCase {
             block
         )
         await session.releaseLock(this.request?.userId!, position)
-        return buildOperationReponse(blocks)
+        return buildOperationResponse(blocks)
     }
 }
 
@@ -164,13 +163,12 @@ export class InitializeRoom implements ComposeUseCase {
     }
 }
 
-function buildOperationReponse(blocks: Block[][]) : string {
+function buildOperationResponse(blocks: Block[][]) : string {
     return JSON.stringify({message: blocks})
 }
 
 function initializeRoomIfNecessary(session: SongSession, songId: string) {
     if (!session.rowCount) {
-        const initializeRoom = new InitializeRoom();
-        initializeRoom.execute(session)
+        new InitializeRoom().execute(session);
     }
 }

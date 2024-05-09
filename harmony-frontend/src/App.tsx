@@ -19,21 +19,34 @@ function App() {
             <Navbar />
             <div className="pt-24 bg-gradient-to-b from-purple-300 to-white">
                 <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/home" element={<HomePage />} />
-                    <Route
-                        path="/configuration"
-                        element={<ConfigurationPage />}
-                    />
-                    <Route
-                        path="/songs"
-                        element={<SongsPage />}
-                    />
-                    <Route path="/songs/:id" element={<EditPage />} />
-                    <Route path="/orgs/:id" element={<OrgPage />} />
-                    <Route path="/orgs" element={<OrgsPage />} />
+                    <Route path="/" element={localStorage.getItem("harmony-uid") == null? <LandingPage /> : <HomePage />} />
+                    {!localStorage.getItem("harmony-uid") &&
+                        <Route path="/register" element={<RegisterPage/>}/>
+                    }
+                    {!localStorage.getItem("harmony-uid") &&
+                        <Route path="/login" element={<LoginPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route
+                            path="/configuration"
+                            element={<ConfigurationPage/>}
+                        />
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route
+                            path="/songs"
+                            element={<SongsPage/>}
+                        />
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/songs/:id" element={<EditPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/orgs/:id" element={<OrgPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/orgs" element={<OrgsPage/>}/>
+                    }
                 </Routes>
             </div>
         </BrowserRouter>

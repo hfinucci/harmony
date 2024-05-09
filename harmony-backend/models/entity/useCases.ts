@@ -1,7 +1,8 @@
 import {z} from "zod";
-import {ComposePersistence} from "../../persistence/composePersistence";
+import {Block, ComposePersistence} from "../../persistence/composePersistence";
 import {SongSession} from "./songSession";
 import {logger} from "../../server";
+import {buildLockedMutexResponse} from "../errors/composeErrors";
 
 const AppendRowValidator = z.object({
     operation: z.string().startsWith("appendRow"),
@@ -40,7 +41,7 @@ const InitializeRoomValidator = z.object({
 export type InitializeRoomRequest = z.infer<typeof InitializeRoomValidator>
 
 export interface ComposeUseCase {
-    execute: (session: SongSession) => void;
+    execute: (session: SongSession) => Promise<string>;
     songId: string | undefined;
 }
 
@@ -57,7 +58,7 @@ export class AppendRow implements ComposeUseCase {
         }
     }
 
-    public async execute(session: SongSession) {
+    public async execute(session: SongSession): Promise<string> {
         initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
@@ -66,13 +67,12 @@ export class AppendRow implements ComposeUseCase {
         const position = String(session.rowCount)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
-            return
+            return buildLockedMutexResponse()
         }
-        const rowCount = await ComposePersistence.appendRow(this.request?.songId!, block)
-        if (rowCount) {
-            session.rowCount = rowCount
-        }
+        const blocks = await ComposePersistence.appendRow(this.request?.songId!, block)
+        session.rowCount = blocks?.length
         await session.releaseLock(this.request?.userId!, position)
+        return buildOperationReponse(blocks)
     }
 }
 
@@ -89,7 +89,7 @@ export class AppendBlock implements ComposeUseCase {
         }
     }
 
-    public async execute(session: SongSession) {
+    public async execute(session: SongSession): Promise<string> {
         initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
@@ -98,10 +98,11 @@ export class AppendBlock implements ComposeUseCase {
         const position = String(this.request?.row!)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
-            return
+            return buildLockedMutexResponse()
         }
-        await ComposePersistence.appendBlock(this.request?.songId!, this.request?.row!, block)
+        const blocks = await ComposePersistence.appendBlock(this.request?.songId!, this.request?.row!, block)
         await session.releaseLock(this.request?.userId!, position)
+        return buildOperationReponse(blocks)
     }
 
 }
@@ -119,7 +120,7 @@ export class EditBlock implements ComposeUseCase {
         }
     }
 
-    public async execute(session: SongSession) {
+    public async execute(session: SongSession) : Promise<string> {
         initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
@@ -128,15 +129,16 @@ export class EditBlock implements ComposeUseCase {
         const position = String(this.request?.row!)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
-            return
+            return buildLockedMutexResponse()
         }
-        await ComposePersistence.insertBlock(
+        const blocks = await ComposePersistence.insertBlock(
             this.request?.songId!,
             this.request?.row!,
             this.request?.col!,
             block
         )
         await session.releaseLock(this.request?.userId!, position)
+        return buildOperationReponse(blocks)
     }
 }
 
@@ -153,12 +155,17 @@ export class InitializeRoom implements ComposeUseCase {
         }
     }
 
-    public async execute(session: SongSession) {
+    public async execute(session: SongSession){
         const rowCount = await ComposePersistence.getRowCount(this.request?.songId!)
         if (rowCount) {
             session.rowCount = rowCount
         }
+        return JSON.stringify({message: "Room initialized"})
     }
+}
+
+function buildOperationReponse(blocks: Block[][]) : string {
+    return JSON.stringify({message: blocks})
 }
 
 function initializeRoomIfNecessary(session: SongSession, songId: string) {

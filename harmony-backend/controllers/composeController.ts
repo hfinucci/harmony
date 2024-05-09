@@ -19,7 +19,10 @@ export default async function composeController(fastify: FastifyInstance, opts: 
                 logger.info("a client has disconnected!")
             })
             socket.on("compose", async (payload) => {
-                await composeService.processRequest(payload)
+                const response = await composeService.processRequest(payload)
+                if (response !== undefined || response !== "") {
+                    socket.emit("compose", response)
+                }
             })
             socket.on("presskey", (payload) => {
                 logger.info(payload)

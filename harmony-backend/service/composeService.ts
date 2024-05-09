@@ -1,5 +1,6 @@
 import {SongSession} from "../models/entity/songSession";
 import {ComposeRequestParser} from "../models/entity/composeRequestParser";
+import {buildInvalidRequestResponse} from "../models/errors/composeErrors";
 
 class SessionHandler {
     private static instance: SessionHandler;
@@ -37,12 +38,12 @@ export class ComposeService {
         this.sessionHandler = SessionHandler.getInstance();
     }
 
-    public async processRequest(request: string) {
+    public async processRequest(request: string): Promise<string>{
         const operation = ComposeRequestParser.parse(request)
         if (!operation) {
-            throw new Error("Invalid operation")
+            return buildInvalidRequestResponse()
         }
         const session = await this.sessionHandler.getSession(operation.songId!)
-        await operation.execute(session!);
+        return await operation.execute(session!);
     }
 }

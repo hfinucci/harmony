@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { OrgService } from "../../service/orgService";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toBase64 } from "../../utils";
 
 const CreateOrgModal = () => {
     const [showModal, setShowModal] = useState(false);
@@ -25,14 +26,6 @@ const CreateOrgModal = () => {
 
     const nav = useNavigate();
     const { t } = useTranslation();
-
-    const toBase64 = (file: File) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
 
     const onSubmit = async (data: any, e: any) => {
         const image = data.image[0] ? await toBase64(data.image[0]) : null;

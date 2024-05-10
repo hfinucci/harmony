@@ -37,7 +37,11 @@ export class OrgService {
         });
     }
 
-    public static async editOrg(id: number, name: string) {
+    public static async editOrg(
+        id: number,
+        name: string,
+        image: string | null
+    ) {
         return await fetch(BASE_URL + "/api/orgs/" + id, {
             method: "PUT",
             headers: {
@@ -45,6 +49,7 @@ export class OrgService {
             },
             body: JSON.stringify({
                 name: name,
+                image: image,
             }),
         });
     }

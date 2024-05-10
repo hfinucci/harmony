@@ -15,6 +15,8 @@ export class OrgService {
     public static async updateOrg(id: number, request: UpdateOrgRequest) {
         const storedOrg = await this.getOrgById(id)
         const updatedOrg = {...storedOrg, ...request}
+        if (request.image != null)
+            await ImageService.uploadOrgImage(updatedOrg.id, request.image);
         return await OrgPersistence.updateOrg(updatedOrg);
     }
 

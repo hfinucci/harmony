@@ -8,7 +8,6 @@ import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { AuthService } from "../service/authService";
 import { ImageService } from "../service/imageService";
-import { parseUpdateOrgImageRequest } from "../models/updateOrgImageRequest";
 
 const BASE_URL = "/api/orgs";
 
@@ -45,19 +44,6 @@ export default async function orgController(
             const request = parseUpdateOrgRequest(req.body);
             logger.info("Updating org with id: " + id);
             return await OrgService.updateOrg(id, request);
-        } catch (err) {
-            logger.error(err);
-            return handleError(err, rep);
-        }
-    });
-
-    server.put(BASE_URL + "/:id/image", async (req: any, rep) => {
-        const id = req.params.id;
-        try {
-            parseId(id);
-            const request = parseUpdateOrgImageRequest(req.body);
-            logger.info("Updating org image with id: " + id);
-            return await ImageService.uploadOrgImage(id, request.image);
         } catch (err) {
             logger.error(err);
             return handleError(err, rep);

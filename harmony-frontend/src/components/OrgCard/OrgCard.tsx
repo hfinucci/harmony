@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { OrgService } from "../../service/orgService";
 import "./OrgCard.css";
 import { useTranslation } from "react-i18next";
-import image from "../../assets/org-default-image.jpg";
+import defaultImage from "../../assets/org-default-image.jpg";
 import { Org } from "../../types/dtos/Org";
 
 const OrgCard = (org: Org) => {
@@ -30,20 +30,11 @@ const OrgCard = (org: Org) => {
             className="width flex flex-col justify-between bg-white border border-2 border-white hover:border-gray-200 rounded-lg shadow"
         >
             <div className="max-h-52 flex justify-center">
-                {org.image && (
-                    <img
-                        className="h-full object-contain rounded-t-lg justify-center"
-                        src={org.image}
-                        alt="org image"
-                    />
-                )}
-                {!org.image && (
-                    <img
-                        className="h-full object-contain rounded-t-lg justify-center"
-                        src={image}
-                        alt="org image"
-                    />
-                )}
+                <img
+                    className="h-full object-contain rounded-t-lg justify-center"
+                    src={org.image ? org.image : defaultImage}
+                    alt="org image"
+                />
             </div>
             <div className="pt-5 pr-5 pl-5">
                 <h5 className="mb-2 text-2xl font-extralight tracking-tight text-gray-400">

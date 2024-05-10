@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import {OrgService} from "../../service/orgService";
-import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
+import { OrgService } from "../../service/orgService";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const CreateOrgModal = () => {
-
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
 
     type CreateOrgFormData = {
         name: string;
+        image: FileList;
     };
 
     const {
@@ -24,10 +24,19 @@ const CreateOrgModal = () => {
     watch();
 
     const nav = useNavigate();
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
-    const onSubmit = async (data:any, e: any) => {
-        const org = await OrgService.createOrg(data.name);
+    const toBase64 = (file: File) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+
+    const onSubmit = async (data: any, e: any) => {
+        const image = data.image[0] ? await toBase64(data.image[0]) : null;
+        const org = await OrgService.createOrg(data.name, image);
         if (org?.status == 200) {
             const orgJson = await org.json();
             nav(`/orgs/${orgJson.id}`);
@@ -44,7 +53,7 @@ const CreateOrgModal = () => {
                 onClick={() => setShowModal(true)}
                 className="bg-white flex w-fit h-fit items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
             >
-                <IoAddSharp className="font-bold"/>
+                <IoAddSharp className="font-bold" />
                 {t("components.createOrgModal.title")}
             </button>
             {showModal && (
@@ -64,9 +73,7 @@ const CreateOrgModal = () => {
                                 <div className="p-4 md:p-5">
                                     <form
                                         className="space-y-4"
-                                        onSubmit={handleSubmit(
-                                            onSubmit
-                                        )}
+                                        onSubmit={handleSubmit(onSubmit)}
                                     >
                                         <div>
                                             <input
@@ -75,16 +82,39 @@ const CreateOrgModal = () => {
                                                 placeholder="Name"
                                                 {...register("name", {
                                                     required: true,
-                                                    maxLength: 20
+                                                    maxLength: 20,
                                                 })}
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-fuchsia-500 focus:border-fuchsia-600 block w-full p-2.5"
                                                 required
                                             />
                                         </div>
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createOrgModal.error.name")}
+                                                    {t(
+                                                        "components.createOrgModal.error.name"
+                                                    )}
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {error}
+                                                </p>
+                                            </>
+                                        )}
+                                        <label className="block mb-2 text-sm font-medium text-fuchsia-950">
+                                            Upload image
+                                        </label>
+                                        <input
+                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                                            aria-describedby="user_avatar_help"
+                                            id="user_avatar"
+                                            type="file"
+                                            accept="image/*"
+                                            {...register("image")}
+                                        />
+                                        {errors.image && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    Errors in image
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -94,19 +124,24 @@ const CreateOrgModal = () => {
                                         <div className="flex flex-row gap-5 justify-end">
                                             <button
                                                 type="button"
-                                                onClick={() => setShowModal(false)}
+                                                onClick={() =>
+                                                    setShowModal(false)
+                                                }
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createOrgModal.cancel")}
+                                                {t(
+                                                    "components.createOrgModal.cancel"
+                                                )}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createOrgModal.create")}
+                                                {t(
+                                                    "components.createOrgModal.create"
+                                                )}
                                             </button>
                                         </div>
-
                                     </form>
                                 </div>
                             </div>

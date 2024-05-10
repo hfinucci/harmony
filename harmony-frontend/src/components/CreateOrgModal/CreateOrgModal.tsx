@@ -101,10 +101,12 @@ const CreateOrgModal = () => {
                                             </>
                                         )}
                                         <label className="block mb-2 text-sm font-medium text-fuchsia-950">
-                                            Upload image
+                                            {t(
+                                                "components.createOrgModal.upload"
+                                            )}
                                         </label>
                                         <input
-                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
                                             aria-describedby="user_avatar_help"
                                             id="user_avatar"
                                             type="file"
@@ -114,7 +116,9 @@ const CreateOrgModal = () => {
                                         {errors.image && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    Errors in image
+                                                    {t(
+                                                        "components.createOrgModal.error.image"
+                                                    )}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}

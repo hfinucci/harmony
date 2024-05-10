@@ -119,9 +119,9 @@ export const TRANSLATIONS_ES = {
         edit: {
             view: {
                 edit: "Editar",
-                preview: "Preview"
-            }
-        }
+                preview: "Preview",
+            },
+        },
     },
     components: {
         changePasswordModal: {
@@ -159,9 +159,11 @@ export const TRANSLATIONS_ES = {
             title: "Crear Organización",
             create: "Crear",
             cancel: "Cancelar",
+            upload: "Subir Imagen",
             error: {
                 name: "El nombre de la organización debe tener menos de 20 caracteres",
                 create: "Error al crear organización, por favor volver a intentar",
+                image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
         navbar: {

@@ -116,6 +116,12 @@ export const TRANSLATIONS_ES = {
             },
             members: "Integrantes",
         },
+        edit: {
+            view: {
+                edit: "Editar",
+                preview: "Preview",
+            },
+        },
     },
     components: {
         changePasswordModal: {
@@ -144,18 +150,22 @@ export const TRANSLATIONS_ES = {
             title: "Editar Organización",
             edit: "Editar",
             cancel: "Cancelar",
+            upload: "Subir Imagen",
             error: {
                 name: "El nombre de la organización debe tener menos de 20 caracteres",
                 edit: "Error al editar organización, por favor volver a intentar",
+                image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
         createOrgModal: {
             title: "Crear Organización",
             create: "Crear",
             cancel: "Cancelar",
+            upload: "Subir Imagen",
             error: {
                 name: "El nombre de la organización debe tener menos de 20 caracteres",
                 create: "Error al crear organización, por favor volver a intentar",
+                image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
         navbar: {

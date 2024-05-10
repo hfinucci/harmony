@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { OrgService } from "../../service/orgService";
 import { Org } from "../../types/dtos/Org";
+import { toBase64 } from "../../utils";
 
 interface EditOrgModalProps {
     org: Org;
@@ -16,6 +17,7 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
 
     type EditOrgFormData = {
         name: string;
+        image: FileList;
     };
 
     const {
@@ -30,11 +32,12 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
     const { t } = useTranslation();
 
     const onSubmit = async (data: any, e: any) => {
-        if (data.name == org.name) {
+        if (data.name == org.name && !data.image) {
             setShowModal(false);
             return;
         }
-        const edit = await OrgService.editOrg(org.id, data.name);
+        const image = data.image[0] ? await toBase64(data.image[0]) : null;
+        const edit = await OrgService.editOrg(org.id, data.name, image);
         if (edit?.status == 200) {
             setShowModal(false);
             edit.json().then((rsp) => {
@@ -46,9 +49,7 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
     return (
         <>
             <button
-                aria-label="create song"
-                data-modal-target="create-song-modal"
-                data-modal-toggle="create-song-modal"
+                aria-label="edit org"
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
@@ -60,7 +61,6 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div
-                        id="create-org-modal"
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
                     >
@@ -94,6 +94,31 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {t(
                                                         "components.editOrgModal.error.name"
+                                                    )}
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {error}
+                                                </p>
+                                            </>
+                                        )}
+                                        <label className="block mb-2 text-sm font-medium text-fuchsia-950">
+                                            {t(
+                                                "components.editOrgModal.upload"
+                                            )}
+                                        </label>
+                                        <input
+                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
+                                            aria-describedby="user_avatar_help"
+                                            id="user_avatar"
+                                            type="file"
+                                            accept="image/*"
+                                            {...register("image")}
+                                        />
+                                        {errors.image && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {t(
+                                                        "components.createOrgModal.error.image"
                                                     )}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">

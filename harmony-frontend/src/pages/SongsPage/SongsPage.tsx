@@ -5,7 +5,7 @@ import {UserService} from "../../service/userService.ts";
 export interface Song {
     id: number;
     name: string;
-    organization?: string;
+    org?: string;
     created: string;
     lastmodified: string;
 }

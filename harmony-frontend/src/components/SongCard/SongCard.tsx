@@ -1,6 +1,7 @@
 import {Song} from "../../pages/SongsPage/SongsPage.tsx";
 import { MdDelete } from "react-icons/md";
 import {SongService} from "../../service/songService.ts";
+import { useNavigate } from "react-router-dom";
 
 interface SongCardProps {
     song: Song;
@@ -12,11 +13,12 @@ const SongCard = (
 ) => {
 
     const deleteSong = async () => await SongService.deleteSongs(song.id).then(() => fetchSongs && fetchSongs())
+    const nav = useNavigate();
 
     return (
         <tr>
             <td className={"text-gray-500"}>{song.name}</td>
-            {song.organization && <td className={"text-gray-500"}>{song.organization}</td>}
+            {song.org && <td className={"text-gray-500"}>{song.org}</td>}
             <td className={"text-gray-500"}>{song.created}</td>
             <td className={"text-gray-500"}>{song.lastmodified}</td>
             <td className="text-3xl text-fuchsia-950">

@@ -31,15 +31,16 @@ export const LoginCard = () => {
             data.password
         );
         if(login?.status == 200) {
+            console.log("es 200")
             let authJson = await login?.json()
-            if (authJson.access_token === undefined || authJson.payload?.id === undefined) {
+            if (authJson.access_token === undefined || authJson.person?.id === undefined) {
                 setLoginError("Invalid login credentials")
                 return
             }
             localStorage['harmony-jwt'] = authJson.access_token
-            localStorage['harmony-uid'] = authJson.payload.id
+            localStorage['harmony-uid'] = authJson.person.id
 
-            nav("/home")
+            nav("/", {replace: true})
         }
         else setLoginError(t("pages.login.error.credentials"));
     }

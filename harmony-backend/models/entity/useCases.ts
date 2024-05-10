@@ -2,6 +2,7 @@ import {z} from "zod";
 import {Block, ComposePersistence} from "../../persistence/composePersistence";
 import {SongSession} from "./songSession";
 import {buildLockedMutexResponse} from "../errors/composeErrors";
+import {logger} from "../../server";
 
 const AppendRowValidator = z.object({
     operation: z.string().startsWith("appendRow"),
@@ -58,11 +59,12 @@ export class AppendRow implements ComposeUseCase {
     }
 
     public async execute(session: SongSession): Promise<string> {
-        initializeRoomIfNecessary(session, this.request?.songId!)
+        await initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
         }
+        logger.info("session.rowcount " + session.rowCount)
         const position = String(session.rowCount)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
         if (!couldLock) {
@@ -89,7 +91,7 @@ export class AppendBlock implements ComposeUseCase {
     }
 
     public async execute(session: SongSession): Promise<string> {
-        initializeRoomIfNecessary(session, this.request?.songId!)
+        await initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
@@ -120,7 +122,7 @@ export class EditBlock implements ComposeUseCase {
     }
 
     public async execute(session: SongSession) : Promise<string> {
-        initializeRoomIfNecessary(session, this.request?.songId!)
+        await initializeRoomIfNecessary(session, this.request?.songId!)
         const block = {
             chord: this.request?.chord!,
             lyrics: this.request?.lyrics!
@@ -161,14 +163,19 @@ export class InitializeRoom implements ComposeUseCase {
         }
         return JSON.stringify({message: "Room initialized"})
     }
+
+    public async updateRowCount(session: SongSession, songId: string) {
+        this.request = {operation: "initializeRoom", songId: songId}
+        await this.execute(session)
+    }
 }
 
 function buildOperationResponse(blocks: Block[][]) : string {
     return JSON.stringify({message: blocks})
 }
 
-function initializeRoomIfNecessary(session: SongSession, songId: string) {
+async function initializeRoomIfNecessary(session: SongSession, songId: string) {
     if (!session.rowCount) {
-        new InitializeRoom().execute(session);
+        await new InitializeRoom().updateRowCount(session, songId);
     }
 }

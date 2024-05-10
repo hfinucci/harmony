@@ -15,16 +15,6 @@ server.listen({host: ADDRESS, port: parseInt(PORT, 10)}, async function (err: an
     }
     await connectToDB()
     await connectToMongoDB()
-
     await ComposePersistence.initializeSession()
-    // await ComposePersistence.appendBlock(
-    //     "65fcbef8461488dff268d070",
-    //     1,
-    //     {chord: "G#", lyrics: "append"}
-    // )
-    // await ComposePersistence.appendRow(
-    //     "65fcbef8461488dff268d070",
-    //     {chord: "G#", lyrics: "append"}
-    // )
     logger.info(`Server listening at ${address}`)
 })

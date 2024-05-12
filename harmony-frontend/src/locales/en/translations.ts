@@ -171,6 +171,11 @@ export const TRANSLATIONS_EN = {
         navbar: {
             login: "Log In",
             register: "Register",
+            userMenu: {
+                changeImage: "Cambiar imagen de perfil",
+                configuration: "Configuración",
+                logout: "Cerrar sesión"
+            }
         },
         orgCard: {
             members: "Members: ",

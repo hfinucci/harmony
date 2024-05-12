@@ -39,7 +39,8 @@ export const LoginCard = () => {
             }
             localStorage['harmony-jwt'] = authJson.access_token
             localStorage['harmony-uid'] = authJson.person.id
-
+            localStorage['harmony-profile-image'] = authJson.person.image
+            window.dispatchEvent(new Event("harmony"));
             nav("/", {replace: true})
         }
         else setLoginError(t("pages.login.error.credentials"));

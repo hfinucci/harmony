@@ -5,6 +5,7 @@ export const TRANSLATIONS_ES = {
             language: "Idioma",
             changePassword: "Cambiar la contraseña",
             deleteAccount: "Eliminar cuenta",
+            changeImage: "Cambiar imagen de perfil",
         },
         home: {
             myOrgs: "Mis Organizaciones",
@@ -146,6 +147,14 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             error: "Error al eliminar la organización",
         },
+        changeProfileImageModal: {
+            title: "Cambiar Imagen de Perfil",
+            cancel: "Cancelar",
+            change: "Cambiar",
+            error: {
+                edit: "Error al cambiar la imagen de perfil, por favor volver a intentar",
+            },
+        },
         editOrgModal: {
             title: "Editar Organización",
             edit: "Editar",
@@ -172,7 +181,6 @@ export const TRANSLATIONS_ES = {
             login: "Iniciar sesión",
             register: "Registrarse",
             userMenu: {
-                changeImage: "Cambiar imagen de perfil",
                 configuration: "Configuración",
                 logout: "Cerrar sesión"
             }

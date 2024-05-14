@@ -41,6 +41,7 @@ export const LoginCard = () => {
             localStorage['harmony-uid'] = authJson.person.id
             localStorage['harmony-profile-image'] = authJson.person.image
             window.dispatchEvent(new Event("harmony"));
+            window.dispatchEvent(new Event("harmony-pi"))
             nav("/", {replace: true})
         }
         else setLoginError(t("pages.login.error.credentials"));

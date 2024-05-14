@@ -9,7 +9,6 @@ import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { FetchSongsByUserResponse } from "../models/dto/fetchSongsByUserResponse";
 import { z } from "zod";
-import { ImageService } from "../service/imageService";
 
 const BASE_URL = "/api/users";
 
@@ -89,8 +88,12 @@ export default async function userController(
                 const id = req.params.id;
                 parseId(id);
                 const request = parseChangeIconRequest(req.body);
-                logger.info("Changing image for user with id " + id);
-                return await UserService.changeIcon(id, request);
+                logger.info("Changing image for user with id " + id + " to " + request.image);
+                const changed = await UserService.changeIcon(id, request);
+                if (!changed)
+                    return false
+                return "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                    request.image
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

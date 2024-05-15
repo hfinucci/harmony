@@ -11,13 +11,13 @@ import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import { useTranslation } from "react-i18next";
 import { Song } from "../SongsPage/SongsPage.tsx";
 import { Org } from "../../types/dtos/Org.ts";
-import defaultImage from "../../assets/org-default-image.jpg";
+import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
     const [songs, setSongs] = useState<Song[]>([]);
-    const [image, setImage] = useState(defaultImage);
+    const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
 
     const orgId = useParams();
 

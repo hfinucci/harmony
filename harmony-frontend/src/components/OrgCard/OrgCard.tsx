@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { OrgService } from "../../service/orgService";
 import "./OrgCard.css";
 import { useTranslation } from "react-i18next";
-import defaultImage from "../../assets/org-default-image.jpg";
+import { ORG_IMAGE_DEFAULT } from "../../utils";
 import { Org } from "../../types/dtos/Org";
 
 const OrgCard = (org: Org) => {
@@ -32,7 +32,7 @@ const OrgCard = (org: Org) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={org.image ? org.image : defaultImage}
+                    src={org.image ? org.image : ORG_IMAGE_DEFAULT}
                     alt="org image"
                 />
             </div>

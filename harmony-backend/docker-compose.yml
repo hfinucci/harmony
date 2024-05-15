@@ -1,0 +1,21 @@
+# para correr -> docker compose up --build
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host # Resolverlo de otra forma
+    ports:
+      - 3000:3000
+
+  mongodb:
+    image: mongo:4.4.6
+    command: mongod --quiet --logpath /dev/null # No mostrar logs
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

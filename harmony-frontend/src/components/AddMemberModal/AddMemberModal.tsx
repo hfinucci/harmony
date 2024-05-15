@@ -55,9 +55,7 @@ const AddMemberModal = ({org}) => {
     return (
         <>
             <button
-                aria-label="create song"
-                data-modal-target="create-song-modal"
-                data-modal-toggle="create-song-modal"
+                aria-label="add member"
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="items-center bg-white w-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
@@ -68,7 +66,6 @@ const AddMemberModal = ({org}) => {
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div
-                        id="create-song-modal"
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
                     >
@@ -109,8 +106,8 @@ const AddMemberModal = ({org}) => {
                                             <div className="flow-root">
                                                 <ul role="list"
                                                     className="divide-y divide-gray-200">
-                                                    {members.map((member: any) => (
-                                                        <li className="py-3 sm:py-4">
+                                                    {members.map((member: any, index) => (
+                                                        <li key={index} className="py-3 sm:py-4">
                                                             <div className="flex items-center">
                                                                 <div className="flex-shrink-0">
                                                                     <img className="w-8 h-8 rounded-full"

@@ -9,6 +9,7 @@ import SongsPage from "./pages/SongsPage/SongsPage.tsx";
 import OrgsPage from "./pages/OrgsPage/OrgsPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import EditPage from "./pages/EditPage/EditPage";
 import PianoPage from "./pages/PianoPage/PianoPage.tsx";
 
 export const BASE_URL = "http://127.0.0.1:3000";
@@ -19,21 +20,37 @@ function App() {
             <Navbar />
             <div className="pt-24 bg-gradient-to-b from-purple-300 to-white">
                 <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/home" element={<HomePage />} />
-                    <Route
-                        path="/configuration"
-                        element={<ConfigurationPage />}
-                    />
-                    <Route
-                        path="/songs"
-                        element={<SongsPage />}
-                    />
-                    <Route path="/orgs/:id" element={<OrgPage />} />
-                    <Route path="/orgs" element={<OrgsPage />} />
-                    <Route path="/piano" element={<PianoPage />} />
+                    <Route path="/" element={localStorage.getItem("harmony-uid") == null? <LandingPage /> : <HomePage />} />
+                    {!localStorage.getItem("harmony-uid") &&
+                        <Route path="/register" element={<RegisterPage/>}/>
+                    }
+                    {!localStorage.getItem("harmony-uid") &&
+                        <Route path="/login" element={<LoginPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route
+                            path="/configuration"
+                            element={<ConfigurationPage/>}
+                        />
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route
+                            path="/songs"
+                            element={<SongsPage/>}
+                        />
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/songs/:id" element={<EditPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/piano" element={<PianoPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/orgs/:id" element={<OrgPage/>}/>
+                    }
+                    {localStorage.getItem("harmony-uid") &&
+                        <Route path="/orgs" element={<OrgsPage/>}/>
+                    }
                 </Routes>
             </div>
         </BrowserRouter>

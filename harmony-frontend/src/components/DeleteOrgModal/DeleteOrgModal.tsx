@@ -23,9 +23,7 @@ const DeleteOrgModal = ({id}) => {
     return (
         <>
             <button
-                aria-label="create song"
-                data-modal-target="create-song-modal"
-                data-modal-toggle="create-song-modal"
+                aria-label="delete org"
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
@@ -36,7 +34,6 @@ const DeleteOrgModal = ({id}) => {
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div
-                        id="delete-account-modal"
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
                     >

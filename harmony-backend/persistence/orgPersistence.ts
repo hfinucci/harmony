@@ -15,8 +15,8 @@ export class OrgPersistence {
 
     public static async updateOrg(updatedOrg: any): Promise<any> {
         const query = {
-            text: 'UPDATE organizations SET name = $1, image = $2 WHERE id = $3 RETURNING *',
-            values: [updatedOrg.name, updatedOrg.image, updatedOrg.id],
+            text: 'UPDATE organizations SET name = $1 WHERE id = $2 RETURNING *',
+            values: [updatedOrg.name, updatedOrg.id],
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;

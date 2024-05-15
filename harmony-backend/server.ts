@@ -1,13 +1,14 @@
-import fastify from 'fastify';
-import cors from '@fastify/cors'
+import fastify from "fastify";
+import cors from "@fastify/cors";
 import fastifyIO from "fastify-socket.io";
-import socketController from './controllers/sockerController';
+import composeController from './controllers/composeController';
 import userController from './controllers/userController';
 import songController from './controllers/songController';
 import pino from 'pino';
 import authController from './controllers/authController';
 import orgController from "./controllers/orgController";
 import memberController from "./controllers/memberController";
+import imageController from "./controllers/imageController";
 
 const server = fastify()
     .register(cors, {
@@ -18,29 +19,30 @@ const server = fastify()
         cors: {
             origin: "*",
             methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        }
+        },
     })
     .register(userController)
     .register(authController)
-    .register(socketController)
+    .register(composeController)
     .register(songController)
     .register(orgController)
     .register(memberController)
+    .register(imageController);
 
 const transport = pino.transport({
     targets: [
         {
-            level: 'trace',
-            target: 'pino-pretty',
+            level: "trace",
+            target: "pino-pretty",
             options: {},
         },
         {
-            level: 'trace',
-            target: 'pino/file',
+            level: "trace",
+            target: "pino/file",
             options: {
-                destination: './logs/harmony-backend.log',
+                destination: "./logs/harmony-backend.log",
             },
-        }
+        },
     ],
 });
 

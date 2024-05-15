@@ -31,7 +31,6 @@ export const LoginCard = () => {
             data.password
         );
         if(login?.status == 200) {
-            console.log("es 200")
             let authJson = await login?.json()
             if (authJson.access_token === undefined || authJson.person?.id === undefined) {
                 setLoginError("Invalid login credentials")

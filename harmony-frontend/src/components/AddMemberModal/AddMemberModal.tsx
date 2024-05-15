@@ -46,7 +46,7 @@ const AddMemberModal = ({org}) => {
     const deleteMember = async () => {
         const rsp = await MemberService.deleteMembership(org);
         if (rsp?.status == 200) {
-            nav(`/home`);
+            nav(`/`);
         } else {
             setError("Error deleting member. Please try again.");
         }

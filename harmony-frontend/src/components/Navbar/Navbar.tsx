@@ -3,10 +3,12 @@ import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
 import { FaRegBell } from "react-icons/fa";
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
     const { t } = useTranslation();
 
+    const nav = useNavigate();
     const [image, setImage] = useState<string>(localStorage.getItem("harmony-profile-image")? localStorage.getItem("harmony-profile-image") : null)
 
     window.addEventListener('harmony-pi', () => {
@@ -20,6 +22,7 @@ export const Navbar = () => {
 
         window.dispatchEvent(new Event("harmony"))
         window.dispatchEvent(new Event("harmony-pi"))
+        nav("/", {replace: true})
     }
 
     return (

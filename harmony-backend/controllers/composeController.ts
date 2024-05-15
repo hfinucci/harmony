@@ -1,9 +1,11 @@
 import { FastifyInstance } from "fastify";
 import server, { logger } from "../server";
 import {ComposeService} from "../service/composeService";
-import {ComposePersistence} from "../persistence/composePersistence";
+import {Block, ComposePersistence} from "../persistence/composePersistence";
+import {SongService} from "../service/songService";
+import {handleError} from "../utils";
 
-const BASE_URL = '/api/socket'
+const BASE_URL = '/api/compose'
 
 export default async function composeController(fastify: FastifyInstance, opts: any) {
 
@@ -28,4 +30,15 @@ export default async function composeController(fastify: FastifyInstance, opts: 
             });
         });
     });
+
+    server.get(BASE_URL + "/:id/blocks", async (req: any, rep: any) : Promise<Block[][]> => {
+        const id = req.params.id;
+        try {
+            logger.info("Fetching song blocks: " + req.name);
+            return await SongService.getSongBlocksById(id);
+        } catch (err) {
+            logger.error(err)
+            return handleError(err, rep)
+        }
+    })
 }

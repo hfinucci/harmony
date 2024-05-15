@@ -24,6 +24,16 @@ export class ComposePersistence {
         this.collection = db.collection(collectionName);
     }
 
+    public static async createSong(): Promise<string | undefined> {
+        const newSong: Song = {
+            _id: null,
+            blocks: [[]]
+        };
+        const insertOneResult: InsertOneResult<Song> = await this.collection.insertOne(newSong)
+        logger.info(`Song ${insertOneResult.insertedId} created`);
+        return insertOneResult.insertedId?.toString()
+    }
+
     public static async insertBlock(songId: string, row: number, col: number, block: Block,): Promise<Block[][]> {
         const song = await this.collection.findOne({_id: new ObjectId(songId)});
         if (song) {
@@ -103,5 +113,10 @@ export class ComposePersistence {
         } else {
             return 0;
         }
+    }
+
+    public static async getSongBlocksById(songId: string) : Promise<Block[][]> {
+        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        return song?.blocks ?? [[]];
     }
 }

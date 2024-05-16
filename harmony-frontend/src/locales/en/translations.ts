@@ -181,8 +181,8 @@ export const TRANSLATIONS_EN = {
             login: "Log In",
             register: "Register",
             userMenu: {
-                configuration: "Configuración",
-                logout: "Cerrar sesión"
+                configuration: "Settings",
+                logout: "Logout"
             }
         },
         orgCard: {

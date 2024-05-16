@@ -39,12 +39,20 @@ export const RegisterCard = () => {
             data.password
         );
         let login = null;
-        if (rsp != null && rsp != undefined)
+        if (rsp?.status == 200)
             login = await UserService.signInWithUserAndPassword(
                 data.mail,
                 data.password
             );
-        if (login?.status == 200) nav("/home");
+        if (login?.status == 200) {
+            let authJson = await login?.json()
+            localStorage['harmony-jwt'] = authJson.access_token
+            localStorage['harmony-uid'] = authJson.person.id
+            localStorage['harmony-profile-image'] = authJson.person.image
+            window.dispatchEvent(new Event("harmony"));
+            window.dispatchEvent(new Event("harmony-pi"))
+            nav("/", {replace: true})
+        }
     };
 
     const invalidEmail = (email: string) => {

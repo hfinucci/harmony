@@ -27,7 +27,7 @@ export class UserService {
     }
 
     public static async changeIcon(id: number, request: ChangeIconRequest) {
-        const changed = await UserPersistence.changeImg(id, request.url)
+        const changed = await UserPersistence.changeImg(id, request.image)
         if(!changed)
             throw new Error("Icon couldn't be changed")
         return changed

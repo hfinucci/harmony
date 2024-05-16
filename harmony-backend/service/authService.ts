@@ -19,6 +19,7 @@ export interface Person {
     id: number;
     name: string;
     email: string;
+    image: string;
 }
 
 export class AuthService {
@@ -47,7 +48,12 @@ export class AuthService {
                 throw new AuthenticationError("Invalid password");
             }
             delete user.password;
-            const person = { ...user } as Person;
+            const person = {
+                ...user,
+                image:
+                    "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                    user.image,
+            } as Person;
             return {
                 access_token: this.generateJWT(person),
                 person: person,

@@ -5,6 +5,7 @@ export const TRANSLATIONS_EN = {
             language: "Language",
             changePassword: "Change password",
             deleteAccount: "Delete account",
+            changeImage: "Change profile image"
         },
         home: {
             myOrgs: "My Organizations",
@@ -146,6 +147,14 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: "Error deleting the organization",
         },
+        changeProfileImageModal: {
+            title: "Change Profile Image",
+            cancel: "Cancel",
+            change: "change",
+            error: {
+                edit: "Error changing profile image, please try again",
+            },
+        },
         editOrgModal: {
             title: "Edit Organization",
             edit: "Edit",
@@ -181,6 +190,10 @@ export const TRANSLATIONS_EN = {
         navbar: {
             login: "Log In",
             register: "Register",
+            userMenu: {
+                configuration: "Settings",
+                logout: "Logout"
+            }
         },
         orgCard: {
             members: "Members: ",

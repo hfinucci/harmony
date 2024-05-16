@@ -8,7 +8,7 @@ import {NewPasswordRequest} from '../models/newPasswordRequest'
 import {UserPersistence} from "../persistence/userPersistence";
 import {AuthenticationError} from "../models/errors/AuthenticationError";
 
-const supabase = createClient("http://localhost:54321", process.env.AUTH_KEY || "")
+// const supabase = createClient("http://localhost:54321", process.env.AUTH_KEY || "")
 
 export interface UserAuth {
     access_token: string;
@@ -16,61 +16,77 @@ export interface UserAuth {
 }
 
 export interface Person {
-    id: number,
-    name: string,
-    email: string
+    id: number;
+    name: string;
+    email: string;
 }
 
 export class AuthService {
-
-    public static async generateHashedPassword(password: string): Promise<string> {
+    public static async generateHashedPassword(
+        password: string
+    ): Promise<string> {
         const saltRounds = 10; // Cost factor for the bcrypt algorithm
         try {
             const salt = await bcrypt.genSalt(saltRounds);
             return await bcrypt.hash(password, salt);
         } catch (error) {
-            throw new Error('Error while registering user');
+            throw new Error("Error while registering user");
         }
     }
 
-    public static async login(request: AuthUserRequest): Promise<UserAuth | null> {
+    public static async login(
+        request: AuthUserRequest
+    ): Promise<UserAuth | null> {
         try {
             const user = await UserPersistence.getUserByEmail(request.email);
+            if (!user) {
+                throw new AuthenticationError('Invalid email')
+            }
             const match = await bcrypt.compare(request.password, user.password);
             if (!match) {
-                throw new AuthenticationError('Invalid password');
+                throw new AuthenticationError("Invalid password");
             }
-            delete user.password
-            const person = {...user} as Person
+            delete user.password;
+            const person = { ...user } as Person;
             return {
                 access_token: this.generateJWT(person),
-                person: person
+                person: person,
             };
         } catch (error) {
             logger.error(error);
-            throw new AuthenticationError('Error while authenticating user');
+            throw new AuthenticationError("Error while authenticating user");
         }
     }
 
     public static generateJWT(user: Person) {
         try {
-            return jwt.sign(user, process.env.JWTSecretKey || "", {expiresIn: '1y'});
+            return jwt.sign(user, process.env.JWTSecretKey || "", {
+                expiresIn: "1y",
+            });
         } catch (error) {
-            throw new AuthenticationError('Error while generating JWT');
+            throw new AuthenticationError("Error while generating JWT");
         }
     }
 
-    public static async updatePassword(request: NewPasswordRequest, userAuth: UserAuth) {
-        const hashedPassword = await this.generateHashedPassword(request.password)
-        return await UserPersistence.updatePasswordById(userAuth.person.id, hashedPassword)
+    public static async updatePassword(
+        request: NewPasswordRequest,
+        userAuth: UserAuth
+    ) {
+        const hashedPassword = await this.generateHashedPassword(
+            request.password
+        );
+        return await UserPersistence.updatePasswordById(
+            userAuth.person.id,
+            hashedPassword
+        );
     }
 
     public static parseJWT(bearerAuth?: string): UserAuth {
         if (bearerAuth == null) {
             throw new AuthenticationError("No token provided");
         }
-        const token = bearerAuth.split(' ')[1];
-        const jwtParts = token.split('.');
+        const token = bearerAuth.split(" ")[1];
+        const jwtParts = token.split(".");
         if (jwtParts.length !== 3) {
             throw new AuthenticationError("Invalid token");
         }
@@ -78,21 +94,21 @@ export class AuthService {
         try {
             payload = JSON.parse(atob(jwtParts[1]));
         } catch (error) {
-            logger.error(error)
+            logger.error(error);
             throw new AuthenticationError("Could not authenticate token");
         }
         if (payload == null) {
             throw new AuthenticationError("No user metadata found");
         }
-        const person = this.validateJWT(token)
-        return {access_token: token, person: person};
+        const person = this.validateJWT(token);
+        return { access_token: token, person: person };
     }
 
     public static validateJWT(token: string): Person {
         try {
             return jwt.verify(token, process.env.JWTSecretKey || "") as Person;
         } catch (error) {
-            throw new AuthenticationError('Invalid token');
+            throw new AuthenticationError("Invalid token");
         }
     }
 }

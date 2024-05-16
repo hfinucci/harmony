@@ -11,7 +11,13 @@ export class MemberService {
     }
 
     public static async getOrgsByUser(user: number) {
-        return await MemberPersistence.getOrgsByUser(user);
+        return (await MemberPersistence.getOrgsByUser(user)).map(
+            (org) =>
+                ({
+                ...org,
+                image: "http://localhost:54321/storage/v1/object/public/orgs_images/" + org.id + "/profile.png"
+            })
+        );
     }
 
     static async deleteMemberById(user: number, org: number) {

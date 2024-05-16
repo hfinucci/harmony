@@ -11,11 +11,13 @@ import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import { useTranslation } from "react-i18next";
 import { Song } from "../SongsPage/SongsPage.tsx";
 import { Org } from "../../types/dtos/Org.ts";
+import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
     const [songs, setSongs] = useState<Song[]>([]);
+    const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
 
     const orgId = useParams();
 
@@ -26,6 +28,7 @@ const OrgPage = () => {
             if (rsp?.status == 200) {
                 const info = await rsp.json();
                 setOrg(info);
+                setImage(info.image);
             }
         });
     }, []);
@@ -70,7 +73,13 @@ const OrgPage = () => {
     return (
         <div>
             <div className="absolute z-1 bg-gradient-to-t from-black w-full h-96 bg-cover bg-center" />
-            <header className="w-full -mt-24 h-96 bg-[url('http://localhost:54321/storage/v1/object/sign/org-images/8323271.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJvcmctaW1hZ2VzLzgzMjMyNzEuanBnIiwiaWF0IjoxNzA1MDg4MzI3LCJleHAiOjE3MzY2MjQzMjd9.ZsSGXqbz1GiiPhxun0zXq4M69gm7L6LkmLDL7Q_qpwU&t=2024-01-12T19%3A38%3A47.152Z')] bg-cover bg-center flex justify-start items-end">
+            <header
+                className={
+                    "w-full -mt-24 h-96 bg-[url('" +
+                    image +
+                    "')] bg-cover bg-center flex justify-start items-end"
+                }
+            >
                 {org && (
                     <div className="flex w-full z-10 justify-between">
                         <h1 className="m-5 text-center text-5xl text-white drop-shadow-lg">
@@ -142,7 +151,15 @@ const OrgPage = () => {
                                                 />
                                             </tr>
                                             <SongCard
-                                                song={{name: elem.name, id: elem.id, created: elem.created, lastmodified: elem.lastmodified} as Song}
+                                                song={
+                                                    {
+                                                        name: elem.name,
+                                                        id: elem.id,
+                                                        created: elem.created,
+                                                        lastmodified:
+                                                            elem.lastmodified,
+                                                    } as Song
+                                                }
                                                 fetchSongs={fetchSongs}
                                             />
                                         </React.Fragment>

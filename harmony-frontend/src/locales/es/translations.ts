@@ -168,6 +168,16 @@ export const TRANSLATIONS_ES = {
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
+        createSongModal: {
+            title: "Crear Canción",
+            name: "Nombre",
+            select: "Seleccionar una organización",
+            create: "Crear",
+            cancel: "Cancelar",
+            error: {
+                name: "El nombre de la canción debe tener menos de 8 caracteres",
+            },
+        },
         navbar: {
             login: "Iniciar sesión",
             register: "Registrarse",

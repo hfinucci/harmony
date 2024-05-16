@@ -4,6 +4,7 @@ import { SongService } from "../../service/songService";
 import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
 import { Song } from "../../pages/SongsPage/SongsPage";
+import {useTranslation} from "react-i18next";
 
 const CreateSongModal = ({
     org,
@@ -15,6 +16,8 @@ const CreateSongModal = ({
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
     const [orgs, setOrgs] = useState<any>();
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         const userId = localStorage.getItem("harmony-uid") as string;
@@ -78,7 +81,7 @@ const CreateSongModal = ({
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        Crear Canción
+                                        {t("components.createSongModal.title")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -90,7 +93,7 @@ const CreateSongModal = ({
                                             <input
                                                 type="text"
                                                 id="name"
-                                                placeholder="Name"
+                                                placeholder={t("components.createSongModal.name")}
                                                 {...register("name", {
                                                     required: true,
                                                     minLength: 8,
@@ -102,9 +105,7 @@ const CreateSongModal = ({
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    El nombre de la organización
-                                                    debe tener al menos 8
-                                                    caracteres
+                                                    {t("components.createSongModal.error.name")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -135,7 +136,7 @@ const CreateSongModal = ({
                                                         <option
                                                             value={0}
                                                             label={
-                                                                "Select an organization"
+                                                                t("components.createSongModal.select")
                                                             }
                                                             disabled={true}
                                                             selected={true}
@@ -147,7 +148,7 @@ const CreateSongModal = ({
                                         {errors.org && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    Seleccione una organización
+                                                    {t("components.createSongModal.select")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -162,13 +163,13 @@ const CreateSongModal = ({
                                                 }
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                Cancelar
+                                                {t("components.createSongModal.cancel")}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                Crear
+                                                {t("components.createSongModal.create")}
                                             </button>
                                         </div>
                                     </form>

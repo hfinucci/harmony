@@ -1,6 +1,6 @@
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {socket} from "../../socket.ts";
-import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
+import {KeyboardShortcuts, MidiNumbers, Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnectIcon.tsx";
 import {Song} from "../SongsPage/SongsPage.tsx";

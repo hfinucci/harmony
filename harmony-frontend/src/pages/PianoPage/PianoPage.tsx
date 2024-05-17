@@ -1,8 +1,9 @@
-import {useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {socket} from "../../socket.ts";
-import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
+import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
 import 'react-piano/dist/styles.css';
-import {log} from "tone/build/esm/core/util/Debug";
+import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnectIcon.tsx";
+import {Song} from "../SongsPage/SongsPage.tsx";
 
 interface Note {
     on: number;
@@ -10,13 +11,20 @@ interface Note {
     velocity: number;
 }
 
-const PianoPage = () => {
+interface MIDIEvent {
+    composeId: string;
+    userId: number;
+    note: Note;
+}
+
+const PianoPage = (song: Song) => {
     const [context, setContext] = useState(new AudioContext());
     // const context: AudioContext = new AudioContext();
     // let context: AudioContext;
     // const oscillators: Record<number, OscillatorNode> = {};
     const [oscillators, setOscillators] =
         useState<Record<number, OscillatorNode>>({});
+    console.log("RERENDER!")
     // const [oscillators, setOscillators] = useState<OscillatorNode>();
 
     const [isConnected, setIsConnected] = useState(socket.connected);
@@ -36,13 +44,19 @@ const PianoPage = () => {
                 sysex: false
             }).then(onMIDISuccess, onMIDIFailure);
         } else {
-            console.log("No puede haber tiki tiki porque no tenes soporte para MIDI.");
+            console.log("No MIDI support in your browser.");
         }
     }, [])
 
+    // useEffect(() => {
+    //     console.log("CAMBIOOOOOOO")
+    //     console.log(pianoState)
+    //     console.log(enabled)
+    //     setPianoState(enabled)
+    // },[enabled]);
+
     useEffect(() => {
         function onConnect() {
-            console.log("me conecte al socket desde el cliente!")
             setIsConnected(true);
         }
 
@@ -52,14 +66,14 @@ const PianoPage = () => {
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
-        socket.on('color_id', (value) => {
+        socket.on('serverMidi', gotExternalMidiMessage);
+        socket.on('colorId', (value) => {
             setColorId(value)
         })
         socket.on('presskey', (noteToPlay: string) => {
             console.log(`reproduciendo ${noteToPlay}`)
             // playSynth(noteToPlay)
         })
-        socket.on('serverMidi', gotExternalMidiMessage);
 
         return () => {
             socket.off('connect', onConnect);
@@ -67,8 +81,11 @@ const PianoPage = () => {
         };
     }, [socket]);
 
-    function gotExternalMidiMessage(data: Note) {
-        play(data)
+    function gotExternalMidiMessage(data: MIDIEvent) {
+        console.log("ENABLED")
+        console.log("PIANO STATE")
+        console.log(data)
+        play(data.note)
     }
 
     function onMIDImessage(messageData: MIDIMessageEvent) {
@@ -78,7 +95,7 @@ const PianoPage = () => {
             velocity: messageData.data[2]
         }
         // play(note);
-        socket.emit('clientMidi', note);
+        socket.emit('clientMidi', { composeId: "song?.composeId", userId: 1000, note: note } as MIDIEvent);
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
     }
 
@@ -120,7 +137,6 @@ const PianoPage = () => {
         setActiveNotes(prevState => prevState.filter(note => note !== pitch));
         context.resume();
         // oscillators?.stop(context.currentTime + 0.1);z
-        console.log(oscillators)
         const currentOscillator = oscillators[frequency];
         if (currentOscillator) {
             currentOscillator.stop(context.currentTime);
@@ -129,8 +145,8 @@ const PianoPage = () => {
     }
 
     function onMIDISuccess(midiData: MIDIAccess) {
+        // console.log(midi)
         midi = midiData;
-        console.log(midi)
         const allInputs = midi.inputs.values();
         for (let input = allInputs.next(); input && !input.done; input = allInputs.next()) {
             input.value.onmidimessage = onMIDImessage;
@@ -150,19 +166,23 @@ const PianoPage = () => {
     });
     return (
         <div>
-            <Piano
-                noteRange={{ first: firstNote, last: lastNote }}
-                playNote={(midiNumber) => {
-                    console.log(midiNumber)
-                }}
-                stopNote={(midiNumber) => {
-                    // Stop playing a given note - see notes below
-                }}
-                width={1000}
-                activeNotes={activeNotes}
-            />
+            {isConnected ? (
+                <Piano
+                    noteRange={{ first: firstNote, last: lastNote }}
+                    playNote={(midiNumber) => {
+                        console.log(midiNumber)
+                    }}
+                    stopNote={(midiNumber) => {
+                        // Stop playing a given note - see notes below
+                    }}
+                    width={1000}
+                    activeNotes={activeNotes}
+                />
+            ) : (
+                <TryingToConnectIcon />
+            )}
         </div>
     );
-};
+}
 
 export default PianoPage;

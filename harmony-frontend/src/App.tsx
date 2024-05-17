@@ -42,9 +42,7 @@ function App() {
                     {localStorage.getItem("harmony-uid") &&
                         <Route path="/songs/:id" element={<EditPage/>}/>
                     }
-                    {localStorage.getItem("harmony-uid") &&
-                        <Route path="/piano" element={<PianoPage/>}/>
-                    }
+                    <Route path="/piano" element={<PianoPage/>}/>
                     {localStorage.getItem("harmony-uid") &&
                         <Route path="/orgs/:id" element={<OrgPage/>}/>
                     }

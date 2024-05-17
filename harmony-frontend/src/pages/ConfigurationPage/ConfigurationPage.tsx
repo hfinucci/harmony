@@ -4,6 +4,7 @@ import SupportedLanguages from "../../types/enums/SupportedLanguages";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
 import { ChangeEvent } from "react";
+import ChangeProfileImageModal from "../../components/ChangeProfileImageModal/ChangeProfileImageModal";
 
 const ConfigurationPage = () => {
     const { t } = useTranslation();
@@ -46,6 +47,13 @@ const ConfigurationPage = () => {
                         {t("pages.configuration.changePassword")}
                     </div>
                     <ChangePasswordModal />
+                </div>
+                <hr className="h-px my-8 bg-gray-200 border-0" />
+                <div className="flex flex-row justify-between">
+                    <div className="text-slate-400">
+                        {t("pages.configuration.changeImage")}
+                    </div>
+                    <ChangeProfileImageModal />
                 </div>
                 <hr className="h-px my-8 bg-gray-200 border-0" />
                 <div className="flex flex-row justify-between">

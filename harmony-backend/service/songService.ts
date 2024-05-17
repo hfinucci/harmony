@@ -1,10 +1,15 @@
 import {CreateSongRequest} from "../models/createSongRequest";
 import {SongPersistence} from '../persistence/songPersistence';
 import {UpdateSongRequest} from "../models/updateSongRequest";
+import {Block, ComposePersistence} from "../persistence/composePersistence";
 
 export class SongService {
 
     public static async createSong(request: CreateSongRequest) {
+        const composeId = await ComposePersistence.createSong();
+        if (composeId) {
+            request.composeId = composeId;
+        }
         return await SongPersistence.createSong(request);
     }
 
@@ -28,5 +33,9 @@ export class SongService {
 
     static async deleteSongById(id: number) {
         return await SongPersistence.deleteSongById(id);
+    }
+
+    static async getSongBlocksById(id: string): Promise<Block[][]> {
+        return await ComposePersistence.getSongBlocksById(id)
     }
 }

@@ -1,5 +1,5 @@
-import server, { logger } from "./server";
-import { connectToDB } from './persistence/dbConfig';
+import server, {logger} from "./server";
+import {connectToDB} from './persistence/dbConfig';
 import {connectToMongoDB} from "./persistence/mongoConfig";
 import {ComposePersistence} from "./persistence/composePersistence";
 
@@ -8,19 +8,13 @@ const PORT = process.env.PORT || '3000'
 
 logger.info("Starting server...")
 
-server.listen({ host: ADDRESS, port: parseInt(PORT, 10) }, async function (err: any, address: any) {
-  if (err) {
-    logger.error(err)
-    process.exit(1)
-  }
-  await connectToDB()
-  await connectToMongoDB()
-
-  await ComposePersistence.initializeSession()
-  await ComposePersistence.insertBlock(
-      "65fcbef8461488dff268d070",
-      3,
-      2,
-      {chord: "Bb", lyrics: "otro bloque"})
-  logger.info(`Server listening at ${address}`)
+server.listen({host: ADDRESS, port: parseInt(PORT, 10)}, async function (err: any, address: any) {
+    if (err) {
+        logger.error(err)
+        process.exit(1)
+    }
+    await connectToDB()
+    await connectToMongoDB()
+    await ComposePersistence.initializeSession()
+    logger.info(`Server listening at ${address}`)
 })

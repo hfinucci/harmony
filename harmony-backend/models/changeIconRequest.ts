@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 const Request = z.object({
-    url: z.string(),
+    image: z.string().regex(new RegExp(/^(cow|dolphin|giraffe|leopard|lion|swan).png/)),
 }).strict();
 
 export function parseChangeIconRequest(payload: any) {

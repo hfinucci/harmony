@@ -193,7 +193,7 @@ const EditPage = () => {
                                         className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
                                     <IoAddCircleSharp className="h-10 w-10"/>
                                 </button>
-                                <button onClick={submit}>submit</button>
+                                <button onClick={submit} className="hidden">submit</button>
                             </div>
                         </div>
                     }

@@ -96,7 +96,7 @@ const CreateSongModal = ({
                                                 placeholder={t("components.createSongModal.name")}
                                                 {...register("name", {
                                                     required: true,
-                                                    minLength: 8,
+                                                    maxLength: 50,
                                                 })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
@@ -116,7 +116,7 @@ const CreateSongModal = ({
                                             <div>
                                                 <select
                                                     id="name"
-                                                    defaultValue={org}
+                                                    defaultValue={org == null? 0: org}
                                                     {...register("org", {
                                                         required: true,
                                                         min: 1,
@@ -129,7 +129,6 @@ const CreateSongModal = ({
                                                             key={index}
                                                             value={o.id}
                                                             label={o.name}
-                                                            selected={org == o}
                                                         />
                                                     ))}
                                                     {!org && (
@@ -138,8 +137,6 @@ const CreateSongModal = ({
                                                             label={
                                                                 t("components.createSongModal.select")
                                                             }
-                                                            disabled={true}
-                                                            selected={true}
                                                         />
                                                     )}
                                                 </select>
@@ -148,7 +145,7 @@ const CreateSongModal = ({
                                         {errors.org && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createSongModal.select")}
+                                                    {t("components.createSongModal.error.org")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}

@@ -1,6 +1,6 @@
-import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {MemberService} from "../../service/memberService.ts";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { MemberService } from "../../service/memberService.ts";
 
 const InvitationPage = () => {
     const nav = useNavigate();
@@ -8,7 +8,7 @@ const InvitationPage = () => {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const orgId = parseInt(searchParams.get("orgid") ?? "0");
+        const orgId = parseInt(searchParams.get("org") ?? "0");
 
         MemberService.createMembership(orgId).then(rsp => {
             switch(rsp.status) {

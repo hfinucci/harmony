@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,8 +22,11 @@ export const LoginCard = () => {
 
     const nav = useNavigate();
     const { t } = useTranslation();
+    const location = useLocation();
 
     const [loginError, setLoginError]: any = useState();
+    const searchParams = new URLSearchParams(location.search);
+    const redirect = searchParams.get("redirect");
 
     const submitLogin =  async (data: any) => {
         const login = await UserService.signInWithUserAndPassword(
@@ -41,7 +44,10 @@ export const LoginCard = () => {
             localStorage['harmony-profile-image'] = authJson.person.image
             window.dispatchEvent(new Event("harmony"));
             window.dispatchEvent(new Event("harmony-pi"))
-            nav("/", {replace: true})
+            if (redirect)
+                nav(redirect, {replace: true})
+            else
+                nav("/", {replace: true})
         }
         else setLoginError(t("pages.login.error.credentials"));
     }

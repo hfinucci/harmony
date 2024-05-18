@@ -31,7 +31,6 @@ export default async function memberController(fastify: FastifyInstance, opts: a
         }
     });
 
-    // Send email request to join the organization as member
     server.post(BASE_URL + '/request', async (req, rep) => {
         try {
             const request = parseSendJoinOrgRequest(req.body);

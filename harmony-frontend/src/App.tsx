@@ -11,6 +11,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import EditPage from "./pages/EditPage/EditPage";
 import { useState } from "react";
+import InvitationPage from "./pages/InvitationPage/InvitationPage.tsx";
 
 export const BASE_URL = "http://127.0.0.1:3000";
 
@@ -55,6 +56,9 @@ function App() {
                     }
                     {auth &&
                         <Route path="/orgs" element={<OrgsPage/>}/>
+                    }
+                    {auth &&
+                        <Route path="/accept-invitation" element={<InvitationPage/>}/>
                     }
                 </Routes>
             </div>

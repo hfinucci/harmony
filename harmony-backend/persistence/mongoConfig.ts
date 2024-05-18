@@ -1,7 +1,7 @@
 import {Collection, MongoClient} from 'mongodb';
 import {logger} from "../server";
 
-const uri = 'mongodb://localhost:27017';
+const uri = 'mongodb://mongodb:27017';
 const dbName = 'harmony';
 const collectionName = "song"
 

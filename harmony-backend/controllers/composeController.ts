@@ -14,7 +14,7 @@ interface Note {
 }
 
 interface MIDIEvent {
-    songId: string;
+    composeId: string;
     userId: number;
     note: Note;
 }
@@ -49,7 +49,7 @@ export default async function composeController(fastify: FastifyInstance, opts: 
             })
             socket.on("clientMidi", async (payload: MIDIEvent) => {
                 logger.info(payload);
-                const resposen = await composeService.addOrUpdateContributor(payload.userId, payload.songId)
+                await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
                 socket.emit("serverMidi", payload);
             });
             socket.on("presskey", (payload) => {

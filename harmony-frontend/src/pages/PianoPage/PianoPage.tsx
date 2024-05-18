@@ -17,7 +17,7 @@ interface MIDIEvent {
     note: Note;
 }
 
-const PianoPage = (song: Song) => {
+const PianoPage = ( { song } ) => {
     const [context, setContext] = useState(new AudioContext());
     // const context: AudioContext = new AudioContext();
     // let context: AudioContext;
@@ -95,7 +95,10 @@ const PianoPage = (song: Song) => {
             velocity: messageData.data[2]
         }
         // play(note);
-        socket.emit('clientMidi', { composeId: "song?.composeId", userId: 1000, note: note } as MIDIEvent);
+        const userId = Number(localStorage.getItem("harmony-uid"))
+        console.log("COMPOSE ID:")
+        console.log(song?.composeId)
+        socket.emit('clientMidi', { composeId: song?.composeId, userId: userId, note: note } as MIDIEvent);
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
     }
 

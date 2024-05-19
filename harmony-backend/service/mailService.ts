@@ -13,7 +13,18 @@ export class MailService {
 
         await this.sendMail(user, subject, html);
     }
-    public static async sendMail(to: string, subject: string, html: string) {
+
+    public static async sendNewMemberJoinedMail(user: string[], org: number) {
+        const subject = "A new member has joined your organization!";
+        const html = `<p>Hi there!</p>
+        <p>A new member has joined your organization on Harmony!</p>
+        <p>Click <a href="http://localhost:5173/org/${org}">here</a> to see who joined!</p>
+        <p>Thanks for using Harmony!</p>`;
+
+        await this.sendMail(user, subject, html);
+    }
+
+    public static async sendMail(to: string | string[], subject: string, html: string) {
         const transporter = nodemailer.createTransport({
             service: process.env.MAIL_HOST,
             auth: {

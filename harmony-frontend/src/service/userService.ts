@@ -68,6 +68,18 @@ export class UserService {
         });
     }
 
+    public static async changeProfileImage(userId: number, image: string) {
+        return await fetch(BASE_URL + "/api/users/" + userId , {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                image: image,
+            }),
+        });
+    }
+
     public static async deleteAccount(userId: number) {
         return await fetch(BASE_URL + "/api/users/" + userId, {
             method: "DELETE",

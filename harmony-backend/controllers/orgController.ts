@@ -79,7 +79,13 @@ export default async function orgController(
             try {
                 parseId(id);
                 logger.info("Fetching members from org with id: " + id);
-                return await MemberService.getMembersByOrg(id);
+                const members = await MemberService.getMembersByOrg(id);
+                return members.map((member) => ({
+                    ...member,
+                    image:
+                        "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                        member.image,
+                }));
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

@@ -52,10 +52,6 @@ export default async function composeController(fastify: FastifyInstance, opts: 
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
                 socket.emit("serverMidi", payload);
             });
-            socket.on("presskey", (payload) => {
-                logger.info(payload)
-                socket.broadcast.emit("presskey", payload);
-            });
         });
     });
 

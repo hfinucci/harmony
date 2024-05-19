@@ -3,7 +3,6 @@ import {socket} from "../../socket.ts";
 import {KeyboardShortcuts, MidiNumbers, Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnectIcon.tsx";
-import {Song} from "../SongsPage/SongsPage.tsx";
 
 interface Note {
     on: number;
@@ -17,18 +16,11 @@ interface MIDIEvent {
     note: Note;
 }
 
-const PianoPage = ( { song } ) => {
+const PianoPage = ( { song, enabled }) => {
     const [context, setContext] = useState(new AudioContext());
-    // const context: AudioContext = new AudioContext();
-    // let context: AudioContext;
-    // const oscillators: Record<number, OscillatorNode> = {};
     const [oscillators, setOscillators] =
         useState<Record<number, OscillatorNode>>({});
-    console.log("RERENDER!")
-    // const [oscillators, setOscillators] = useState<OscillatorNode>();
-
     const [isConnected, setIsConnected] = useState(socket.connected);
-
     const [activeNotes, setActiveNotes] = useState<number[]>([]);
     const [colorId, setColorId] = useState(1);
 
@@ -48,13 +40,6 @@ const PianoPage = ( { song } ) => {
         }
     }, [])
 
-    // useEffect(() => {
-    //     console.log("CAMBIOOOOOOO")
-    //     console.log(pianoState)
-    //     console.log(enabled)
-    //     setPianoState(enabled)
-    // },[enabled]);
-
     useEffect(() => {
         function onConnect() {
             setIsConnected(true);
@@ -70,10 +55,6 @@ const PianoPage = ( { song } ) => {
         socket.on('colorId', (value) => {
             setColorId(value)
         })
-        socket.on('presskey', (noteToPlay: string) => {
-            console.log(`reproduciendo ${noteToPlay}`)
-            // playSynth(noteToPlay)
-        })
 
         return () => {
             socket.off('connect', onConnect);
@@ -82,9 +63,6 @@ const PianoPage = ( { song } ) => {
     }, [socket]);
 
     function gotExternalMidiMessage(data: MIDIEvent) {
-        console.log("ENABLED")
-        console.log("PIANO STATE")
-        console.log(data)
         play(data.note)
     }
 
@@ -94,12 +72,10 @@ const PianoPage = ( { song } ) => {
             pitch: messageData.data[1],
             velocity: messageData.data[2]
         }
+        // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
         // play(note);
         const userId = Number(localStorage.getItem("harmony-uid"))
-        console.log("COMPOSE ID:")
-        console.log(song?.composeId)
-        socket.emit('clientMidi', { composeId: song?.composeId, userId: userId, note: note } as MIDIEvent);
-        // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
+        socket.emit('clientMidi', { composeId: song.composeid, userId: userId, note: note } as MIDIEvent);
     }
 
     function play(note: Note){
@@ -148,7 +124,6 @@ const PianoPage = ( { song } ) => {
     }
 
     function onMIDISuccess(midiData: MIDIAccess) {
-        // console.log(midi)
         midi = midiData;
         const allInputs = midi.inputs.values();
         for (let input = allInputs.next(); input && !input.done; input = allInputs.next()) {

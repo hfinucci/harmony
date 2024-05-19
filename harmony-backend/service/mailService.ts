@@ -8,7 +8,7 @@ export class MailService {
         const subject = "You've been invited to join an organization!";
         const html = `<p>Hi there!</p>
         <p>You've been invited to join an organization on Harmony!</p>
-        <p>Click <a href="http://localhost:5173/accept-invitation?org=${org}">here</a> to join the organization!</p>
+        <p>Click <a href="http://localhost:5173/accept-invitation?user=${user}&org=${org}">here</a> to join the organization!</p>
         <p>Thanks for using Harmony!</p>`;
 
         await this.sendMail(user, subject, html);

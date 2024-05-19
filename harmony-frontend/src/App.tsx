@@ -57,9 +57,7 @@ function App() {
                     {auth &&
                         <Route path="/orgs" element={<OrgsPage/>}/>
                     }
-                    {auth &&
-                        <Route path="/accept-invitation" element={<InvitationPage/>}/>
-                    }
+                    <Route path="/accept-invitation" element={<InvitationPage/>}/>
                 </Routes>
             </div>
         </BrowserRouter>

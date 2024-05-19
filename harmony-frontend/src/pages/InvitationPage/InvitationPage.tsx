@@ -8,16 +8,19 @@ const InvitationPage = () => {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
+        const email = searchParams.get("user") ?? "";
         const orgId = parseInt(searchParams.get("org") ?? "0");
+        const redirectUrl = encodeURIComponent("/accept-invitation?user=" + email + "&org=" + orgId);
 
-        MemberService.createMembership(orgId).then(rsp => {
+        MemberService.createMembership(email, orgId).then(rsp => {
             switch(rsp.status) {
                 case 200:
                     nav("/orgs/" + orgId);
                     break;
                 case 401:
                 case 403:
-                    nav("/login?redirect=/accept-invitation?org=" + orgId);
+                case 400:
+                    nav("/login?redirect=" + redirectUrl, {replace: true});
                     break;
                 default:
 

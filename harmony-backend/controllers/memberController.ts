@@ -18,6 +18,12 @@ export default async function memberController(fastify: FastifyInstance, opts: a
             const request = parseCreateMemberRequest(req.body);
             const user = AuthService.parseJWT(req.headers.authorization)
             if (user.person != null) {
+                if (user.person.email !== request.user) {
+                    logger.error("Logged user id does not match user id in request");
+                    return rep
+                        .code(403)
+                        .send()
+                }
                 logger.info("Adding user " + user.person.name + " to organization: " + request.org);
                 return await MemberService.createMember(user.person.id, request.org);
             }

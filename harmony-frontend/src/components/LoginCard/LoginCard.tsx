@@ -26,7 +26,7 @@ export const LoginCard = () => {
 
     const [loginError, setLoginError]: any = useState();
     const searchParams = new URLSearchParams(location.search);
-    const redirect = searchParams.get("redirect");
+    const redirect = searchParams.get("redirect") ? decodeURIComponent(searchParams.get("redirect")!) : null;
 
     const submitLogin =  async (data: any) => {
         const login = await UserService.signInWithUserAndPassword(
@@ -44,9 +44,9 @@ export const LoginCard = () => {
             localStorage['harmony-profile-image'] = authJson.person.image
             window.dispatchEvent(new Event("harmony"));
             window.dispatchEvent(new Event("harmony-pi"))
-            if (redirect)
+            if (redirect) {
                 nav(redirect, {replace: true})
-            else
+            } else
                 nav("/", {replace: true})
         }
         else setLoginError(t("pages.login.error.credentials"));

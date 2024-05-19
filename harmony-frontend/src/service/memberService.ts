@@ -1,15 +1,17 @@
 const BASE_URL = "http://127.0.0.1:3000";
 
 export class MemberService {
-    public static async createMembership(oid: number) {
+    public static async createMembership(email: string, oid: number) {
+        console.log("JWT: " + localStorage.getItem('harmony-jwt'))
         return await fetch(BASE_URL + "/api/members", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
+                "Authorization": ("Bearer " + localStorage.getItem('harmony-jwt')) as string
             },
             body: JSON.stringify({
-                org: oid,
+                user: email,
+                org: +oid,
             })
         })
     }
@@ -22,7 +24,7 @@ export class MemberService {
                 "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
             },
             body: JSON.stringify({
-                org: oid,
+                org: +oid,
                 user: user
             })
         })

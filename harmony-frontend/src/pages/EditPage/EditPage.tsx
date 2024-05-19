@@ -2,29 +2,25 @@ import React, {useEffect, useState} from "react";
 import {Song} from "../SongsPage/SongsPage";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
-import { useParams, useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {SongService} from "../../service/songService";
-import { IoPeopleSharp } from "react-icons/io5";
-import { IoAddCircleSharp } from "react-icons/io5";
+import {IoAddCircleSharp, IoPeopleSharp} from "react-icons/io5";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
-import { FaRegHeart } from "react-icons/fa";
-import { CgExport } from "react-icons/cg";
-import { FaHeart } from "react-icons/fa";
+import {FaMusic} from "react-icons/fa";
+import {CgExport} from "react-icons/cg";
 import {useTranslation} from "react-i18next";
 import {Block} from "../../types/dtos/Block";
 import PreviewSongComponent from "../../components/PreviewSongComponent/PreviewSongComponent";
 import {AddBlock} from "../../components/AddBlock/AddBlock";
+import PianoPage from "../PianoPage/PianoPage.tsx";
 
 
 const EditPage = () => {
     const [song, setSong] = useState<Song>();
     const [songs, setSongs] = useState<Song[]>([]);
     const [org, setOrg] = useState<Org>();
-
     const [view, setView] = useState<number>(1)
-    const [like, setLike] = useState<boolean>(false)
-
+    const [piano, setPiano] = useState<boolean>(false)
     const [blocks, setBlocks] = useState<Block[][]>([[{note:"A#", lyric:"Hello"}]])
 
     const songId = useParams();
@@ -63,6 +59,10 @@ const EditPage = () => {
     const navToSong = (song: Song) => {
         nav("/songs/" + song.id);
     };
+
+    const togglePiano = () => {
+        setPiano(!piano);
+    }
 
     function addBlock(block: Block, x:number, y:number){
         let copy = [...blocks];
@@ -150,15 +150,15 @@ const EditPage = () => {
                             </li>
                         </ul>
                         <div className="flex items-center space-x-3">
-                            {like &&
-                                <button onClick={() => setLike(false)}
-                                        className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                    <FaHeart/></button>
+                            {piano &&
+                                <button onClick={togglePiano}
+                                        className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-300 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                    <FaMusic/></button>
                             }
-                            {!like &&
-                                <button onClick={() => setLike(true)}
+                            {!piano &&
+                                <button onClick={togglePiano}
                                         className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                    <FaRegHeart/></button>
+                                    <FaMusic/></button>
                             }
                             <button
                                 className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
@@ -194,6 +194,9 @@ const EditPage = () => {
                                     <IoAddCircleSharp className="h-10 w-10"/>
                                 </button>
                                 <button onClick={submit}>submit</button>
+                            </div>
+                            <div className={"fixed inset-x-0 bottom-0 flex justify-center mb-4"}>
+                                {piano && <PianoPage enabled={piano} song={song}/>}
                             </div>
                         </div>
                     }

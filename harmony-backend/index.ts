@@ -3,7 +3,7 @@ import {connectToDB} from './persistence/dbConfig';
 import {connectToMongoDB} from "./persistence/mongoConfig";
 import {ComposePersistence} from "./persistence/composePersistence";
 
-const ADDRESS = process.env.ADDRESS || '127.0.0.1'
+const ADDRESS = process.env.ADDRESS || '0.0.0.0'
 const PORT = process.env.PORT || '3000'
 
 logger.info("Starting server...")

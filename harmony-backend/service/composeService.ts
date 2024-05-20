@@ -46,4 +46,17 @@ export class ComposeService {
         const session = await this.sessionHandler.getSession(operation.songId!)
         return await operation.execute(session!);
     }
+
+    public async getContributors(songId: string) : Promise<{contributors: number[] | undefined}> {
+        const session = await this.sessionHandler.getSession(songId)
+        session?.purgeInactiveContributors()
+        const contributors =  session?.contributors.map(s => s.userId)
+        return { contributors: contributors }
+    }
+
+    public async addOrUpdateContributor(userId: number, songId: string) {
+        const session = await this.sessionHandler.getSession(songId)
+        session?.addOrUpdateContributor(userId)
+    }
+
 }

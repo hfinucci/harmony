@@ -7,13 +7,30 @@ import {handleError} from "../utils";
 
 const BASE_URL = '/api/compose'
 
+interface Note {
+    on: number;
+    pitch: number;
+    velocity: number;
+}
+
+interface MIDIEvent {
+    composeId: string;
+    userId: number;
+    note: Note;
+}
+
+
 export default async function composeController(fastify: FastifyInstance, opts: any) {
 
     const composeService = new ComposeService()
+    let color_id = 2
 
     server.ready().then(() => {
         server.io.on("connect", async (socket) => {
             logger.info("a new client has connected!")
+            logger.info(`sending color_id = ${color_id}`)
+            socket.emit("colorId", "colorcito");
+            color_id += 1
             logger.info(socket.id)
             socket.on("disconnect", () => {
                 logger.info("a client has disconnected!")
@@ -24,9 +41,16 @@ export default async function composeController(fastify: FastifyInstance, opts: 
                     socket.emit("compose", response)
                 }
             })
-            socket.on("presskey", (payload) => {
-                logger.info(payload)
-                socket.broadcast.emit("presskey", payload);
+            socket.on("contributors", async(songId) => {
+                const response = await composeService.getContributors(songId)
+                if (response) {
+                    socket.emit("contributors", response)
+                }
+            })
+            socket.on("clientMidi", async (payload: MIDIEvent) => {
+                logger.info(payload);
+                await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
+                socket.emit("serverMidi", payload);
             });
         });
     });

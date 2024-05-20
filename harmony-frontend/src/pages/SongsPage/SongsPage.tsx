@@ -6,6 +6,7 @@ export interface Song {
     id: number;
     name: string;
     org?: string;
+    composeId: string;
     created: string;
     lastmodified: string;
 }

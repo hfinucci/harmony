@@ -123,6 +123,9 @@ export const TRANSLATIONS_EN = {
                 preview: "Preview",
             },
         },
+        orgInvitation: {
+            loading: "Processing invitation...",
+        }
     },
     components: {
         changePasswordModal: {

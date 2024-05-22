@@ -1,4 +1,4 @@
 export interface Block {
-    note: string;
-    lyric: string;
+    chord: string;
+    lyrics: string;
 }

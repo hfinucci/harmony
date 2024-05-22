@@ -4,6 +4,7 @@ import "./OrgCard.css";
 import { useTranslation } from "react-i18next";
 import { ORG_IMAGE_DEFAULT } from "../../utils";
 import { Org } from "../../types/dtos/Org";
+import {Link} from "react-router-dom";
 
 const OrgCard = (org: Org) => {
     const [members, setMembers] = useState<string>();
@@ -25,8 +26,8 @@ const OrgCard = (org: Org) => {
         });
     }, []);
     return (
-        <a
-            href={`/orgs/${org.id}`}
+        <Link
+            to={`/orgs/${org.id}`}
             className="width flex flex-col justify-between bg-white border border-2 border-white hover:border-gray-200 rounded-lg shadow"
         >
             <div className="max-h-52 flex justify-center">
@@ -47,7 +48,7 @@ const OrgCard = (org: Org) => {
                     </p>
                 )}
             </div>
-        </a>
+        </Link>
     );
 };
 

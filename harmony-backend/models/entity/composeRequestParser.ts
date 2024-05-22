@@ -1,4 +1,3 @@
-import {z} from "zod";
 import {AppendBlock, AppendRow, ComposeUseCase, EditBlock, InitializeRoom} from "./useCases";
 import {logger} from "../../server";
 
@@ -16,7 +15,8 @@ export class ComposeRequestParser {
         try {
             request = JSON.parse(rawRequest);
         } catch (e) {
-            throw new Error("Invalid JSON");
+            logger.info("Error in JSON parse: " + e)
+            return undefined;
         }
         for (let i = 0; i <= useCases.length; i++) {
             let result = useCases[i].parse(request);

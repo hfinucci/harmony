@@ -9,6 +9,7 @@ export interface Song {
     composeId: string;
     created: string;
     lastmodified: string;
+    composeid: string;
 }
 
 const SongsPage = () => {

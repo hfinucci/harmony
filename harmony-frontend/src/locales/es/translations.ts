@@ -122,6 +122,7 @@ export const TRANSLATIONS_ES = {
                 edit: "Editar",
                 preview: "Preview",
             },
+            me: "Me"
         },
     },
     components: {

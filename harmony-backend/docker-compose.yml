@@ -10,6 +10,8 @@ services:
         - 3000:3000
     expose:
       - 54322
+      - 54321
+      - 54323
     env_file:
       - .env
     networks:

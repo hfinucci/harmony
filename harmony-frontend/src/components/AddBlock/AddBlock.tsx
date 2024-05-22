@@ -12,7 +12,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
     defaultBlock: Block
 }) => {
     const [width, setWidth] = useState<number>(0)
-    const [content, setContent] = useState(defaultBlock.lyric);
+    const [content, setContent] = useState(defaultBlock.lyrics);
     const span = useRef(null);
 
     const {
@@ -25,7 +25,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
     const submitBlock = () => {
         const name = "form" + rowIndex + "_" + blockIndex
         const form = document.forms[name]
-        submit(rowIndex, blockIndex, {note: form.elements[0].value, lyric: form.elements[1].value})
+        submit(rowIndex, blockIndex, {chord: form.elements[0].value, lyrics: form.elements[1].value})
     }
 
     function handleEnter(event) {
@@ -67,10 +67,10 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
                 <form name={"form" + rowIndex + "_" + blockIndex} autoComplete="off" className={"flex flex-col gap-4 h-24 w-fit"}>
                     <div className="flex flex-row justify-between">
                         <input
-                            autoFocus={defaultBlock.note == '' && defaultBlock.lyric == '' }
+                            autoFocus={defaultBlock.chord == '' && defaultBlock.lyrics == '' }
                             id="note"
-                            defaultValue={defaultBlock? defaultBlock.note : undefined}
-                            {...register("note", {
+                            defaultValue={defaultBlock? defaultBlock.chord : undefined}
+                            {...register("chord", {
                                 required: true,
                                 validate: { invalidNote },
                             })}
@@ -84,8 +84,8 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
                     <span id="hide" ref={span}>{content}</span>
                     <input
                         id="lyric"
-                        defaultValue={defaultBlock? defaultBlock.lyric : undefined}
-                        {...register("lyric", {
+                        defaultValue={defaultBlock? defaultBlock.lyrics : undefined}
+                        {...register("lyrics", {
                             required: true
                         })}
                         onKeyDown={handleEnter}

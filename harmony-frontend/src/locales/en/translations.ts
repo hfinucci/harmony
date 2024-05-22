@@ -124,6 +124,9 @@ export const TRANSLATIONS_EN = {
             },
             me: "Yo"
         },
+        orgInvitation: {
+            loading: "Processing invitation...",
+        }
     },
     components: {
         changePasswordModal: {

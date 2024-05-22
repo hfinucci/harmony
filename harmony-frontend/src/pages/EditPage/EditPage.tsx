@@ -195,7 +195,7 @@ const EditPage = () => {
                                 </button>
                                 <button onClick={submit}>submit</button>
                             </div>
-                            <div className={"fixed inset-x-0 bottom-0 flex justify-center mb-4"}>
+                            <div className={"h-fit fixed inset-x-0 bottom-0 flex justify-center mb-4"}>
                                 {piano && <PianoPage enabled={piano} song={song}/>}
                             </div>
                         </div>

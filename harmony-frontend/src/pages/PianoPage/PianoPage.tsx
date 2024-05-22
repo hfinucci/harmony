@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 import {socket} from "../../socket.ts";
-import {KeyboardShortcuts, MidiNumbers, Piano} from "react-piano";
+import {KeyboardShortcuts, MidiNumbers, Piano as ReactPiano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnectIcon.tsx";
+import {Piano} from "@tonejs/piano/build/piano/Piano";
 
 interface Note {
     on: number;
@@ -16,18 +17,60 @@ interface MIDIEvent {
     note: Note;
 }
 
-const PianoPage = ( { song, enabled }) => {
+const midiToNoteMap: Map<number, string> = new Map([
+    [48, "C3"],
+    [49, "C#3"],
+    [50, "D3"],
+    [51, "D#3"],
+    [52, "E3"],
+    [53, "F3"],
+    [54, "F#3"],
+    [55, "G3"],
+    [56, "G#3"],
+    [57, "A3"],
+    [58, "A#3"],
+    [59, "B3"],
+    [60, "C4"],
+    [61, "C#4"],
+    [62, "D4"],
+    [63, "D#4"],
+    [64, "E4"],
+    [65, "F4"],
+    [66, "F#4"],
+    [67, "G4"],
+    [68, "G#4"],
+    [69, "A4"],
+    [70, "A#4"],
+    [71, "B4"]
+]);
+
+
+const PianoPage = ({song, enabled}) => {
     const [context, setContext] = useState(new AudioContext());
     const [oscillators, setOscillators] =
         useState<Record<number, OscillatorNode>>({});
     const [isConnected, setIsConnected] = useState(socket.connected);
+    const [isSampleLoaded, setSampleLoaded] = useState(false);
     const [activeNotes, setActiveNotes] = useState<number[]>([]);
     const [colorId, setColorId] = useState(1);
+    const [playedPianoNotes, setPlayedPianoNotes] = useState<number[]>([]);
 
     let midi: MIDIAccess | undefined;
+    let tonePiano: Piano
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        if (!isSampleLoaded) {
+            tonePiano = new Piano({
+                velocities: 5
+            })
+            tonePiano.toDestination()
+            tonePiano.load().finally(() => {
+                setSampleLoaded(true)
+            })
+        }
+
+
+        navigator.mediaDevices.getUserMedia({audio: true})
             .then(() => {
                 setContext(new AudioContext());
             })
@@ -75,17 +118,38 @@ const PianoPage = ( { song, enabled }) => {
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
         // play(note);
         const userId = Number(localStorage.getItem("harmony-uid"))
-        socket.emit('clientMidi', { composeId: song.composeid, userId: userId, note: note } as MIDIEvent);
+        socket.emit('clientMidi', {composeId: song.composeid, userId: userId, note: note} as MIDIEvent);
     }
 
-    function play(note: Note){
+    const playPianoOn = (note: Note) => {
+        const letter = midiToNoteMap.get(note.pitch)
+        if (!letter) {
+            return
+        }
+        setPlayedPianoNotes((prevNotes) => [...prevNotes, note.pitch]);
+        tonePiano.keyDown({note: letter})
+    };
+
+    const playPianoStop = (note: Note) => {
+        const letter = midiToNoteMap.get(note.pitch)
+        setPlayedPianoNotes((prevNotes) => prevNotes.filter((n) => n !== note.pitch));
+        tonePiano.keyUp({note: letter})
+    };
+
+    function play(note: Note) {
         const pitch = note.pitch;
-        switch(note.on) {
+        switch (note.on) {
             case 144:
-                noteOn(pitch, calculateFrequency(pitch));
+                playPianoOn(note)
+                // playSynthOn(pitch, calculateFrequency(pitch));
+                setActiveNotes(prevState => {
+                    return [...prevState, pitch]
+                });
                 break;
             case 128:
-                noteOff(pitch, calculateFrequency(pitch));
+                playPianoStop(note)
+                // playSynthOff(pitch, calculateFrequency(pitch));
+                setActiveNotes(prevState => prevState.filter(note => note !== pitch));
                 break;
         }
     }
@@ -94,15 +158,12 @@ const PianoPage = ( { song, enabled }) => {
         return Math.pow(2, ((pitch - 69) / 12)) * 440;
     }
 
-    function noteOn(pitch: number, frequency: number) {
+    function playSynthOn(pitch: number, frequency: number) {
         const osc = new OscillatorNode(context);
         setOscillators(prevOscillators => ({
             ...prevOscillators,
             [frequency]: osc
         }));
-        setActiveNotes(prevState => {
-            return [...prevState, pitch]
-        });
         context.resume();
         osc.type = 'sawtooth';
         osc.frequency.value = frequency;
@@ -111,11 +172,8 @@ const PianoPage = ( { song, enabled }) => {
         osc.stop(context.currentTime + 0.5);
     }
 
-    // TODO arreglar el useState para que oscilators se carge correctamente
-    function noteOff(pitch: number, frequency: number) {
-        setActiveNotes(prevState => prevState.filter(note => note !== pitch));
+    function playSynthOff(pitch: number, frequency: number) {
         context.resume();
-        // oscillators?.stop(context.currentTime + 0.1);z
         const currentOscillator = oscillators[frequency];
         if (currentOscillator) {
             currentOscillator.stop(context.currentTime);
@@ -135,29 +193,24 @@ const PianoPage = ( { song, enabled }) => {
         console.log("No puede haber tiki tiki porque no se encontro un MIDI.");
     }
 
-    const firstNote = MidiNumbers.fromNote('c3');
-    const lastNote = MidiNumbers.fromNote('b4');
-    const keyboardShortcuts = KeyboardShortcuts.create({
-        firstNote: firstNote,
-        lastNote: lastNote,
-        keyboardConfig: KeyboardShortcuts.HOME_ROW,
-    });
     return (
-        <div>
-            {isConnected ? (
-                <Piano
-                    noteRange={{ first: firstNote, last: lastNote }}
-                    playNote={(midiNumber) => {
-                        console.log(midiNumber)
-                    }}
-                    stopNote={(midiNumber) => {
-                        // Stop playing a given note - see notes below
-                    }}
-                    width={1000}
-                    activeNotes={activeNotes}
-                />
+        <div className={"flex justify-center"}>
+            {(isConnected && isSampleLoaded) ? (
+                <div>
+                    <ReactPiano
+                        noteRange={{first: MidiNumbers.fromNote('c3'), last: MidiNumbers.fromNote('b4')}}
+                        playNote={(midiNumber) => {
+                        }}
+                        stopNote={(midiNumber) => {
+                        }}
+                        width={1000}
+                        activeNotes={activeNotes}
+                    />
+                </div>
             ) : (
-                <TryingToConnectIcon />
+                <div className={"mb-28"}>
+                    <TryingToConnectIcon/>
+                </div>
             )}
         </div>
     );

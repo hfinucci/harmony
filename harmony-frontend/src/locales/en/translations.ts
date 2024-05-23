@@ -134,6 +134,10 @@ export const TRANSLATIONS_EN = {
             org: {
                 notFound: "Organization not found",
                 forbidden: "You don't have permission to access this organization",
+            },
+            song: {
+                notFound: "Song not found",
+                forbidden: "You don't have permission to access this song",
             }
         }
     },

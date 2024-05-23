@@ -7,25 +7,20 @@ import { useTranslation } from "react-i18next";
 const DeleteAccountModal = () => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
+    const [goToHome, setGoToHome] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
 
     const submitDeleteAccount = async () => {
-        const getLoggedUserRes = await UserService.getLoggedUser();
-        if (getLoggedUserRes?.status == 200) {
-            const loggedUser = await getLoggedUserRes.json();
-
-            const deleteAccountRes = await UserService.deleteAccount(
-                loggedUser.id
-            );
-            if (deleteAccountRes?.status == 200) {
-                setShowModal(false);
-                navigate("/");
-            } else setError(t("components.deleteAccountModal.error"));
-        } else {
+        const deleteAccountRes = await UserService.deleteAccount();
+        if (deleteAccountRes.status == 200) {
+            setShowModal(false);
+            localStorage.removeItem("harmony-jwt")
+            localStorage.removeItem("harmony-uid")
+            localStorage.removeItem("harmony-profile-image")
             navigate("/");
-        }
+        } else setError(t("components.deleteAccountModal.error"));
     };
 
     return (

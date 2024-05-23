@@ -18,6 +18,10 @@ export class UserService {
         return await UserPersistence.getUserById(id);
     }
 
+    public static async getUserByEmail(email: string) {
+        return await UserPersistence.getUserByEmail(email);
+    }
+
     public static async deleteUserById(id: number) {
         logger.info("Deleting user with id " + id + " from user table")
         const deleted = await UserPersistence.deleteUserById(id);

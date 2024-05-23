@@ -36,8 +36,11 @@ const AddMemberModal = ({org}) => {
     watch();
 
     const onSubmit = async (data: any, e: any) => {
-        console.info("Mandar mail...")
-        setShowModal(false)
+        const rsp = await MemberService.sendJoinOrgRequest(data.name, org);
+        if (rsp.status == 200)
+            setShowModal(false);
+        else
+            setError("Error sending request. Please try again.");
     };
 
     const nav = useNavigate();
@@ -87,7 +90,7 @@ const AddMemberModal = ({org}) => {
                                             <input
                                                 type="text"
                                                 id="name"
-                                                placeholder="Name"
+                                                placeholder="Email"
                                                 {...register("name", {
                                                     required: true,
                                                 })}

@@ -5,6 +5,9 @@ import {handleError, parseId} from "../utils";
 import {parseCreateMemberRequest} from "../models/createMemberRequest";
 import {OrgService} from "../service/orgService";
 import {AuthService} from "../service/authService";
+import {MailService} from "../service/mailService";
+import {parseSendJoinOrgRequest} from "../models/sendJoinOrgRequest";
+import {UserService} from "../service/userService";
 
 const BASE_URL = '/api/members'
 
@@ -15,8 +18,39 @@ export default async function memberController(fastify: FastifyInstance, opts: a
             const request = parseCreateMemberRequest(req.body);
             const user = AuthService.parseJWT(req.headers.authorization)
             if (user.person != null) {
+                if (user.person.email !== request.user) {
+                    logger.error("Logged user id does not match user id in request");
+                    return rep
+                        .code(403)
+                        .send()
+                }
                 logger.info("Adding user " + user.person.name + " to organization: " + request.org);
                 return await MemberService.createMember(user.person.id, request.org);
+            }
+            logger.info("No user logged in");
+            return rep
+                .code(403)
+                .send()
+        } catch (err) {
+            logger.error(err)
+            return handleError(err, rep)
+        }
+    });
+
+    server.post(BASE_URL + '/request', async (req, rep) => {
+        try {
+            const request = parseSendJoinOrgRequest(req.body);
+            const user = AuthService.parseJWT(req.headers.authorization)
+            if (user.person != null) {
+                const futureMember = await UserService.getUserByEmail(request.user);
+                if (futureMember == null) {
+                    logger.error("User not found: " + request.user);
+                    return rep
+                        .code(404)
+                        .send()
+                }
+                logger.info("Sending request to join organization: " + request.org);
+                return await MailService.sendJoinOrgRequestMail(request.user, request.org);
             }
             logger.info("No user logged in");
             return rep

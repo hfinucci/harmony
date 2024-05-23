@@ -32,7 +32,8 @@ const OrgCard = (org: Org) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={org.image ? org.image : ORG_IMAGE_DEFAULT}
+                    src={org.image}
+                    onError={() => {this.onerror = null; this.src = ORG_IMAGE_DEFAULT;}}
                     alt="org image"
                 />
             </div>

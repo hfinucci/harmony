@@ -125,6 +125,14 @@ export const TRANSLATIONS_ES = {
         },
         orgInvitation: {
             loading: "Procesando invitación...",
+        },
+        error: {
+            default: "¡Ups! Algo salió mal",
+            goToHome: "Volver al inicio",
+            org: {
+                notFound: "Organización no encontrada",
+                forbidden: "No tenés permiso para acceder a esta organización",
+            }
         }
     },
     components: {

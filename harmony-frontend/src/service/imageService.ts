@@ -7,6 +7,7 @@ export class ImageService {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
         });
     }

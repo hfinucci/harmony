@@ -66,8 +66,13 @@ export default async function memberController(fastify: FastifyInstance, opts: a
         const user = req.params.user;
         const org = req.params.org
         try {
+            const loggedUser = AuthService.parseJWT(req.headers.authorization)
             parseId(user)
             parseId(org)
+
+            logger.info("Checking if user with id " + user + " is a member of org with id " + org);
+            await MemberService.getMembership(user, org);
+
             logger.info("Deleting membership of user with id " + user + " from org with id " + org);
             const info = await MemberService.deleteMemberById(user, org);
             const members = await MemberService.getMembersByOrg(org);

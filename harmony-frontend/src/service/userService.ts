@@ -73,6 +73,7 @@ export class UserService {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string,
             },
             body: JSON.stringify({
                 image: image,
@@ -85,6 +86,7 @@ export class UserService {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string,
             },
         });
     }
@@ -96,6 +98,7 @@ export class UserService {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string,
                 },
             }
         );

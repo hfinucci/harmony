@@ -1,6 +1,7 @@
 import {dbpool} from './dbConfig';
 import {CreateMemberRequest} from "../models/createMemberRequest";
 import {QueryResult} from "pg";
+import {AuthorizationError} from "../models/errors/AuthorizationError";
 
 export class MemberPersistence {
 
@@ -34,6 +35,18 @@ export class MemberPersistence {
         const song = result.rows;
         return song ?? (() => {
             throw new Error("Orgs not found")
+        })();
+    }
+
+    static async getMembership(user: number, org: number) {
+        const query = {
+            text: 'SELECT * FROM members WHERE user_id = $1 and org_id = $2',
+            values: [user, org],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const song = result.rows[0];
+        return song ?? (() => {
+            throw new AuthorizationError("Membership not found")
         })();
     }
 

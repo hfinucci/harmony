@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import SongCard from "../../components/SongCard/SongCard";
 import { OrgService } from "../../service/orgService";
 import { FaMusic } from "react-icons/fa";
@@ -12,26 +12,50 @@ import { useTranslation } from "react-i18next";
 import { Song } from "../SongsPage/SongsPage.tsx";
 import { Org } from "../../types/dtos/Org.ts";
 import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
+import ErrorPage from "../ErrorPage/ErrorPage.tsx";
+import Loading from "../../components/Loading/Loading.tsx";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
     const [songs, setSongs] = useState<Song[]>([]);
-    const [image, setImage] = useState("http://localhost:54321/storage/v1/object/public/orgs_images/org-default-image.png");
+    const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [errorCode, setErrorCode] = useState<number>();
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     const orgId = useParams();
 
+    const nav = useNavigate();
     const { t } = useTranslation();
 
     useEffect(() => {
-        OrgService.getOrg(Number(orgId.id)).then(async (rsp) => {
-            if (rsp?.status == 200) {
-                const info = await rsp.json();
-                setOrg(info);
-                console.log(info)
-                setImage(info.image?? ORG_IMAGE_DEFAULT);
-            }
-        });
+        OrgService.getOrg(Number(orgId.id))
+            .then(async (rsp) => {
+                switch (rsp.status) {
+                    case 200:
+                        const info = await rsp.json();
+                        setOrg(info);
+                        setImage(info.image);
+                        break;
+                    case 401:
+                        localStorage.removeItem("harmony-jwt");
+                        localStorage.removeItem("harmony-uid");
+                        nav("/login");
+                        break;
+                    case 403:
+                        console.log("FORBIDDEN")
+                        setErrorCode(403);
+                        setErrorMsg("pages.error.org.forbidden");
+                        break;
+                    case 404:
+                    default:
+                        setErrorCode(404);
+                        setErrorMsg("pages.error.org.notFound");
+                        break;
+                }
+            })
+            .finally(() => setLoading(false));
     }, []);
 
     useEffect(() => {
@@ -41,6 +65,16 @@ const OrgPage = () => {
                 setMembers(info);
             }
         });
+
+        if (org) {
+            const fetchImage = async (url: string) => {
+                const response = await fetch(url);
+                if (response.ok) {
+                    setImage(url);
+                }
+            }
+            fetchImage(org.image);
+        }
     }, [org]);
 
     const fetchSongs = async () => {
@@ -71,15 +105,22 @@ const OrgPage = () => {
         setOrg(org);
     };
 
+    if (loading) {
+        return <Loading />;
+    }
+
+    if (errorCode) {
+        return <ErrorPage code={errorCode} msg={errorMsg} />;
+    }
+
     return (
         <div>
             <div className="absolute z-1 bg-gradient-to-t from-black w-full h-96 bg-cover bg-center" />
             <header
                 className={
-                    "w-full -mt-24 h-96 bg-[url('" +
-                    image +
-                    "')] bg-cover bg-center flex justify-start items-end"
+                    "w-full -mt-24 h-96 bg-cover bg-center flex justify-start items-end"
                 }
+                style={{ backgroundImage: `url(${image})` }}
             >
                 {org && (
                     <div className="flex w-full z-10 justify-between">

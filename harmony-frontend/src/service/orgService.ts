@@ -6,6 +6,7 @@ export class OrgService {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
         });
     }
@@ -15,6 +16,7 @@ export class OrgService {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
         });
     }
@@ -24,6 +26,7 @@ export class OrgService {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
         });
     }
@@ -33,6 +36,7 @@ export class OrgService {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
         });
     }
@@ -46,6 +50,7 @@ export class OrgService {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
             body: JSON.stringify({
                 name: name,

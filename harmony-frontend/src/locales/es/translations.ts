@@ -126,6 +126,20 @@ export const TRANSLATIONS_ES = {
         },
         orgInvitation: {
             loading: "Procesando invitación...",
+        },
+        error: {
+            default: "¡Ups! Algo salió mal",
+            goToHome: "Volver al inicio",
+            forbidden: "No tenés permiso para acceder a esta página",
+            org: {
+                notFound: "Organización no encontrada",
+                forbidden: "No tenés permiso para acceder a esta organización",
+            },
+            song: {
+                notFound: "Canción no encontrada",
+                forbidden: "No tenés permiso para acceder a esta canción",
+
+            }
         }
     },
     components: {
@@ -156,6 +170,7 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             change: "Cambiar",
             error: {
+                fetch: "Error al obtener las imágenes, por favor volver a intentar",
                 edit: "Error al cambiar la imagen de perfil, por favor volver a intentar",
             },
         },

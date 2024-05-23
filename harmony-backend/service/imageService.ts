@@ -1,7 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
+import {createClient} from "@supabase/supabase-js";
+import {logger} from "../server";
 
 const supabase = createClient(
-    "http://localhost:54321",
+    "http://host.docker.internal:54321",
     process.env.AUTH_KEY || ""
 );
 const PROFILE_IMAGES_BUCKET = "profile_images";
@@ -9,26 +10,24 @@ const ORG_IMAGES_BUCKET = "orgs_images";
 
 const base64ImageToBlob = (str: string) => {
     // extract content type and base64 payload from original string
-    var pos = str.indexOf(';base64,');
-    var type = str.substring(5, pos);
-    var b64 = str.substr(pos + 8);
+    const pos = str.indexOf(';base64,');
+    const type = str.substring(5, pos);
+    const b64 = str.substr(pos + 8);
 
     // decode base64
-    var imageContent = atob(b64);
+    const imageContent = atob(b64);
 
     // create an ArrayBuffer and a view (as unsigned 8-bit)
-    var buffer = new ArrayBuffer(imageContent.length);
-    var view = new Uint8Array(buffer);
+    const buffer = new ArrayBuffer(imageContent.length);
+    const view = new Uint8Array(buffer);
 
     // fill the view, using the decoded base64
-    for(var n = 0; n < imageContent.length; n++) {
+    for(let n = 0; n < imageContent.length; n++) {
         view[n] = imageContent.charCodeAt(n);
     }
 
     // convert ArrayBuffer to Blob
-    var blob = new Blob([buffer], { type: type });
-
-    return blob;
+    return new Blob([buffer], {type: type});
 }
 
 export class ImageService {
@@ -38,12 +37,13 @@ export class ImageService {
             .list();
 
         if (error) {
-            throw new Error("Error getting profile images");
+            throw new Error("Error getting profile images: " + error.message);
         }
         return data;
     }
 
     public static async uploadOrgImage(orgId: number, image: string) {
+        logger.info("Change image for organization with id: " + orgId)
         return this.uploadImage(`${orgId}/profile.png`, image, `Error uploading image for org with id: ${orgId}`);
     }
 

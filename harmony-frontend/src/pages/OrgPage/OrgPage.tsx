@@ -17,7 +17,7 @@ const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
     const [songs, setSongs] = useState<Song[]>([]);
-    const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
+    const [image, setImage] = useState("http://localhost:54321/storage/v1/object/public/orgs_images/org-default-image.png");
 
     const orgId = useParams();
 
@@ -28,7 +28,8 @@ const OrgPage = () => {
             if (rsp?.status == 200) {
                 const info = await rsp.json();
                 setOrg(info);
-                setImage(info.image);
+                console.log(info)
+                setImage(info.image?? ORG_IMAGE_DEFAULT);
             }
         });
     }, []);

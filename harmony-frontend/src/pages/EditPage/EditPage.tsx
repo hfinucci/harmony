@@ -13,27 +13,46 @@ import {Block} from "../../types/dtos/Block";
 import PreviewSongComponent from "../../components/PreviewSongComponent/PreviewSongComponent";
 import {AddBlock} from "../../components/AddBlock/AddBlock";
 import PianoPage from "../PianoPage/PianoPage.tsx";
+import {BlockService} from "../../service/blockService";
+import {socket} from "../../socket.ts";
+import {useInterval} from "../../utils";
+import {Contributors} from "../../types/dtos/Contributors";
+import 'flowbite';
+import 'flowbite/dist/flowbite.css'
+import "./EditPage.css"
 
 
 const EditPage = () => {
     const [song, setSong] = useState<Song>();
     const [songs, setSongs] = useState<Song[]>([]);
+    const [isConnected, setIsConnected] = useState(socket.connected);
     const [org, setOrg] = useState<Org>();
     const [view, setView] = useState<number>(1)
     const [piano, setPiano] = useState<boolean>(false)
-    const [blocks, setBlocks] = useState<Block[][]>([[{note:"A#", lyric:"Hello"}]])
+    const [contributors, setContributors] = useState<Contributors[]>(null)
+
+    const [blocks, setBlocks] = useState<Block[][]>()
 
     const songId = useParams();
 
     const nav = useNavigate();
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     useEffect(() => {
         SongService.getSongById(Number(songId.id)).then(async (rsp) => {
             if (rsp?.status == 200) {
                 rsp.json().then((response: Song) => {
                     setSong(response);
+                    socket.emit("contributors", response.composeid)
+                    BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
+                        if (rsp?.status == 200) {
+                            rsp.json().then((response: Block[][]) => {
+                                setBlocks(response)
+                            })
+                        }
+
+                    })
                 })
             }
         });
@@ -56,6 +75,42 @@ const EditPage = () => {
         }
     }, [song]);
 
+    useEffect(() => {
+        function onConnect() {
+            setIsConnected(true);
+            console.log("connected")
+        }
+
+        function onDisconnect() {
+            setIsConnected(false);
+            console.log("disconnected")
+        }
+
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('compose', gotComposeResponse);
+        socket.on('contributors', gotContributorsResponse);
+
+        return () => {
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
+    }, [socket]);
+
+    useInterval( () => {
+        socket.emit('contributors', song?.composeid)
+    }, 10000)
+
+    function gotComposeResponse(data: any) {
+        const json : Block[][] = JSON.parse(data)["message"]
+        setBlocks(json)
+    }
+
+    function gotContributorsResponse(data: any) {
+        const conts = data.contributors as Contributors[]
+        setContributors(conts)
+    }
+
     const navToSong = (song: Song) => {
         nav("/songs/" + song.id);
     };
@@ -64,41 +119,59 @@ const EditPage = () => {
         setPiano(!piano);
     }
 
-    function addBlock(block: Block, x:number, y:number){
-        let copy = [...blocks];
-        copy[x][y] = block;
-        setBlocks(copy);
-        console.log("addBlock")
-        console.log(blocks)
-    }
-
     function handleUpdateBlock(rowIndex: number, blockIndex: number, block: Block) {
-        const updatedBlocks = [...blocks];
-        updatedBlocks[rowIndex][blockIndex] = block;
-        setBlocks(updatedBlocks);
+        const body = {
+            operation: "editBlock",
+            songId: song?.composeid,
+            userId: Number(localStorage.getItem("harmony-uid")),
+            row: rowIndex,
+            col: blockIndex,
+            lyrics: block.lyrics,
+            chord: block.chord
+        }
+        socket.emit('compose', JSON.stringify(body))
     }
 
-    const handleAddBlockInRow = (rowIndex: number) => {
-        if (blocks[rowIndex].length < 4) {
+    const handleAddBlockInRow = async (rowIndex: number) => {
+        const body = {
+            operation: "appendBlock",
+            songId: song?.composeid,
+            userId: Number(localStorage.getItem("harmony-uid")),
+            row: rowIndex,
+            lyrics: "",
+            chord: ""
+        }
+        socket.emit('compose', JSON.stringify(body))
+        if (!(blocks) || blocks[rowIndex].length < 4) {
             const updatedBlocks = [...blocks];
-            updatedBlocks[rowIndex] = [...updatedBlocks[rowIndex], { note: '', lyric: '' }];
+            updatedBlocks[rowIndex] = [...updatedBlocks[rowIndex], {note: '', lyric: ''}];
             setBlocks(updatedBlocks);
         }
     }
 
     const handleAddBlockNewRow = () => {
-        setBlocks([...blocks, [{ note: '', lyric: '' }]]);
+        const body = {
+            operation: "appendRow",
+            songId: song?.composeid,
+            userId: Number(localStorage.getItem("harmony-uid")),
+            lyrics: "",
+            chord: ""
+        }
+        socket.emit('compose', JSON.stringify(body))
+        setBlocks([...blocks, [{note: '', lyric: ''}]]);
     };
 
     function handleDeleteBlock(rowIndex: number, blockIndex: number) {
         const updatedBlocks = [...blocks];
         updatedBlocks[rowIndex].splice(blockIndex, 1);
+        if (updatedBlocks[rowIndex].length === 0) {
+            updatedBlocks.splice(rowIndex, 1);
+        }
         setBlocks(updatedBlocks);
     }
 
     const submit = () => {
         // Handle submission of blocks, for example, send to server or process locally
-        console.log(blocks);
     };
 
     return (
@@ -111,8 +184,8 @@ const EditPage = () => {
                         {org &&
                             <li>
                                 <div
-                                   className="flex text-fuchsia-950 w-full text-lg items-center p-2 group">
-                                    <IoPeopleSharp />
+                                    className="flex text-fuchsia-950 w-full text-lg items-center p-2 group">
+                                    <IoPeopleSharp/>
                                     <h1 className="ms-3">{org.name}</h1>
                                 </div>
                                 {songs &&
@@ -120,7 +193,7 @@ const EditPage = () => {
                                         {songs.map((song, index) => (
                                             <li key={index}>
                                                 <Link to={"/songs/" + song.id}
-                                                   className={song.id == songId.id ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</Link>
+                                                      className={song.id == songId.id ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</Link>
                                             </li>
                                         ))}
                                     </ul>
@@ -128,7 +201,7 @@ const EditPage = () => {
                             </li>
                         }
                     </ul>
-                    <CreateSongModal callback={navToSong} />
+                    <CreateSongModal callback={navToSong}/>
                 </div>
             </aside>
             {song &&
@@ -149,6 +222,27 @@ const EditPage = () => {
                                 >{t("pages.edit.view.preview")}</button>
                             </li>
                         </ul>
+                        <div className="flex -space-x-4 rtl:space-x-reverse">
+                            {contributors && contributors.map((contributor, index) => {
+                                if(contributor.id != localStorage.getItem("harmony-uid") as number)
+                                    return <div key={index} className="group flex justify-center">
+                                        <div
+                                            className="absolute mt-12 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 group-hover:opacity-100">
+                                            {contributor.name}
+                                        </div>
+                                        <img data-tooltip-target={"tooltip-" + contributor.id} className="w-10 h-10 rounded-full ring-2 ring-fuchsia-900"
+                                             src={contributor.image} alt="Medium avatar" />
+                                    </div>
+                            })}
+                            <div key={0} className="group flex justify-center">
+                                <div
+                                    className="absolute mt-12 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 group-hover:opacity-100">
+                                    {t("pages.edit.me")}
+                                </div>
+                                <img className="w-10 h-10 rounded-full ring-2 ring-fuchsia-900"
+                                     src={localStorage.getItem("harmony-profile-image")} alt="Medium avatar" />
+                            </div>
+                        </div>
                         <div className="flex items-center space-x-3">
                             {piano &&
                                 <button onClick={togglePiano}
@@ -169,16 +263,18 @@ const EditPage = () => {
                     {view == 1 &&
                         <div className="p-2 ml-72 mt-5 w-4/5 h-full bg-white">
                             <div>
-                                {blocks.map((row, rowIndex) => (
+                                {blocks && blocks.map((row, rowIndex) => (
                                     <div key={rowIndex} className="block flex flex-row flex-wrap"
                                          style={{position: 'relative'}}>
-                                        {row.map((block, blockIndex) => (
+                                        {row.map((block: Block, blockIndex) => (
                                             <div key={blockIndex}>
                                                 <AddBlock
-                                                    key={rowIndex + "_" + blockIndex + "_" + block.note + "_" + block.lyric}
-                                                    rowIndex={rowIndex} blockIndex={blockIndex}
+                                                    key={rowIndex + "_" + blockIndex + "_" + block.chord + "_" + block.lyrics}
+                                                    rowIndex={rowIndex}
+                                                    blockIndex={blockIndex}
                                                     submit={handleUpdateBlock}
-                                                    defaultBlock={block} deleteBlock={handleDeleteBlock}/>
+                                                    defaultBlock={block}
+                                                    deleteBlock={handleDeleteBlock}/>
                                             </div>
                                         ))}
                                         {blocks[rowIndex].length < 4 && (
@@ -193,7 +289,7 @@ const EditPage = () => {
                                         className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
                                     <IoAddCircleSharp className="h-10 w-10"/>
                                 </button>
-                                <button onClick={submit}>submit</button>
+                                <button onClick={submit} className="hidden">submit</button>
                             </div>
                             <div className={"fixed inset-x-0 bottom-0 flex justify-center mb-4"}>
                                 {piano && <PianoPage enabled={piano} song={song}/>}

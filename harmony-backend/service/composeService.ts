@@ -1,6 +1,7 @@
-import {SongSession} from "../models/entity/songSession";
+import {Contributor, SongSession} from "../models/entity/songSession";
 import {ComposeRequestParser} from "../models/entity/composeRequestParser";
 import {buildInvalidRequestResponse} from "../models/errors/composeErrors";
+import {UserService} from "./userService";
 
 class SessionHandler {
     private static instance: SessionHandler;
@@ -47,11 +48,23 @@ export class ComposeService {
         return await operation.execute(session!);
     }
 
-    public async getContributors(songId: string) : Promise<{contributors: number[] | undefined}> {
+    public async getContributors(songId: string) : Promise<{contributors: object[] | undefined}> {
         const session = await this.sessionHandler.getSession(songId)
         session?.purgeInactiveContributors()
-        const contributors =  session?.contributors.map(s => s.userId)
-        return { contributors: contributors }
+        const contributors = session?.contributors as Contributor[]
+        let users = []
+        for (const s of contributors) {
+            const u = await UserService.getUserById(s.userId)
+            users.push(
+                {
+                    ...u,
+                    image:
+                        "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                        u.image,
+                }
+            )
+        }
+        return { contributors: users }
     }
 
     public async addOrUpdateContributor(userId: number, songId: string) {

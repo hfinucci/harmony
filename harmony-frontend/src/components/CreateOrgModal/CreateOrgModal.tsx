@@ -75,7 +75,7 @@ const CreateOrgModal = () => {
                                                 placeholder="Name"
                                                 {...register("name", {
                                                     required: true,
-                                                    maxLength: 20,
+                                                    maxLength: 50,
                                                 })}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-fuchsia-500 focus:border-fuchsia-600 block w-full p-2.5"
                                                 required

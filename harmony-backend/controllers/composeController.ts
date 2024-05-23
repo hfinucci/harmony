@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import server, { logger } from "../server";
 import {ComposeService} from "../service/composeService";
-import {Block, ComposePersistence} from "../persistence/composePersistence";
+import {Block} from "../persistence/composePersistence";
 import {SongService} from "../service/songService";
 import {handleError} from "../utils";
 
@@ -36,13 +36,16 @@ export default async function composeController(fastify: FastifyInstance, opts: 
                 logger.info("a client has disconnected!")
             })
             socket.on("compose", async (payload) => {
+                logger.info("compose: " + payload)
                 const response = await composeService.processRequest(payload)
                 if (response !== undefined || response !== "") {
                     socket.emit("compose", response)
                 }
             })
             socket.on("contributors", async(songId) => {
+                logger.info("Getting contributors for song with id: " + songId)
                 const response = await composeService.getContributors(songId)
+                logger.info("Contributors: " + response.contributors)
                 if (response) {
                     socket.emit("contributors", response)
                 }
@@ -58,7 +61,7 @@ export default async function composeController(fastify: FastifyInstance, opts: 
     server.get(BASE_URL + "/:id/blocks", async (req: any, rep: any) : Promise<Block[][]> => {
         const id = req.params.id;
         try {
-            logger.info("Fetching song blocks: " + req.name);
+            logger.info("Fetching song blocks: " + id);
             return await SongService.getSongBlocksById(id);
         } catch (err) {
             logger.error(err)

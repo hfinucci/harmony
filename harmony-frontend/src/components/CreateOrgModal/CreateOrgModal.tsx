@@ -72,6 +72,7 @@ const CreateOrgModal = () => {
                                             <input
                                                 type="text"
                                                 id="name"
+                                                data-testid="name"
                                                 placeholder="Name"
                                                 {...register("name", {
                                                     required: true,
@@ -101,6 +102,7 @@ const CreateOrgModal = () => {
                                         <input
                                             className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
                                             aria-describedby="user_avatar_help"
+                                            data-testid="org-image"
                                             id="user_avatar"
                                             type="file"
                                             accept="image/*"

@@ -93,6 +93,7 @@ const CreateSongModal = ({
                                             <input
                                                 type="text"
                                                 id="name"
+                                                data-testid="create-org-name"
                                                 placeholder={t("components.createSongModal.name")}
                                                 {...register("name", {
                                                     required: true,
@@ -116,6 +117,7 @@ const CreateSongModal = ({
                                             <div>
                                                 <select
                                                     id="name"
+                                                    data-testid="create-song-org"
                                                     defaultValue={org == null? 0: org}
                                                     {...register("org", {
                                                         required: true,

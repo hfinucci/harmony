@@ -117,6 +117,15 @@ export const TRANSLATIONS_EN = {
             },
             members: "Members",
         },
+        songs: {
+            title: "Your organizations' songs",
+            name: "Name",
+            org: "Organization",
+            creationDate: "Creation Date",
+            lastModified: "Last Modification",
+            actions: "Actions",
+            none: "Oops! You don't have any songs yet",
+        },
         edit: {
             view: {
                 edit: "Edit",

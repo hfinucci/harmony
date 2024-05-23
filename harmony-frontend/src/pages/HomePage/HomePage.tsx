@@ -59,15 +59,13 @@ const HomePage = () => {
 
                 {orgs.length != 0 ? (
                     <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
-                        {orgs.slice(0, 3).map((org) => (
-                            <>
+                        {orgs.slice(0, 3).map((org, index) => (
                                 <OrgCard
-                                    key={org.id}
+                                    key={index}
                                     name={org.name}
                                     image={org.image}
                                     id={org.id}
                                 />
-                            </>
                         ))}
                         {orgs.length > 3 && (
                             <button
@@ -131,6 +129,7 @@ const HomePage = () => {
                                                         backgroundColor:
                                                             "#f0f0f0",
                                                     }}
+                                                    key={index}
                                                 />
                                             </tr>
                                             <SongCard

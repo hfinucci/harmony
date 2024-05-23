@@ -96,7 +96,7 @@ export const TRANSLATIONS_EN = {
                 lastName: "Error in last name",
                 mail: "Error in mail",
                 password: "Error in password",
-                passwordLength: "8 characters minimum",
+                passwordLength: "The password should have 8 characters minimum",
                 subscription: "You should accept the Terms and Conditions",
             },
         },
@@ -122,6 +122,7 @@ export const TRANSLATIONS_EN = {
                 edit: "Edit",
                 preview: "Preview",
             },
+            me: "Yo"
         },
         orgInvitation: {
             loading: "Processing invitation...",
@@ -174,7 +175,7 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             upload: "Upload Image",
             error: {
-                name: "The name of the organization cannot be longer than 20 characters",
+                name: "The name of the organization cannot be longer than 50 characters",
                 edit: "Error editing organization, please try again",
                 image: "Error uploading image, the size must be less than 4MB",
             },
@@ -185,7 +186,7 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             upload: "Upload Image",
             error: {
-                name: "The name of the organization cannot be longer than 20 characters",
+                name: "The name of the organization cannot be longer than 50 characters",
                 create: "Error creating organization, please try again",
                 image: "Error uploading image, the size must be less than 4MB",
             },
@@ -197,7 +198,8 @@ export const TRANSLATIONS_EN = {
             create: "Create",
             cancel: "Cancel",
             error: {
-                name: "The name of the song cannot be longer than 8 characters",
+                name: "The name of the song cannot be longer than 50 characters",
+                org: "Please select a valid organization"
             },
         },
         navbar: {

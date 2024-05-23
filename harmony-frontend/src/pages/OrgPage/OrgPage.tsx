@@ -41,7 +41,6 @@ const OrgPage = () => {
                     case 401:
                         localStorage.removeItem("harmony-jwt");
                         localStorage.removeItem("harmony-uid");
-                        localStorage.removeItem("harmony-profile-image");
                         nav("/login");
                         break;
                     case 403:

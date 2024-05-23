@@ -96,7 +96,7 @@ export const TRANSLATIONS_ES = {
                 lastName: "Error en el apellido",
                 mail: "Error en el mail",
                 password: "Error la contraseña",
-                passwordLength: "Mínimo 8 caracteres",
+                passwordLength: "La contraseña debe tener mínimo 8 caracteres",
                 subscription: "Debes aceptar los Términos y Condiciones",
             },
         },
@@ -122,6 +122,7 @@ export const TRANSLATIONS_ES = {
                 edit: "Editar",
                 preview: "Preview",
             },
+            me: "Me"
         },
         orgInvitation: {
             loading: "Procesando invitación...",
@@ -174,7 +175,7 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             upload: "Subir Imagen",
             error: {
-                name: "El nombre de la organización debe tener menos de 20 caracteres",
+                name: "El nombre de la organización debe tener menos de 50 caracteres",
                 edit: "Error al editar organización, por favor volver a intentar",
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
@@ -185,7 +186,7 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             upload: "Subir Imagen",
             error: {
-                name: "El nombre de la organización debe tener menos de 20 caracteres",
+                name: "El nombre de la organización debe tener menos de 50 caracteres",
                 create: "Error al crear organización, por favor volver a intentar",
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
@@ -197,7 +198,8 @@ export const TRANSLATIONS_ES = {
             create: "Crear",
             cancel: "Cancelar",
             error: {
-                name: "El nombre de la canción debe tener menos de 8 caracteres",
+                name: "El nombre de la canción debe tener menos de 50 caracteres",
+                org: "Seleccionar una organización válida"
             },
         },
         navbar: {

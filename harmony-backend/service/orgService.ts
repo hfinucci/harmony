@@ -2,6 +2,7 @@ import {CreateOrgRequest} from "../models/createOrgRequest";
 import {OrgPersistence} from '../persistence/orgPersistence';
 import {UpdateOrgRequest} from "../models/updateOrgRequest";
 import {ImageService} from "./imageService";
+import {logger} from "../server";
 
 export class OrgService {
 
@@ -15,8 +16,10 @@ export class OrgService {
     public static async updateOrg(id: number, request: UpdateOrgRequest) {
         const storedOrg = await this.getOrgById(id)
         const updatedOrg = {...storedOrg, ...request}
-        if (request.image != null)
+        if (request.image != null) {
+            logger.info("Will change image")
             await ImageService.uploadOrgImage(updatedOrg.id, request.image);
+        }
         return await OrgPersistence.updateOrg(updatedOrg);
     }
 

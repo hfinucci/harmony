@@ -1,4 +1,3 @@
-import {Mutex, Semaphore, withTimeout} from 'async-mutex';
 import {logger} from "../../server";
 import {BlockMutex} from "./blockMutex";
 
@@ -42,6 +41,7 @@ export class SongSession {
             contributor.lastModified = new Date();
             return;
         }
+
         this.contributors.push(new Contributor(userId));
     }
 

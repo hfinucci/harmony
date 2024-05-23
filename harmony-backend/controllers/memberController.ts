@@ -8,6 +8,7 @@ import {AuthService} from "../service/authService";
 import {MailService} from "../service/mailService";
 import {parseSendJoinOrgRequest} from "../models/sendJoinOrgRequest";
 import {UserService} from "../service/userService";
+import {checkIfRequesterIsMember} from "../models/checks";
 
 const BASE_URL = '/api/members'
 
@@ -66,8 +67,12 @@ export default async function memberController(fastify: FastifyInstance, opts: a
         const user = req.params.user;
         const org = req.params.org
         try {
+            const loggedUser = AuthService.parseJWT(req.headers.authorization)
             parseId(user)
             parseId(org)
+
+            await checkIfRequesterIsMember(user, org);
+
             logger.info("Deleting membership of user with id " + user + " from org with id " + org);
             const info = await MemberService.deleteMemberById(user, org);
             const members = await MemberService.getMembersByOrg(org);

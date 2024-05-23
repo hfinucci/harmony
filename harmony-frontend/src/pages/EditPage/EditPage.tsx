@@ -18,6 +18,7 @@ import {socket} from "../../socket.ts";
 import {useInterval} from "../../utils";
 import {Contributors} from "../../types/dtos/Contributors";
 import "./EditPage.css"
+import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 
 
 const EditPage = () => {
@@ -31,6 +32,9 @@ const EditPage = () => {
 
     const [blocks, setBlocks] = useState<Block[][]>()
 
+    const [errorCode, setErrorCode] = useState<number>();
+    const [errorMsg, setErrorMsg] = useState<string>();
+
     const songId = useParams();
 
     const nav = useNavigate();
@@ -39,19 +43,29 @@ const EditPage = () => {
 
     useEffect(() => {
         SongService.getSongById(Number(songId.id)).then(async (rsp) => {
-            if (rsp?.status == 200) {
-                rsp.json().then((response: Song) => {
-                    setSong(response);
-                    socket.emit("contributors", response.composeid)
-                    BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
-                        if (rsp?.status == 200) {
-                            rsp.json().then((response: Block[][]) => {
-                                setBlocks(response)
-                            })
-                        }
+            switch (rsp.status) {
+                case 200:
+                    rsp.json().then((response: Song) => {
+                        setSong(response);
+                        socket.emit("contributors", response.composeid)
+                        BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
+                            if (rsp?.status == 200) {
+                                rsp.json().then((response: Block[][]) => {
+                                    setBlocks(response)
+                                })
+                            }
 
+                        })
                     })
-                })
+                    break;
+                case 403:
+                    setErrorCode(403);
+                    setErrorMsg(t("pages.error.song.forbidden"));
+                    break;
+                case 404:
+                    setErrorCode(404);
+                    setErrorMsg(t("pages.error.song.notFound"));
+                    break;
             }
         });
     }, [songId]);
@@ -171,6 +185,10 @@ const EditPage = () => {
     const submit = () => {
         // Handle submission of blocks, for example, send to server or process locally
     };
+
+    if (errorCode) {
+        return <ErrorPage code={errorCode} msg={errorMsg}/>;
+    }
 
     return (
         <div className="container h-screen">

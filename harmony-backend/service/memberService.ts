@@ -30,6 +30,10 @@ export class MemberService {
         );
     }
 
+    public static async getMembership(user: number, org: number) {
+        return await MemberPersistence.getMembership(user, org);
+    }
+
     static async deleteMemberById(user: number, org: number) {
         return await MemberPersistence.deleteMembership(user, org);
     }

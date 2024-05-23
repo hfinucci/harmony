@@ -1,6 +1,7 @@
 import {z} from "zod";
 import {FastifyReply} from "fastify";
 import {AuthenticationError} from "./models/errors/AuthenticationError";
+import {AuthorizationError} from "./models/errors/AuthorizationError";
 
 const Request = z.object({
     id: z.number(),
@@ -19,7 +20,12 @@ export function handleError(err: any, rep: FastifyReply) {
         return rep
             .code(401)
             .send()
-    } else {
+    } else if (err instanceof AuthorizationError) {
+        return rep
+            .code(403)
+            .send()
+    }
+    else {
         return rep
             .code(404)
             .send()

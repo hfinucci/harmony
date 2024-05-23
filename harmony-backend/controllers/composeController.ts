@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import {FastifyInstance, FastifyReply} from "fastify";
 import server, { logger } from "../server";
 import {ComposeService} from "../service/composeService";
 import {Block} from "../persistence/composePersistence";
@@ -20,7 +20,10 @@ interface MIDIEvent {
 }
 
 
-export default async function composeController(fastify: FastifyInstance, opts: any) {
+export default async function composeController(
+    fastify: FastifyInstance,
+    opts: any
+) {
 
     const composeService = new ComposeService()
     let color_id = 2
@@ -39,7 +42,7 @@ export default async function composeController(fastify: FastifyInstance, opts: 
                 logger.info("compose: " + payload)
                 const response = await composeService.processRequest(payload)
                 if (response !== undefined || response !== "") {
-                    socket.emit("compose", response)
+                    socket.broadcast.emit("compose", response)
                 }
             })
             socket.on("contributors", async(songId) => {
@@ -53,12 +56,12 @@ export default async function composeController(fastify: FastifyInstance, opts: 
             socket.on("clientMidi", async (payload: MIDIEvent) => {
                 logger.info(payload);
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
-                socket.emit("serverMidi", payload);
+                socket.broadcast.emit("serverMidi", payload);
             });
         });
     });
 
-    server.get(BASE_URL + "/:id/blocks", async (req: any, rep: any) : Promise<Block[][]> => {
+    server.get(BASE_URL + "/:id/blocks", async (req: any, rep: any) : Promise<Block[][] | FastifyReply> => {
         const id = req.params.id;
         try {
             logger.info("Fetching song blocks: " + id);

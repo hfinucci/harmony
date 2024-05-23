@@ -8,6 +8,8 @@ import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { AuthService } from "../service/authService";
 import { ImageService } from "../service/imageService";
+import {AuthorizationError} from "../models/errors/AuthorizationError";
+import {checkIfRequesterIsMember} from "../models/checks";
 
 const BASE_URL = "/api/orgs";
 
@@ -40,8 +42,13 @@ export default async function orgController(
     server.put(BASE_URL + "/:id", async (req: any, rep) => {
         const id = req.params.id;
         try {
+            const user = AuthService.parseJWT(req.headers.authorization);
             parseId(id);
+
             const request = parseUpdateOrgRequest(req.body);
+
+            await checkIfRequesterIsMember(user.person.id, id);
+
             logger.info("Updating org with id: " + id);
             return await OrgService.updateOrg(id, request);
         } catch (err) {
@@ -55,9 +62,14 @@ export default async function orgController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
                 logger.info("Fetching org with id: " + id);
                 const org = await OrgService.getOrgById(id);
+
+                await checkIfRequesterIsMember(user.person.id, id)
+
                 return {
                     ...org,
                     image:
@@ -77,9 +89,16 @@ export default async function orgController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
                 logger.info("Fetching members from org with id: " + id);
                 const members = await MemberService.getMembersByOrg(id);
+
+                logger.info("Checking if user is member of org with id: " + id);
+                if (!members.some((member) => member.id === user.person.id)) {
+                    throw new AuthorizationError("User is not a member of this organization");
+                }
                 return members.map((member) => ({
                     ...member,
                     image:
@@ -98,7 +117,11 @@ export default async function orgController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
+                await checkIfRequesterIsMember(user.person.id, id);
+
                 logger.info("Fetching songs from org with id: " + id);
                 return await SongService.getSongsByOrg(id);
             } catch (err) {
@@ -113,7 +136,11 @@ export default async function orgController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
+                await checkIfRequesterIsMember(user.person.id, id);
+
                 logger.info("Deleting org with id: " + id);
                 await ImageService.deleteOrgImage(id);
                 return await OrgService.deleteOrgById(id);

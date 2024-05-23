@@ -19,7 +19,8 @@ export class SongService {
         return await fetch(BASE_URL + "/api/songs/" + id, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
             },
         })
     }
@@ -29,7 +30,8 @@ export class SongService {
         return await fetch(BASE_URL + "/api/songs/" + id, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
             },
         })
     }

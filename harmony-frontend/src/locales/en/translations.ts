@@ -135,6 +135,19 @@ export const TRANSLATIONS_EN = {
         },
         orgInvitation: {
             loading: "Processing invitation...",
+        },
+        error: {
+            default: "Oops! Something went wrong",
+            goToHome: "Go back to Home",
+            forbidden: "You don't have permission to access this page",
+            org: {
+                notFound: "Organization not found",
+                forbidden: "You don't have permission to access this organization",
+            },
+            song: {
+                notFound: "Song not found",
+                forbidden: "You don't have permission to access this song",
+            }
         }
     },
     components: {
@@ -165,6 +178,7 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             change: "Change",
             error: {
+                fetch: "Error fetching images, please try again ",
                 edit: "Error changing profile image, please try again",
             },
         },

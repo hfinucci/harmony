@@ -9,6 +9,8 @@ import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { FetchSongsByUserResponse } from "../models/dto/fetchSongsByUserResponse";
 import { z } from "zod";
+import {AuthenticationError} from "../models/errors/AuthenticationError";
+import {AuthorizationError} from "../models/errors/AuthorizationError";
 
 const BASE_URL = "/api/users";
 
@@ -43,7 +45,13 @@ export default async function userController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot get orgs for another user");
+                }
+
                 logger.info("Getting orgs from user with id: " + id);
                 return await MemberService.getOrgsByUser(id);
             } catch (error: any) {
@@ -85,8 +93,14 @@ export default async function userController(
         BASE_URL + "/:id",
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 const id = req.params.id;
                 parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot update profile image for another user");
+                }
+
                 const request = parseChangeIconRequest(req.body);
                 logger.info("Changing image for user with id " + id + " to " + request.image);
                 const changed = await UserService.changeIcon(id, request);
@@ -106,7 +120,13 @@ export default async function userController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
+                const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot get songs for another user");
+                }
+
                 logger.info("Getting songs with id: " + id);
                 const songs = await SongService.getSongsByUser(id);
                 return z.array(FetchSongsByUserResponse).parse(songs);

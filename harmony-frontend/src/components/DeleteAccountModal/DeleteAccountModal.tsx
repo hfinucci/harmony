@@ -19,6 +19,8 @@ const DeleteAccountModal = () => {
             localStorage.removeItem("harmony-jwt")
             localStorage.removeItem("harmony-uid")
             localStorage.removeItem("harmony-profile-image")
+            window.dispatchEvent(new Event("harmony"));
+            window.dispatchEvent(new Event("harmony-pi"));
             navigate("/");
         } else setError(t("components.deleteAccountModal.error"));
     };

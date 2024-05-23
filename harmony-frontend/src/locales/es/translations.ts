@@ -129,6 +129,7 @@ export const TRANSLATIONS_ES = {
         error: {
             default: "¡Ups! Algo salió mal",
             goToHome: "Volver al inicio",
+            forbidden: "No tenés permiso para acceder a esta página",
             org: {
                 notFound: "Organización no encontrada",
                 forbidden: "No tenés permiso para acceder a esta organización",
@@ -163,6 +164,7 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             change: "Cambiar",
             error: {
+                fetch: "Error al obtener las imágenes, por favor volver a intentar",
                 edit: "Error al cambiar la imagen de perfil, por favor volver a intentar",
             },
         },

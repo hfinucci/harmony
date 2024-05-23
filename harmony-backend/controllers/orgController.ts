@@ -9,6 +9,7 @@ import { SongService } from "../service/songService";
 import { AuthService } from "../service/authService";
 import { ImageService } from "../service/imageService";
 import {AuthorizationError} from "../models/errors/AuthorizationError";
+import {checkIfRequesterIsMember} from "../models/checks";
 
 const BASE_URL = "/api/orgs";
 
@@ -149,12 +150,4 @@ export default async function orgController(
             }
         }
     );
-
-    const checkIfRequesterIsMember = async (userId: number, orgId: number) => {
-        logger.info("Checking if user is member of org with id: " + orgId);
-        await MemberService.getMembership(
-            userId,
-            orgId
-        );
-    }
 }

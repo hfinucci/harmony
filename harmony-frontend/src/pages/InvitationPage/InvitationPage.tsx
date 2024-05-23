@@ -1,9 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { MemberService } from "../../service/memberService.ts";
 import {useTranslation} from "react-i18next";
+import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 
 const InvitationPage = () => {
+    const [errorCode, setErrorCode] = useState<number>();
+    const [error, setError] = useState<string>("");
+
     const nav = useNavigate();
     const location = useLocation();
     const { t } = useTranslation();
@@ -19,8 +23,11 @@ const InvitationPage = () => {
                 case 200:
                     nav("/orgs/" + orgId);
                     break;
-                case 401:
                 case 403:
+                    setErrorCode(403);
+                    setError(t("pages.error.forbidden"));
+                    break;
+                case 401:
                 case 400:
                     nav("/login?redirect=" + redirectUrl, {replace: true});
                     break;
@@ -30,6 +37,10 @@ const InvitationPage = () => {
         });
 
     }, [location, nav]);
+
+    if (errorCode) {
+        return <ErrorPage code={errorCode} msg={error} />;
+    }
 
     return (
         <div className="text-center">

@@ -14,7 +14,9 @@ const ChangeProfileImageModal = () => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
     const [images, setImages] = useState<ImageProp[]>();
-    const [selected, setSelected] = useState<ImageProp>()
+    const [selected, setSelected] = useState<ImageProp>();
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         if(showModal) {
@@ -24,7 +26,7 @@ const ChangeProfileImageModal = () => {
                         const imgs = response.map((img) => {return {url: img, name: img.split("/")[img.split("/").length - 1]}}) as ImageProp[]
                         setImages(imgs);
                     })
-                }
+                } else setError(t("components.changeProfileImageModal.error.fetch"));
             });
             const current = localStorage.getItem("harmony-profile-image")
             setSelected({url: current, name: current.split("/")[current.split("/").length - 1]})
@@ -43,8 +45,6 @@ const ChangeProfileImageModal = () => {
     } = useForm<ChangeProfileImageFormData>();
 
     watch();
-
-    const { t } = useTranslation();
 
     const onSubmit = async (data: any, e: any) => {
         if (!data.image || localStorage.getItem("harmony-profile-image").includes(data.image)) {
@@ -88,6 +88,11 @@ const ChangeProfileImageModal = () => {
                                         {t("components.changeProfileImageModal.title")}
                                     </h3>
                                 </div>
+                                {error && (
+                                    <div className="text-center text-red-500">
+                                        {error}
+                                    </div>
+                                )}
                                 <div className="p-4 md:p-5">
                                     <form
                                         className="space-y-4"

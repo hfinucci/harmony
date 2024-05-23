@@ -129,6 +129,7 @@ export const TRANSLATIONS_EN = {
         error: {
             default: "Oops! Something went wrong",
             goToHome: "Go back to Home",
+            forbidden: "You don't have permission to access this page",
             org: {
                 notFound: "Organization not found",
                 forbidden: "You don't have permission to access this organization",
@@ -163,6 +164,7 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             change: "change",
             error: {
+                fetch: "Error fetching images, please try again ",
                 edit: "Error changing profile image, please try again",
             },
         },

@@ -154,7 +154,7 @@ export const TRANSLATIONS_EN = {
         changeProfileImageModal: {
             title: "Change Profile Image",
             cancel: "Cancel",
-            change: "change",
+            change: "Change",
             error: {
                 edit: "Error changing profile image, please try again",
             },

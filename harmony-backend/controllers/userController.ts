@@ -76,7 +76,7 @@ export default async function userController(
     // TODO FIX DELETE USER
     server.delete(
         BASE_URL,
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req, rep) => {
             try {
                 const userAuth: UserAuth = AuthService.parseJWT(
                     req.headers.authorization

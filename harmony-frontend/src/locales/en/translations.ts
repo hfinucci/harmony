@@ -117,6 +117,15 @@ export const TRANSLATIONS_EN = {
             },
             members: "Members",
         },
+        songs: {
+            title: "Your organizations' songs",
+            name: "Name",
+            org: "Organization",
+            creationDate: "Creation Date",
+            lastModified: "Last Modification",
+            actions: "Actions",
+            none: "Oops! You don't have any songs yet",
+        },
         edit: {
             view: {
                 edit: "Edit",
@@ -167,7 +176,7 @@ export const TRANSLATIONS_EN = {
         changeProfileImageModal: {
             title: "Change Profile Image",
             cancel: "Cancel",
-            change: "change",
+            change: "Change",
             error: {
                 fetch: "Error fetching images, please try again ",
                 edit: "Error changing profile image, please try again",

@@ -81,8 +81,8 @@ export class UserService {
         });
     }
 
-    public static async deleteAccount(userId: number) {
-        return await fetch(BASE_URL + "/api/users/" + userId, {
+    public static async deleteAccount() {
+        return await fetch(BASE_URL + "/api/users", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

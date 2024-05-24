@@ -117,6 +117,15 @@ export const TRANSLATIONS_ES = {
             },
             members: "Integrantes",
         },
+        songs: {
+            title: "Canciones de tus organizaciones",
+            name: "Nombre",
+            org: "Organización",
+            creationDate: "Fecha de Creación",
+            lastModified: "Fecha de Modificación",
+            actions: "Acciones",
+            none: "¡Oops! No tenés canciones",
+        },
         edit: {
             view: {
                 edit: "Editar",

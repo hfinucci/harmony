@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import SongCard from "../../components/SongCard/SongCard.tsx";
 import {UserService} from "../../service/userService.ts";
+import {useTranslation} from "react-i18next";
 
 export interface Song {
     id: number;
@@ -15,6 +16,8 @@ export interface Song {
 const SongsPage = () => {
 
     const [songs, setSongs] = useState<Song[]>([]);
+
+    const { t } = useTranslation();
 
     const fetchSongs = async () => {
         await UserService.getSongsByUserId(Number(localStorage.getItem('harmony-uid')))
@@ -33,17 +36,17 @@ const SongsPage = () => {
     return (
 
         <div className="container h-screen mt-16 mx-auto max-w-12xl">
-            <h1 className="text-fuchsia-950 text-4xl mb-4">Canciones en tus organizaciones</h1>
+            <h1 className="text-fuchsia-950 text-4xl mb-4">{t("pages.songs.title")}</h1>
             <div className="flex flex-col rounded-lg bg-white p-10">
                 {songs.length !== 0 ? (
                     <table className="table table-bordered border-separate border-spacing-y-1.5">
                         <thead>
                         <tr>
-                            <th className={"text-left text-gray-500"}>Nombre</th>
-                            <th className={"text-left text-gray-500"}>Organización</th>
-                            <th className={"text-left text-gray-500"}>Fecha de Creación</th>
-                            <th className={"text-left text-gray-500"}>Fecha de Modificación</th>
-                            <th className={"text-left text-gray-500"}>Acciones</th>
+                            <th className={"text-left text-gray-500"}>{t("pages.songs.name")}</th>
+                            <th className={"text-left text-gray-500"}>{t("pages.songs.org")}</th>
+                            <th className={"text-left text-gray-500"}>{t("pages.songs.creationDate")}</th>
+                            <th className={"text-left text-gray-500"}>{t("pages.songs.lastModified")}</th>
+                            <th className={"text-left text-gray-500"}>{t("pages.songs.actions")}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,7 +67,7 @@ const SongsPage = () => {
                     songs.length == 0 &&
                     <div className="flex items-center justify-center p-4 md:p-5">
                         <h1 className="text-2xl text-fuchsia-950">
-                            Oops! No tenes canciones
+                            {t("pages.songs.none")}
                         </h1>
                     </div>
                 )}

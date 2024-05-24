@@ -102,7 +102,7 @@ const ChangeProfileImageModal = () => {
                                             {images &&
                                                 images.map((img: ImageProp, index: number) =>
                                                     <div className="h-12 w-12" key={index}>
-                                                        <label htmlFor={img.name + "-s"} id={img.name + "-label"}
+                                                        <label data-testid={img.name} htmlFor={img.name + "-s"} id={img.name + "-label"}
                                                                onClick={() => {
                                                                    changeSelection(img)
                                                                }}>

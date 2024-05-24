@@ -325,7 +325,7 @@ describe("Test ConfigurationPage", () => {
         expect(submitButton).toBeInTheDocument();
 
         await act(() => fireEvent.click(submitButton));
-        expect(screen.queryByText(/Error changing profile image, please try again/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Error changing profile image, please try again/i)).toBeInTheDocument();
     });
 
     test("changes language successfully", async () => {

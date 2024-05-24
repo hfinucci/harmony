@@ -30,7 +30,7 @@ const OrgsPage = () => {
                 <CreateOrgModal />
             </div>
             {orgs && orgs.length > 0 && (
-                <div className="flex flex-row flex-wrap gap-5 justify-start w-fit rounded-lg p-5">
+                <div data-testid={"orgs-page-orgs"} className="flex flex-row flex-wrap gap-5 justify-start w-fit rounded-lg p-5">
                     {orgs.map((elem: Org, index: number) => (
                         <OrgCard
                             key={index}

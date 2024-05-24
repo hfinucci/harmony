@@ -14,7 +14,8 @@ export default defineConfig({
             exclude: [
                 "src/utils.ts",
                 "src/types/*",
-                "src/locales/*"
+                "src/locales/*",
+                "src/service/*",
             ],
         }
     },

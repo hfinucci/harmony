@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import server, { logger } from "../server";
 import { ImageService } from "../service/imageService";
 import { handleError } from "../utils";
+import 'dotenv/config'
 
 const BASE_URL = "/api/images";
 
@@ -14,7 +15,7 @@ export default async function imageController(
             logger.info("Getting all profile images");
             return (await ImageService.getAllProfileImages()).map(
                 (image) =>
-                    "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                    process.env.IMAGE_PATH + "profile_images/" +
                     image.name
             );
         } catch (error: any) {

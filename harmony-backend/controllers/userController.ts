@@ -30,7 +30,7 @@ export default async function userController(
                 return {
                     ...user,
                     image:
-                        "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                        process.env.IMAGE_PATH + "profile_images/" +
                         user.image,
                 };
             } catch (error: any) {
@@ -106,7 +106,7 @@ export default async function userController(
                 const changed = await UserService.changeIcon(id, request);
                 if (!changed)
                     return false
-                return "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                return  process.env.IMAGE_PATH + "profile_images/" +
                     request.image
             } catch (err) {
                 logger.error(err);

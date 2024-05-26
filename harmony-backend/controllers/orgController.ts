@@ -73,7 +73,7 @@ export default async function orgController(
                 return {
                     ...org,
                     image:
-                        "http://localhost:54321/storage/v1/object/public/orgs_images/" +
+                        process.env.IMAGE_PATH + "orgs_images/" +
                         id +
                         "/profile.png",
                 };
@@ -102,7 +102,7 @@ export default async function orgController(
                 return members.map((member) => ({
                     ...member,
                     image:
-                        "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                        process.env.IMAGE_PATH  + "profile_images/" +
                         member.image,
                 }));
             } catch (err) {

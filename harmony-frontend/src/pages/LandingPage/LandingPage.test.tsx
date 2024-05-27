@@ -1,10 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import LandingPage from "./LandingPage";
 import { describe, expect, test } from "vitest";
+import {BrowserRouter} from "react-router-dom";
 
 describe("Test LandingPage", () => {
     test("renders correctly", () => {
-        render(<LandingPage />);
+        render(
+            <BrowserRouter>
+                <LandingPage />
+            </BrowserRouter>
+        );
 
         expect(screen.getByText("Harmony")).toBeInTheDocument();
         expect(

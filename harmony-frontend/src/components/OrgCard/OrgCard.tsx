@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 
 const OrgCard = (org: Org) => {
     const [members, setMembers] = useState<string>();
+    const [image, setImage] = useState<string>(org.image);
 
     const { t } = useTranslation();
 
@@ -33,8 +34,11 @@ const OrgCard = (org: Org) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={org.image}
-                    onError={() => {this.onerror = null; this.src = ORG_IMAGE_DEFAULT;}}
+                    src={image}
+                    onError={() => {
+                        console.log("Hello?")
+                        setImage(ORG_IMAGE_DEFAULT);
+                    }}
                     alt="org image"
                 />
             </div>

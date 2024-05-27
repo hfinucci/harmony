@@ -31,14 +31,17 @@ const AddMemberModal = ({org}) => {
         handleSubmit,
         watch,
         formState: { errors },
+        reset
     } = useForm<AddMemberFormData>();
 
     watch();
 
     const onSubmit = async (data: any, e: any) => {
         const rsp = await MemberService.sendJoinOrgRequest(data.name, org);
-        if (rsp.status == 200)
+        if (rsp.status == 200) {
+            reset()
             setShowModal(false);
+        }
         else
             setError("Error sending request. Please try again.");
     };
@@ -61,7 +64,7 @@ const AddMemberModal = ({org}) => {
                 aria-label="add member"
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="items-center bg-white w-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
+                className="mt-5 items-center bg-white w-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full">
                 <IoPersonAdd />
                 {t("components.addMember.button")}
             </button>

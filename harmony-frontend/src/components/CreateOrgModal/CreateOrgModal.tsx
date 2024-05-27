@@ -20,6 +20,7 @@ const CreateOrgModal = () => {
         handleSubmit,
         watch,
         formState: { errors },
+        reset
     } = useForm<CreateOrgFormData>();
 
     watch();
@@ -32,6 +33,7 @@ const CreateOrgModal = () => {
         const org = await OrgService.createOrg(data.name, image);
         if (org?.status == 200) {
             const orgJson = await org.json();
+            reset()
             nav(`/orgs/${orgJson.id}`);
         } else {
             setError(t("components.createOrgModal.error.create"));

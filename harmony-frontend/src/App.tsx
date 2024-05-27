@@ -13,6 +13,7 @@ import EditPage from "./pages/EditPage/EditPage";
 import { useState } from "react";
 import InvitationPage from "./pages/InvitationPage/InvitationPage.tsx";
 import ErrorPage from "./pages/ErrorPage/ErrorPage.tsx";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 export const BASE_URL = "http://127.0.0.1:3000";
 
@@ -28,6 +29,7 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <div className="pt-24 bg-gradient-to-b from-purple-300 to-white">
+                <ScrollToTop />
                 <Routes>
                     <Route path="/" element={auth? <HomePage /> : <LandingPage/>}/>
                     {!auth &&

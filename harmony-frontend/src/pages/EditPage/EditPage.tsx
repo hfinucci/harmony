@@ -115,6 +115,7 @@ const EditPage = () => {
 
     function gotComposeResponse(data: any) {
         const json : Block[][] = JSON.parse(data)["message"]
+        console.log("blocks setting")
         setBlocks(json)
     }
 
@@ -132,6 +133,8 @@ const EditPage = () => {
     }
 
     function handleUpdateBlock(rowIndex: number, blockIndex: number, block: Block) {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[rowIndex][blockIndex] = block;
         const body = {
             operation: "editBlock",
             songId: song?.composeid,
@@ -142,6 +145,7 @@ const EditPage = () => {
             chord: block.chord
         }
         socket.emit('compose', JSON.stringify(body))
+        setBlocks(updatedBlocks);
     }
 
     const handleAddBlockInRow = async (rowIndex: number) => {

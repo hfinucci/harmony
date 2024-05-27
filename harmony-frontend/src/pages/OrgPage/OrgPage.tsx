@@ -36,7 +36,6 @@ const OrgPage = () => {
                     case 200:
                         const info = await rsp.json();
                         setOrg(info);
-                        setImage(info.image);
                         break;
                     case 401:
                         localStorage.removeItem("harmony-jwt");
@@ -67,15 +66,18 @@ const OrgPage = () => {
         });
 
         if (org) {
-            const fetchImage = async (url: string) => {
-                const response = await fetch(url);
-                if (response.ok) {
-                    setImage(url);
-                }
-            }
             fetchImage(org.image);
         }
     }, [org]);
+
+    const fetchImage = async (url: string) => {
+        const response = await fetch(url);
+        if (response.ok) {
+            setImage(url);
+        } else {
+            setImage(ORG_IMAGE_DEFAULT)
+        }
+    }
 
     const fetchSongs = async () => {
         await OrgService.getOrgSongs(Number(orgId.id)).then(async (rsp) => {
@@ -99,6 +101,7 @@ const OrgPage = () => {
         } else {
             setSongs([song]);
         }
+        nav("/songs/" + song.id)
     };
 
     const editOrg = (org: Org) => {
@@ -223,7 +226,7 @@ const OrgPage = () => {
                     <h1 className="text-2xl text-fuchsia-950 font-semibold">
                         {t("pages.org.members")}
                     </h1>
-                    <div className=" flex flex-col grow rounded-lg bg-white p-5 justify-between">
+                    <div className=" flex flex-col rounded-lg bg-white p-5 justify-between">
                         {members && (
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <tbody>

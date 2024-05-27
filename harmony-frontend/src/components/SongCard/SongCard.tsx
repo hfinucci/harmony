@@ -1,12 +1,13 @@
 import {Song} from "../../pages/SongsPage/SongsPage.tsx";
-import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import {SongService} from "../../service/songService.ts";
 import { useNavigate } from "react-router-dom";
+import DeleteSongModal from "../DeleteSongModal/DeleteSongModal";
 
 interface SongCardProps {
     song: Song;
     fetchSongs: () => void;
+
 }
 
 const SongCard = (
@@ -26,9 +27,7 @@ const SongCard = (
                 <button onClick={() => nav(`/songs/${song.id}`)} className={"hover:text-fuchsia-700 flex justify-center mr-8"}>
                     <FaEdit />
                 </button>
-                <button onClick={deleteSong} className={"hover:text-fuchsia-700 flex justify-center mr-8"}>
-                    <MdDelete />
-                </button>
+                <DeleteSongModal songId={song.id} callback={deleteSong} />
             </td>
         </tr>
     )

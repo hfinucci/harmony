@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import SongCard from "../../components/SongCard/SongCard.tsx";
 import {UserService} from "../../service/userService.ts";
 import {useTranslation} from "react-i18next";
+import { FaMusic } from "react-icons/fa6";
 
 export interface Song {
     id: number;
@@ -36,7 +37,10 @@ const SongsPage = () => {
     return (
 
         <div className="container h-screen mt-16 mx-auto max-w-12xl">
-            <h1 className="text-fuchsia-950 text-4xl mb-4">{t("pages.songs.title")}</h1>
+            <h1 className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-2">
+                <FaMusic />
+                {t("pages.songs.title")}
+            </h1>
             <div className="flex flex-col rounded-lg bg-white p-10">
                 {songs.length !== 0 ? (
                     <table className="table table-bordered border-separate border-spacing-y-1.5">

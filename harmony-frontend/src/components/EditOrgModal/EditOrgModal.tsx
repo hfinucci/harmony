@@ -25,6 +25,7 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
         handleSubmit,
         watch,
         formState: { errors },
+        reset
     } = useForm<EditOrgFormData>();
 
     watch();
@@ -41,6 +42,7 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
         if (edit?.status == 200) {
             setShowModal(false);
             edit.json().then((rsp) => {
+                reset()
                 callback(rsp);
             });
         } else setError(t("components.editOrgModal.error.edit"));

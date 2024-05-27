@@ -66,7 +66,7 @@ export const TRANSLATIONS_ES = {
                 title: "¡Unite ahora!",
                 description:
                     "¡No dejes que la distancia física limite tu creatividad musical! Únete a Harmony hoy mismo y descubre cómo la colaboración musical en tiempo real puede ser emocionante, eficiente y verdaderamente global. Regístrate ahora para comenzar tu viaje musical en equipo.",
-                signUp: "Registrate",
+                signUp: "¡Registrate!",
             },
         },
         login: {
@@ -101,10 +101,10 @@ export const TRANSLATIONS_ES = {
             },
         },
         orgs: {
-            title: "Mis Organizaciones",
+            title: "Todas Mis Organizaciones",
             edit: "Editar",
             delete: "Eliminar",
-            noSongs: "¡Oops! No tienes ninguna organización",
+            noOrgs: "¡Oops! No tienes ninguna organización",
         },
         org: {
             songs: {
@@ -173,6 +173,12 @@ export const TRANSLATIONS_ES = {
             yes: "Sí",
             cancel: "Cancelar",
             error: "Error al eliminar la organización",
+        },
+        deleteSongModal: {
+            title: "¿Estás seguro que querés eliminar la canción?",
+            yes: "Sí",
+            cancel: "Cancelar",
+            error: "Error al eliminar la canción",
         },
         changeProfileImageModal: {
             title: "Cambiar Imagen de Perfil",

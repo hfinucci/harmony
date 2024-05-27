@@ -45,6 +45,9 @@ export default async function composeController(
                     socket.broadcast.emit("compose", response)
                 }
             })
+            socket.on("session_established", async(request) => {
+                await composeService.addOrUpdateContributor(request.userId, request.songId)
+            })
             socket.on("contributors", async(songId) => {
                 logger.info("Getting contributors for song with id: " + songId)
                 const response = await composeService.getContributors(songId)

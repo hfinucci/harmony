@@ -127,6 +127,8 @@ const PianoPage = ({song, enabled}) => {
             return
         }
         setPlayedPianoNotes((prevNotes) => [...prevNotes, note.pitch]);
+        console.log("tonePiano: " + tonePiano.loaded)
+        console.log("letter: " + letter)
         tonePiano.keyDown({note: letter})
     };
 

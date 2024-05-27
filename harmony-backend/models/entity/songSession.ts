@@ -41,7 +41,6 @@ export class SongSession {
             contributor.lastModified = new Date();
             return;
         }
-
         this.contributors.push(new Contributor(userId));
     }
 
@@ -53,7 +52,7 @@ export class SongSession {
         const now = new Date();
         // Solo se queda con los ultimos 5 minutos
         this.contributors = this.contributors
-            .filter(c => now.getTime() - c.lastModified.getTime() < 1000*60*5);
+            .filter(c => now.getTime() - c.lastModified.getTime() < 1000*60*5 * 20);
 
     }
 }

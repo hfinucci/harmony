@@ -44,7 +44,7 @@ const OrgsPage = () => {
             {orgs && orgs.length == 0 && (
                 <div className="flex items-center justify-center p-4 md:p-5">
                     <h1 className="text-2xl text-fuchsia-950">
-                        {t("pages.orgs.noSongs")}
+                        {t("pages.orgs.noOrgs")}
                     </h1>
                 </div>
             )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
 import { SongService } from "../../service/songService";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { UserService } from "../../service/userService";
 import { Song } from "../../pages/SongsPage/SongsPage";
 import {useTranslation} from "react-i18next";
@@ -39,6 +40,7 @@ const CreateSongModal = ({
         handleSubmit,
         watch,
         formState: { errors },
+        reset
     } = useForm<CreateSongFormData>();
 
     watch();
@@ -51,12 +53,14 @@ const CreateSongModal = ({
             SongService.getSongById(body.id).then(async (rsp) => {
                 if (rsp?.status == 200) {
                     const info = await rsp.json();
-                    callback(info);
+                    reset()
+                    callback(info)
                 }
             });
         } else {
             setError("Error creating song");
         }
+
     };
 
     return (

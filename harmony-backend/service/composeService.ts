@@ -59,7 +59,7 @@ export class ComposeService {
                 {
                     ...u,
                     image:
-                        "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                        process.env.IMAGE_PATH  + "profile_images/" +
                         u.image,
                 }
             )

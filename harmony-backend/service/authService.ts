@@ -51,7 +51,7 @@ export class AuthService {
             const person = {
                 ...user,
                 image:
-                    "http://localhost:54321/storage/v1/object/public/profile_images/" +
+                    process.env.IMAGE_PATH  + "profile_images/" +
                     user.image,
             } as Person;
             return {

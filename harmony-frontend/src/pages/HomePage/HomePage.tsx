@@ -24,6 +24,7 @@ const HomePage = () => {
         } else {
             setSongs([song]);
         }
+        nav("/songs/" + song.id)
     };
 
     const fetchSongs = async () => {

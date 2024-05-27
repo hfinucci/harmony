@@ -3,6 +3,7 @@ import guitarists from "../../assets/landing-guitarists.png";
 import jazzband from "../../assets/landing-jazz-band.png";
 import musicroom from "../../assets/landing-music-room.png";
 import rockband from "../../assets/landing-rock-band.png";
+import {Link} from "react-router-dom";
 
 const LandingPage = () => {
     const { t } = useTranslation();
@@ -128,10 +129,12 @@ const LandingPage = () => {
                         <p className="text-xl font-serif text-zinc-500 px-12">
                             {t("pages.landingPage.join.description")}
                         </p>
-                        <div>
-                            <button className="rounded-md bg-fuchsia-900 text-white px-4 py-2">
-                                {t("pages.landingPage.join.signUp")}
-                            </button>
+                        <div className="flex justify-center">
+                            <Link to="/register">
+                                <h1 className="hover:bg-white hover:text-fuchsia-950 text-white border border-fuchsia-950 bg-fuchsia-950 py-2 px-4 rounded-full w-fit">
+                                    {t("pages.landingPage.join.signUp")}
+                                </h1>
+                            </Link>
                         </div>
                     </div>
                 </div>

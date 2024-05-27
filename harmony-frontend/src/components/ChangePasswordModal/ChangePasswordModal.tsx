@@ -19,13 +19,17 @@ const ChangePasswordModal = () => {
         handleSubmit,
         watch,
         formState: { errors },
+        reset
     } = useForm<ChangePasswordFormData>();
 
     watch("password");
 
     const submitChangePassword = async (data: ChangePasswordFormData) => {
         const response = await UserService.changePassword(data.password);
-        if (response?.status == 200) setShowModal(false);
+        if (response?.status == 200) {
+            reset()
+            setShowModal(false);
+        }
         else
             setChangePasswordError(
                 t("components.changePasswordModal.error.change")

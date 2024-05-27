@@ -25,7 +25,7 @@ export class MemberService {
             (org) =>
                 ({
                 ...org,
-                image: "http://localhost:54321/storage/v1/object/public/orgs_images/" + org.id + "/profile.png"
+                image: process.env.IMAGE_PATH + "orgs_images/" + org.id + "/profile.png"
             })
         );
     }

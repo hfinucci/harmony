@@ -19,6 +19,7 @@ import {useInterval} from "../../utils";
 import {Contributors} from "../../types/dtos/Contributors";
 import "./EditPage.css"
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
+import {Document, Page, PDFDownloadLink, StyleSheet, Text, View} from '@react-pdf/renderer'
 
 
 const EditPage = () => {
@@ -186,6 +187,56 @@ const EditPage = () => {
         setBlocks(updatedBlocks);
     }
 
+    const styles = StyleSheet.create({
+        section: {
+            padding: 2,
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        title: {
+            fontSize: 32,
+            fontWeight: 'extrabold',
+            padding: 5
+        },
+        chord: {
+            borderRadius: '25px',
+            fontWeight: 'bold',
+            padding: 5,
+            color: 'rgb(74 4 78)',
+            alignSelf: 'flex-start',
+            backgroundColor: 'rgb(245 208 254)',
+        },
+        lyrics: {
+            padding: 5,
+        }
+    });
+
+    const Pdf = ({blocks}: {blocks: Block[][]} | undefined) => (
+        <Document>
+            <Page style={styles.section} wrap={false} size="A4">
+                <Text style={styles.title}>
+                    {song?.name}
+                </Text>
+                <div id="song" >
+                    {blocks.map((block, index_l) => (
+                        <div key={index_l}>
+                            {block.map((block, index_b) => (
+                                <View key={index_l + "_" + index_b}>
+                                    <Text style={styles.chord}>
+                                        {block?.chord + " "}
+                                    </Text>
+                                    <Text style={styles.lyrics}>
+                                        {block?.lyrics + " "}
+                                    </Text>
+                                </View>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </Page>
+        </Document>
+    );
+    
     const submit = () => {
         // Handle submission of blocks, for example, send to server or process locally
     };
@@ -274,10 +325,17 @@ const EditPage = () => {
                                         className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
                                     <FaMusic/></button>
                             }
-                            <button
-                                className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                <CgExport/>
-                            </button>
+                            { blocks &&
+                            <PDFDownloadLink document={<Pdf blocks={blocks} />} fileName={song.name ? song.name + ".pdf" : "song.pdf"}>
+                                {({blob, url, loading, error}) =>
+                                    loading ? 'Loading document...' : (
+                                        <button
+                                            className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                            <CgExport/>
+                                        </button>)
+                                }
+                            </PDFDownloadLink>
+                            }
                         </div>
                     </div>
                     {view == 1 &&

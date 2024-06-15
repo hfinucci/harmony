@@ -211,6 +211,7 @@ const EditPage = () => {
         }
     });
 
+
     const Pdf = ({blocks}: {blocks: Block[][]} | undefined) => (
         <Document>
             <Page style={styles.section} wrap={false} size="A4">
@@ -223,10 +224,10 @@ const EditPage = () => {
                             {block.map((block, index_b) => (
                                 <View key={index_l + "_" + index_b}>
                                     <Text style={styles.chord}>
-                                        {block?.chord + " "}
+                                        {block?.chord}
                                     </Text>
                                     <Text style={styles.lyrics}>
-                                        {block?.lyrics + " "}
+                                        {block?.lyrics}
                                     </Text>
                                 </View>
                             ))}

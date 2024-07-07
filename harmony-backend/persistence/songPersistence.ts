@@ -46,6 +46,18 @@ export class SongPersistence {
         })();
     }
 
+    static async getSongsByAlbum(id: number) {
+        const query = {
+            text: 'SELECT * FROM songs WHERE album = $1',
+            values: [id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const song = result.rows;
+        return song ?? (() => {
+            throw new Error("Songs not found")
+        })();
+    }
+
     static async deleteSongById(id: number) {
         const query = {
             text: 'DELETE FROM songs WHERE id = $1 RETURNING (id)',

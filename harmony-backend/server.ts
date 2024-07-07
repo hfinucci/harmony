@@ -9,6 +9,7 @@ import authController from './controllers/authController';
 import orgController from "./controllers/orgController";
 import memberController from "./controllers/memberController";
 import imageController from "./controllers/imageController";
+import albumController from "./controllers/albumController";
 
 const server = fastify()
     .register(cors, {
@@ -27,7 +28,8 @@ const server = fastify()
     .register(songController)
     .register(orgController)
     .register(memberController)
-    .register(imageController);
+    .register(imageController)
+    .register(albumController);
 
 const transport = pino.transport({
     targets: [

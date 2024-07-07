@@ -2,6 +2,7 @@ import {z} from "zod";
 
 const Request = z.object({
     name: z.string().optional(),
+    album: z.number().optional().nullable()
 }).strict();
 
 export function parseUpdateSongRequest(payload: any) {

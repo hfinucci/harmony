@@ -30,9 +30,14 @@ export default async function songController(fastify: FastifyInstance, opts: any
         const id = req.params.id;
         try {
             parseId(id)
+            const user = AuthService.parseJWT(req.headers.authorization);
             const request = parseUpdateSongRequest(req.body);
+
+            const song = await SongService.getSongById(id)
+            await checkIfRequesterIsMember(user.person.id, song.org);
+
             logger.info("Updating song with id: " + id);
-            return await SongService.updateSong(id, request);
+            return await SongService.updateSong(song, request);
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

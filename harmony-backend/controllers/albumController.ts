@@ -30,7 +30,12 @@ export default async function albumController(fastify: FastifyInstance, opts: an
         const id = req.params.id;
         try {
             parseId(id)
+            const user = AuthService.parseJWT(req.headers.authorization);
             const request = parseUpdateAlbumRequest(req.body);
+
+            const album = await AlbumService.getAlbumById(id)
+            await checkIfRequesterIsMember(user.person.id, album.org);
+
             logger.info("Updating album with id: " + id);
             return await AlbumService.updateAlbum(id, request);
         } catch (err) {

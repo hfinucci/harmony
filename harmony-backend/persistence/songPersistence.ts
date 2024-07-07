@@ -6,8 +6,8 @@ export class SongPersistence {
 
     public static async createSong(request: CreateSongRequest): Promise<any> {
         const query = {
-            text: 'INSERT INTO songs (name, org, created, lastModified, composeId) VALUES ($1, $2, NOW(), NOW(), $3) RETURNING (id)',
-            values: [request.name, request.org, request.composeId],
+            text: 'INSERT INTO songs (name, org, created, lastModified, composeId, album) VALUES ($1, $2, NOW(), NOW(), $3, $4) RETURNING (id)',
+            values: [request.name, request.org, request.composeId, request.album],
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;

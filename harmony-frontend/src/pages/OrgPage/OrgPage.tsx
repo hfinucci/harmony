@@ -23,6 +23,7 @@ const OrgPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [errorCode, setErrorCode] = useState<number>();
     const [errorMsg, setErrorMsg] = useState<string>("");
+    const [imageReload, setImageReload] = useState<number>(Date.now())
 
     const orgId = useParams();
 
@@ -64,11 +65,13 @@ const OrgPage = () => {
                 setMembers(info);
             }
         });
-
-        if (org) {
-            fetchImage(org.image);
-        }
     }, [org]);
+
+    useEffect(() => {
+        if (org) {
+            fetchImage(org.image + "?reload=" + imageReload);
+        }
+    }, [org, imageReload]);
 
     const fetchImage = async (url: string) => {
         const response = await fetch(url);
@@ -132,7 +135,7 @@ const OrgPage = () => {
                         </h1>
                         <div className="flex gap-2 items-center mr-5">
                             <DeleteOrgModal id={org.id} />
-                            <EditOrgModal org={org} callback={editOrg} />
+                            <EditOrgModal org={org} callback={editOrg} reloadImage={setImageReload} />
                         </div>
                     </div>
                 )}

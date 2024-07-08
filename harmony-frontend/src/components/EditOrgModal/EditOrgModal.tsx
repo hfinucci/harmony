@@ -9,9 +9,10 @@ import { toBase64 } from "../../utils";
 interface EditOrgModalProps {
     org: Org;
     callback: (org: Org) => void;
+    reloadImage:  React.Dispatch<React.SetStateAction<number>>;
 }
 
-const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
+const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
 
@@ -45,6 +46,10 @@ const EditOrgModal = ({ org, callback }: EditOrgModalProps) => {
                 reset()
                 callback(rsp);
             });
+
+            if (image != null) {
+                reloadImage(Date.now())
+            }
         } else setError(t("components.editOrgModal.error.edit"));
     };
 

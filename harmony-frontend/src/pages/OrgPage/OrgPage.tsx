@@ -14,6 +14,7 @@ import { Org } from "../../types/dtos/Org.ts";
 import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
+import {ImageService} from "../../service/imageService.ts";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
@@ -69,13 +70,14 @@ const OrgPage = () => {
 
     useEffect(() => {
         if (org) {
-            fetchImage(org.image + "?reload=" + imageReload);
+            fetchImage(org.image);
         }
     }, [org, imageReload]);
 
     const fetchImage = async (url: string) => {
-        const response = await fetch(url);
+        const response = await ImageService.getOrgImage(url);
         if (response.ok) {
+            url = URL.createObjectURL(await response.blob());
             setImage(url);
         } else {
             setImage(ORG_IMAGE_DEFAULT)

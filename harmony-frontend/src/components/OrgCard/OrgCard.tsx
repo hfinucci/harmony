@@ -34,9 +34,8 @@ const OrgCard = (org: Org) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={image}
+                    src={image + "?reload=" + Date.now()}
                     onError={() => {
-                        console.log("Hello?")
                         setImage(ORG_IMAGE_DEFAULT);
                     }}
                     alt="org image"

@@ -14,6 +14,7 @@ import { Org } from "../../types/dtos/Org.ts";
 import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
+import {ImageService} from "../../service/imageService.ts";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
@@ -23,6 +24,7 @@ const OrgPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [errorCode, setErrorCode] = useState<number>();
     const [errorMsg, setErrorMsg] = useState<string>("");
+    const [imageReload, setImageReload] = useState<number>(Date.now())
 
     const orgId = useParams();
 
@@ -64,15 +66,18 @@ const OrgPage = () => {
                 setMembers(info);
             }
         });
+    }, [org]);
 
+    useEffect(() => {
         if (org) {
             fetchImage(org.image);
         }
-    }, [org]);
+    }, [org, imageReload]);
 
     const fetchImage = async (url: string) => {
-        const response = await fetch(url);
+        const response = await ImageService.getOrgImage(url);
         if (response.ok) {
+            url = URL.createObjectURL(await response.blob());
             setImage(url);
         } else {
             setImage(ORG_IMAGE_DEFAULT)
@@ -132,7 +137,7 @@ const OrgPage = () => {
                         </h1>
                         <div className="flex gap-2 items-center mr-5">
                             <DeleteOrgModal id={org.id} />
-                            <EditOrgModal org={org} callback={editOrg} />
+                            <EditOrgModal org={org} callback={editOrg} reloadImage={setImageReload} />
                         </div>
                     </div>
                 )}

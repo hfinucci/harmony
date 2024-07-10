@@ -12,4 +12,13 @@ export class ImageService {
         });
     }
 
+    public static async getOrgImage(url: string) {
+        return await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+            },
+        });
+    }
 }

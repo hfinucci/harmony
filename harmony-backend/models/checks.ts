@@ -11,7 +11,7 @@ export const checkIfRequesterIsMember = async (userId: number, orgId: number) =>
 }
 
 export const checkIfAlbumIsFromOrg = async (albumId: number, orgId: number) => {
-    logger.info("Checking if album is from org with id: " + orgId);
+    logger.info("Checking if album with id " + albumId + " is from org with id: " + orgId);
     const album = await AlbumService.getAlbumById(albumId);
     if(orgId != album.org)
         throw new Error("Album with id " + albumId + " is not from organization with id " + orgId)

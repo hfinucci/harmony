@@ -18,6 +18,9 @@ export default async function songController(fastify: FastifyInstance, opts: any
 
             await checkIfRequesterIsMember(user.person.id, request.org);
 
+            if(request.album)
+                await checkIfAlbumIsFromOrg(request.album, request.org)
+
             logger.info("Creating song: " + request.name);
             return await SongService.createSong(request);
         } catch (err) {

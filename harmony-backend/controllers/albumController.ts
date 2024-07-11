@@ -55,8 +55,6 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 logger.info("Fetching album with id: " + id);
                 const album = await AlbumService.getAlbumById(id);
 
-                logger.info("Album: ")
-
                 await checkIfRequesterIsMember(user.person.id, album.org);
 
                 return album;

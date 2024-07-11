@@ -16,8 +16,6 @@ CREATE UNIQUE INDEX album_pkey ON public.album USING btree (id);
 
 alter table "public"."album" add constraint "album_pkey" PRIMARY KEY using index "album_pkey";
 
-alter table "public"."album" add constraint "album_id_key" UNIQUE using index "album_id_key";
-
 alter table "public"."album" add constraint "album_org_id_fkey" FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE not valid;
 
 alter table "public"."album" validate constraint "album_org_id_fkey";

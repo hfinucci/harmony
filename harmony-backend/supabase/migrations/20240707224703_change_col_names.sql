@@ -1,5 +1,3 @@
-alter table "public"."album" drop constraint "album_id_key";
-
 alter table "public"."album" drop constraint "album_org_id_fkey";
 
 alter table "public"."songs" drop constraint "songs_album_id_fkey";

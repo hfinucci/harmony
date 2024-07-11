@@ -57,4 +57,38 @@ export class AlbumPersistence {
             throw new Error("Album not found")
         })();
     }
+
+    static async deleteAlbumCascadeById(id: number): Promise<any> {
+        const client = await dbpool.connect();
+
+        try {
+            await client.query('BEGIN');
+
+            // Elimina las canciones del álbum
+            const deleteSongsQuery = {
+                text: 'DELETE FROM songs WHERE album = $1',
+                values: [id],
+            };
+            await client.query(deleteSongsQuery);
+
+            // Elimina el álbum
+            const deleteAlbumQuery = {
+                text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
+                values: [id],
+            };
+            const result: QueryResult = await client.query(deleteAlbumQuery);
+
+            if (!result.rows[0]) {
+                throw new Error("Album not found");
+            }
+
+            await client.query('COMMIT');
+            return result.rows[0];
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
 }

@@ -29,4 +29,8 @@ export class AlbumService {
     static async deleteAlbumById(id: number) {
         return await AlbumPersistence.deleteAlbumById(id);
     }
+
+    static async deleteAlbumCascadeById(id: number) {
+        return await AlbumPersistence.deleteAlbumCascadeById(id);
+    }
 }

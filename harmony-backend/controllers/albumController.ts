@@ -94,11 +94,37 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
 
-                await checkIfRequesterIsMember(user.person.id, id);
+                // Verifica si el usuario es miembro
+                const album = await AlbumService.getAlbumById(id)
+                await checkIfRequesterIsMember(user.person.id, album.org);
 
                 logger.info("Deleting album with id: " + id);
                 // TODO: Delete album image
                 return await AlbumService.deleteAlbumById(id);
+            } catch (err) {
+                logger.error(err);
+                return handleError(err, rep);
+            }
+        }
+    );
+
+    server.delete(
+        BASE_URL + "/:id/cascade",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            const id = req.params.id;
+            try {
+                const user = AuthService.parseJWT(req.headers.authorization);
+                parseId(id);
+
+                // Verifica si el usuario es miembro
+                const album = await AlbumService.getAlbumById(id)
+                await checkIfRequesterIsMember(user.person.id, album.org);
+
+                // Elimina el álbum y sus canciones en cascada
+                await AlbumService.deleteAlbumCascadeById(id);
+
+                logger.info("Deleted album with id: " + id + " and its songs");
+                return {"id": id};
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

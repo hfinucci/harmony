@@ -5,7 +5,7 @@ import {parseCreateSongRequest} from "../models/createSongRequest";
 import {handleError, parseId} from "../utils";
 import {parseUpdateSongRequest} from "../models/updateSongRequest";
 import {AuthService} from "../service/authService";
-import {checkIfRequesterIsMember} from "../models/checks";
+import {checkIfAlbumIsFromOrg, checkIfRequesterIsMember} from "../models/checks";
 
 const BASE_URL = '/api/songs'
 
@@ -17,6 +17,9 @@ export default async function songController(fastify: FastifyInstance, opts: any
             const request = parseCreateSongRequest(req.body);
 
             await checkIfRequesterIsMember(user.person.id, request.org);
+
+            if(request.album)
+                await checkIfAlbumIsFromOrg(request.album, request.org)
 
             logger.info("Creating song: " + request.name);
             return await SongService.createSong(request);
@@ -30,9 +33,17 @@ export default async function songController(fastify: FastifyInstance, opts: any
         const id = req.params.id;
         try {
             parseId(id)
+            const user = AuthService.parseJWT(req.headers.authorization);
             const request = parseUpdateSongRequest(req.body);
+
+            const song = await SongService.getSongById(id)
+            await checkIfRequesterIsMember(user.person.id, song.org);
+
+            if(request.album)
+                await checkIfAlbumIsFromOrg(request.album, song.org);
+
             logger.info("Updating song with id: " + id);
-            return await SongService.updateSong(id, request);
+            return await SongService.updateSong(song, request);
         } catch (err) {
             logger.error(err)
             return handleError(err, rep)

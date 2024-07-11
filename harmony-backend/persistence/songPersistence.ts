@@ -6,8 +6,8 @@ export class SongPersistence {
 
     public static async createSong(request: CreateSongRequest): Promise<any> {
         const query = {
-            text: 'INSERT INTO songs (name, org, created, lastModified, composeId) VALUES ($1, $2, NOW(), NOW(), $3) RETURNING (id)',
-            values: [request.name, request.org, request.composeId],
+            text: 'INSERT INTO songs (name, org, created, lastModified, composeId, album) VALUES ($1, $2, NOW(), NOW(), $3, $4) RETURNING (id)',
+            values: [request.name, request.org, request.composeId, request.album],
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;
@@ -15,8 +15,8 @@ export class SongPersistence {
 
     public static async updateSong(updatedSong: any): Promise<any> {
         const query = {
-            text: 'UPDATE songs SET name = $1, lastModified = NOW() WHERE id = $2 RETURNING (id)',
-            values: [updatedSong.name, updatedSong.id],
+            text: 'UPDATE songs SET name = $1, lastModified = NOW(), album = $2 WHERE id = $3 RETURNING (id)',
+            values: [updatedSong.name, updatedSong.album, updatedSong.id],
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;
@@ -37,6 +37,18 @@ export class SongPersistence {
     static async getSongsByOrg(id: number) {
         const query = {
             text: 'SELECT * FROM songs WHERE org = $1',
+            values: [id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const song = result.rows;
+        return song ?? (() => {
+            throw new Error("Songs not found")
+        })();
+    }
+
+    static async getSongsByAlbum(id: number) {
+        const query = {
+            text: 'SELECT * FROM songs WHERE album = $1',
             values: [id],
         };
         const result: QueryResult = await dbpool.query(query);

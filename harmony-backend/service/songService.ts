@@ -13,9 +13,8 @@ export class SongService {
         return await SongPersistence.createSong(request);
     }
 
-    public static async updateSong(id: number, request: UpdateSongRequest) {
-        const storedSong = await this.getSongById(id)
-        const updatedSong = {...storedSong, ...request}
+    public static async updateSong(song: any, request: UpdateSongRequest) {
+        const updatedSong = {...song, ...request}
         return await SongPersistence.updateSong(updatedSong);
     }
 
@@ -25,6 +24,10 @@ export class SongService {
 
     public static async getSongsByOrg(id: number) {
         return await SongPersistence.getSongsByOrg(id);
+    }
+
+    public static async getSongsByAlbum(id: number) {
+        return await SongPersistence.getSongsByAlbum(id);
     }
 
     public static async getSongsByUser(id: number) {

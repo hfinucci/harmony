@@ -10,6 +10,7 @@ import { AuthService } from "../service/authService";
 import { ImageService } from "../service/imageService";
 import {AuthorizationError} from "../models/errors/AuthorizationError";
 import {checkIfRequesterIsMember} from "../models/checks";
+import {AlbumService} from "../service/albumService";
 
 const BASE_URL = "/api/orgs";
 
@@ -124,6 +125,25 @@ export default async function orgController(
 
                 logger.info("Fetching songs from org with id: " + id);
                 return await SongService.getSongsByOrg(id);
+            } catch (err) {
+                logger.error(err);
+                return handleError(err, rep);
+            }
+        }
+    );
+
+    server.get(
+        BASE_URL + "/:id/albums",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            const id = req.params.id;
+            try {
+                const user = AuthService.parseJWT(req.headers.authorization);
+                parseId(id);
+
+                await checkIfRequesterIsMember(user.person.id, id);
+
+                logger.info("Fetching albums from org with id: " + id);
+                return await AlbumService.getAlbumsByOrg(id);
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

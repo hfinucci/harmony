@@ -40,8 +40,20 @@ export class AlbumPersistence {
             values: [id],
         };
         const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
+        const albums = result.rows;
+        return albums ?? (() => {
+            throw new Error("Albums not found")
+        })();
+    }
+
+    static async getAlbumsByUser(id: number) {
+        const query = {
+            text: 'SELECT a.id as id, m.org_id as org, a.name as name FROM albums a JOIN members m ON a.org=m.org_id WHERE m.user_id = $1',
+            values: [id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const albums = result.rows;
+        return albums ?? (() => {
             throw new Error("Albums not found")
         })();
     }

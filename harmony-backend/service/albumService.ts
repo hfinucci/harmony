@@ -26,6 +26,10 @@ export class AlbumService {
         return await AlbumPersistence.getAlbumsByOrg(id);
     }
 
+    public static async getAlbumsByUser(id: number) {
+        return await AlbumPersistence.getAlbumsByUser(id);
+    }
+
     static async deleteAlbumById(id: number) {
         return await AlbumPersistence.deleteAlbumById(id);
     }

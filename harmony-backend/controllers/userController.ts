@@ -9,8 +9,8 @@ import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { FetchSongsByUserResponse } from "../models/dto/fetchSongsByUserResponse";
 import { z } from "zod";
-import {AuthenticationError} from "../models/errors/AuthenticationError";
 import {AuthorizationError} from "../models/errors/AuthorizationError";
+import {AlbumService} from "../service/albumService";
 
 const BASE_URL = "/api/users";
 
@@ -18,6 +18,88 @@ export default async function userController(
     fastify: FastifyInstance,
     opts: any
 ) {
+    server.post(BASE_URL, async (req, rep) => {
+        try {
+            const request = parseCreateUserRequest(req.body);
+            logger.info("Signing up user with email: " + request.email);
+            await UserService.createUser(request);
+            return await AuthService.login(request);
+        } catch (error: any) {
+            logger.error(error);
+            return handleError(error, rep);
+        }
+    });
+
+    server.put(
+        BASE_URL + "/:id",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            try {
+                const user = AuthService.parseJWT(req.headers.authorization);
+                const id = req.params.id;
+                parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot update profile image for another user");
+                }
+
+                const request = parseChangeIconRequest(req.body);
+                logger.info("Changing image for user with id " + id + " to " + request.image);
+                const changed = await UserService.changeIcon(id, request);
+                if (!changed)
+                    return false
+                return  process.env.IMAGE_PATH + "profile_images/" +
+                    request.image
+            } catch (err) {
+                logger.error(err);
+                return handleError(err, rep);
+            }
+        }
+    );
+
+    server.get(
+        BASE_URL + "/:id/songs",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            const id = req.params.id;
+            try {
+                const user = AuthService.parseJWT(req.headers.authorization);
+                parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot get songs for another user");
+                }
+
+                logger.info("Getting songs from user with id: " + id);
+                const songs = await SongService.getSongsByUser(id);
+                return z.array(FetchSongsByUserResponse).parse(songs);
+            } catch (error: any) {
+                logger.error(error);
+                return handleError(error, rep);
+            }
+        }
+    );
+
+    server.get(
+        BASE_URL + "/:id/albums",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            const id = req.params.id;
+            try {
+                logger.info("Here")
+                const user = AuthService.parseJWT(req.headers.authorization);
+                parseId(id);
+
+                if (user.person.id !== id) {
+                    throw new AuthorizationError("Cannot get albums for another user");
+                }
+
+                logger.info("Getting albums from user with id: " + id);
+                return await AlbumService.getAlbumsByUser(id);
+            } catch (error: any) {
+                logger.error(error);
+                return handleError(error, rep);
+            }
+        }
+    );
+
     server.get(
         BASE_URL + "/:id",
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
@@ -61,18 +143,6 @@ export default async function userController(
         }
     );
 
-    server.post(BASE_URL, async (req, rep) => {
-        try {
-            const request = parseCreateUserRequest(req.body);
-            logger.info("Signing up user with email: " + request.email);
-            await UserService.createUser(request);
-            return await AuthService.login(request);
-        } catch (error: any) {
-            logger.error(error);
-            return handleError(error, rep);
-        }
-    });
-
     // TODO FIX DELETE USER
     server.delete(
         BASE_URL,
@@ -89,51 +159,4 @@ export default async function userController(
         }
     );
 
-    server.put(
-        BASE_URL + "/:id",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
-            try {
-                const user = AuthService.parseJWT(req.headers.authorization);
-                const id = req.params.id;
-                parseId(id);
-
-                if (user.person.id !== id) {
-                    throw new AuthorizationError("Cannot update profile image for another user");
-                }
-
-                const request = parseChangeIconRequest(req.body);
-                logger.info("Changing image for user with id " + id + " to " + request.image);
-                const changed = await UserService.changeIcon(id, request);
-                if (!changed)
-                    return false
-                return  process.env.IMAGE_PATH + "profile_images/" +
-                    request.image
-            } catch (err) {
-                logger.error(err);
-                return handleError(err, rep);
-            }
-        }
-    );
-
-    server.get(
-        BASE_URL + "/:id" + "/songs",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
-            const id = req.params.id;
-            try {
-                const user = AuthService.parseJWT(req.headers.authorization);
-                parseId(id);
-
-                if (user.person.id !== id) {
-                    throw new AuthorizationError("Cannot get songs for another user");
-                }
-
-                logger.info("Getting songs with id: " + id);
-                const songs = await SongService.getSongsByUser(id);
-                return z.array(FetchSongsByUserResponse).parse(songs);
-            } catch (error: any) {
-                logger.error(error);
-                return handleError(error, rep);
-            }
-        }
-    );
 }

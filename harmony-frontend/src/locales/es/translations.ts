@@ -100,6 +100,12 @@ export const TRANSLATIONS_ES = {
                 subscription: "Debes aceptar los Términos y Condiciones",
             },
         },
+        albums: {
+            title: "Todos Mis Álbumes",
+            edit: "Editar",
+            delete: "Eliminar",
+            noOrgs: "¡Oops! No tienes ningún álbum",
+        },
         orgs: {
             title: "Todas Mis Organizaciones",
             edit: "Editar",
@@ -217,8 +223,21 @@ export const TRANSLATIONS_ES = {
             select: "Seleccionar una organización",
             create: "Crear",
             cancel: "Cancelar",
+            button: "Agregar Canción",
             error: {
                 name: "El nombre de la canción debe tener menos de 50 caracteres",
+                org: "Seleccionar una organización válida"
+            },
+        },
+        createAlbumModal: {
+            title: "Crear Álbum",
+            name: "Nombre",
+            select: "Seleccionar una organización",
+            create: "Crear",
+            cancel: "Cancelar",
+            button: "Agregar Álbum",
+            error: {
+                name: "El nombre del álbum debe tener menos de 50 caracteres",
                 org: "Seleccionar una organización válida"
             },
         },
@@ -234,6 +253,9 @@ export const TRANSLATIONS_ES = {
             members: "Miembros: ",
             edit: "Editar",
             delete: "Eliminar",
+        },
+        albumCard: {
+            org: "Organización: ",
         },
         addMember: {
             button: "Agregar Miembro",

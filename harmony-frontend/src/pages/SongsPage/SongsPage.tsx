@@ -37,7 +37,7 @@ const SongsPage = () => {
     return (
 
         <div className="container h-screen mt-16 mx-auto max-w-12xl">
-            <h1 className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-2">
+            <h1 className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-2 items-center">
                 <FaMusic />
                 {t("pages.songs.title")}
             </h1>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserService } from "../../service/userService.ts";
 import AlbumCard from "../../components/AlbumCard/AlbumCard";
-import { IoPeopleSharp } from "react-icons/io5";
+import { RiAlbumFill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { Album } from "../../types/dtos/Album.ts";
 import { useNavigate } from "react-router-dom";
@@ -26,8 +26,8 @@ const AlbumsPage = () => {
     return (
         <div className="container h-screen mt-8 mx-auto max-w-12xl">
             <div className="flex flex-row justify-between items-center">
-                <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3">
-                    <IoPeopleSharp />
+                <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3 items-center">
+                    <RiAlbumFill />
                     <h1>{t("pages.albums.title")}</h1>
                 </div>
                 <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)}/>

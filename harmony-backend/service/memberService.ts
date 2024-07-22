@@ -6,12 +6,12 @@ export class MemberService {
     public static async createMember(user: number, org: number) {
         const newMember = await MemberPersistence.createMembership(user, org);
         const orgMembers = await MemberPersistence.getMembersByOrg(org);
-        // make a new array with the mails of the members of the org except the newMember
+
         const membersMails = orgMembers
             .filter((member) => member.id !== user)
             .map((member) => member.email);
-
-        await MailService.sendNewMemberJoinedMail(membersMails, org);
+        if (membersMails.length > 0)
+            await MailService.sendNewMemberJoinedMail(membersMails, org);
 
         return newMember;
     }

@@ -83,7 +83,6 @@ export default async function userController(
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;
             try {
-                logger.info("Here")
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
 

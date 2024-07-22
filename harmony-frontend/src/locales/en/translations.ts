@@ -123,6 +123,16 @@ export const TRANSLATIONS_EN = {
             },
             members: "Members",
         },
+        album: {
+            songs: {
+                title: "Songs",
+                name: "Name",
+                creationDate: "Date of Creation",
+                lastModified: "Last Modification",
+                actions: "Actions",
+                none: "Oops! You have no songs",
+            }
+        },
         songs: {
             title: "Your organizations' songs",
             name: "Name",
@@ -179,6 +189,12 @@ export const TRANSLATIONS_EN = {
             cancel: "Cancel",
             error: "Error deleting the organization",
         },
+        deleteAlbumModal: {
+            title: "Are you sure you want to delete the album?",
+            yes: "Yes",
+            cancel: "Cancel",
+            error: "Error deleting the album",
+        },
         deleteSongModal: {
             title: "Are you sure you want to delete the song?",
             yes: "Yes",
@@ -202,6 +218,17 @@ export const TRANSLATIONS_EN = {
             error: {
                 name: "The name of the organization cannot be longer than 50 characters",
                 edit: "Error editing organization, please try again",
+                image: "Error uploading image, the size must be less than 4MB",
+            },
+        },
+        editAlbumModal: {
+            title: "Edit Album",
+            edit: "Edit",
+            cancel: "Cancel",
+            upload: "Upload Image",
+            error: {
+                name: "The name of the album cannot be longer than 50 characters",
+                edit: "Error editing album, please try again",
                 image: "Error uploading image, the size must be less than 4MB",
             },
         },

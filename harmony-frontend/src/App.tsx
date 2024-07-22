@@ -15,6 +15,7 @@ import InvitationPage from "./pages/InvitationPage/InvitationPage.tsx";
 import ErrorPage from "./pages/ErrorPage/ErrorPage.tsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import AlbumsPage from "./pages/AlbumsPage/AlbumsPage";
+import AlbumPage from "./pages/AlbumPage/AlbumPage";
 
 export const BASE_URL = "http://127.0.0.1:3000";
 
@@ -60,6 +61,9 @@ function App() {
                     }
                     {auth &&
                         <Route path="/orgs" element={<OrgsPage/>}/>
+                    }
+                    {auth &&
+                        <Route path="/albums/:id" element={<AlbumPage/>}/>
                     }
                     {auth &&
                         <Route path="/albums" element={<AlbumsPage/>}/>

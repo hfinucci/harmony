@@ -100,6 +100,12 @@ export const TRANSLATIONS_EN = {
                 subscription: "You should accept the Terms and Conditions",
             },
         },
+        albums: {
+            title: "All My Albums",
+            edit: "Edit",
+            delete: "Delete",
+            noOrgs: "Oops! You don't have any albums yet",
+        },
         orgs: {
             title: "All My Organizations",
             edit: "Edit",
@@ -216,8 +222,21 @@ export const TRANSLATIONS_EN = {
             select: "Select an organization",
             create: "Create",
             cancel: "Cancel",
+            button: "Add Song",
             error: {
                 name: "The name of the song cannot be longer than 50 characters",
+                org: "Please select a valid organization"
+            },
+        },
+        createAlbumModal: {
+            title: "Create Album",
+            name: "Name",
+            select: "Select an organization",
+            create: "Create",
+            cancel: "Cancel",
+            button: "Add Album",
+            error: {
+                name: "The name of the album cannot be longer than 50 characters",
                 org: "Please select a valid organization"
             },
         },
@@ -231,6 +250,9 @@ export const TRANSLATIONS_EN = {
         },
         orgCard: {
             members: "Members: ",
+        },
+        albumCard: {
+            org: "Organization: ",
         },
         addMember: {
             button: "Add Member",

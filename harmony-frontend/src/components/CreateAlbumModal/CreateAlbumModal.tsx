@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
-import { SongService } from "../../service/songService";
+import { AlbumService } from "../../service/albumService";
 import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
-import { Song } from "../../pages/SongsPage/SongsPage";
+import { Album } from "../../types/dtos/Album";
 import {useTranslation} from "react-i18next";
 
-const CreateSongModal = ({
-    org,
-    callback,
-}: {
+const CreateAlbumModal = ({
+                             org,
+                             callback,
+                         }: {
     org?: number;
-    callback: (song: Song) => void;
+    callback: (album: Album) => void;
 }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
@@ -29,9 +29,10 @@ const CreateSongModal = ({
         });
     }, []);
 
-    type CreateSongFormData = {
+    type CreateAlbumFormData = {
         name: string;
         org: number;
+        image: FileList; //TODO: create with image
     };
 
     const {
@@ -40,16 +41,16 @@ const CreateSongModal = ({
         watch,
         formState: { errors },
         reset
-    } = useForm<CreateSongFormData>();
+    } = useForm<CreateAlbumFormData>();
 
     watch();
 
     const onSubmit = async (data: any, e: any) => {
-        const song = await SongService.createSong(data.name, data.org);
-        if (song?.status == 200) {
+        const album = await AlbumService.createAlbum(data.name, data.org);
+        if (album?.status == 200) {
             setShowModal(false);
-            const body = await song.json();
-            SongService.getSongById(body.id).then(async (rsp) => {
+            const body = await album.json();
+            AlbumService.getAlbumById(body.id).then(async (rsp) => {
                 if (rsp?.status == 200) {
                     const info = await rsp.json();
                     reset()
@@ -57,7 +58,7 @@ const CreateSongModal = ({
                 }
             });
         } else {
-            setError("Error creating song");
+            setError("Error creating album");
         }
 
     };
@@ -65,13 +66,13 @@ const CreateSongModal = ({
     return (
         <>
             <button
-                aria-label="create song"
+                aria-label="create album"
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="bg-white flex justify-center items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
             >
                 <IoAddSharp className="font-bold" />
-                {t("components.createSongModal.button")}
+                {t("components.createAlbumModal.button")}
             </button>
             {showModal && (
                 <>
@@ -84,7 +85,7 @@ const CreateSongModal = ({
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        {t("components.createSongModal.title")}
+                                        {t("components.createAlbumModal.title")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -97,7 +98,7 @@ const CreateSongModal = ({
                                                 type="text"
                                                 id="name"
                                                 data-testid="create-org-name"
-                                                placeholder={t("components.createSongModal.name")}
+                                                placeholder={t("components.createAlbumModal.name")}
                                                 {...register("name", {
                                                     required: true,
                                                     maxLength: 50,
@@ -109,7 +110,7 @@ const CreateSongModal = ({
                                         {errors.name && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createSongModal.error.name")}
+                                                    {t("components.createAlbumModal.error.name")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -120,7 +121,7 @@ const CreateSongModal = ({
                                             <div>
                                                 <select
                                                     id="name"
-                                                    data-testid="create-song-org"
+                                                    data-testid="create-album-org"
                                                     defaultValue={org == null? 0: org}
                                                     {...register("org", {
                                                         required: true,
@@ -140,7 +141,7 @@ const CreateSongModal = ({
                                                         <option
                                                             value={0}
                                                             label={
-                                                                t("components.createSongModal.select")
+                                                                t("components.createAlbumModal.select")
                                                             }
                                                         />
                                                     )}
@@ -150,7 +151,7 @@ const CreateSongModal = ({
                                         {errors.org && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createSongModal.error.org")}
+                                                    {t("components.createAlbumModal.error.org")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -165,13 +166,13 @@ const CreateSongModal = ({
                                                 }
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createSongModal.cancel")}
+                                                {t("components.createAlbumModal.cancel")}
                                             </button>
                                             <button
                                                 type="submit"
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
-                                                {t("components.createSongModal.create")}
+                                                {t("components.createAlbumModal.create")}
                                             </button>
                                         </div>
                                     </form>
@@ -185,4 +186,4 @@ const CreateSongModal = ({
     );
 };
 
-export default CreateSongModal;
+export default CreateAlbumModal;

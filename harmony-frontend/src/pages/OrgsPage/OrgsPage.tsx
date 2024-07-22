@@ -23,7 +23,7 @@ const OrgsPage = () => {
     return (
         <div className="container h-screen mt-8 mx-auto max-w-12xl">
             <div className="flex flex-row justify-between items-center">
-                <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3">
+                <div className="text-fuchsia-950 text-4xl mb-4 flex flex-row gap-3 items-center">
                     <IoPeopleSharp />
                     <h1>{t("pages.orgs.title")}</h1>
                 </div>

@@ -115,4 +115,15 @@ export class UserService {
             },
         });
     }
+
+    public static async getUserAlbums(userId: string) {
+        return await fetch(BASE_URL + "/api/users/" + userId + "/albums", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: ("Bearer " +
+                    localStorage.getItem("harmony-jwt")) as string,
+            },
+        });
+    }
 }

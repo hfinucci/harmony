@@ -124,6 +124,7 @@ export const TRANSLATIONS_ES = {
             members: "Integrantes",
         },
         album: {
+            from: "De la organización ",
             songs: {
                 title: "Canciones",
                 name: "Nombre",
@@ -192,6 +193,7 @@ export const TRANSLATIONS_ES = {
         },
         deleteAlbumModal: {
             title: "¿Estás seguro que querés eliminar el álbum?",
+            cascade: "También eliminar las canciones del álbum",
             yes: "Sí",
             cancel: "Cancelar",
             error: "Error al eliminar el álbum",

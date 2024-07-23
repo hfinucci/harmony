@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AlbumService } from "../../service/albumService";
 import "./AlbumCard.css";
 import { useTranslation } from "react-i18next";
 import { ORG_IMAGE_DEFAULT } from "../../utils";
@@ -15,7 +14,6 @@ const AlbumCard = (album: Album) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        console.log("Album card, album.org: " + album.org)
         OrgService.getOrg(album.org).then(async (rsp) => {
             if(rsp?.status == 200) {
                 const o = await rsp.json()

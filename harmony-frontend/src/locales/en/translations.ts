@@ -124,6 +124,7 @@ export const TRANSLATIONS_EN = {
             members: "Members",
         },
         album: {
+            from: "From organization ",
             songs: {
                 title: "Songs",
                 name: "Name",
@@ -191,6 +192,7 @@ export const TRANSLATIONS_EN = {
         },
         deleteAlbumModal: {
             title: "Are you sure you want to delete the album?",
+            cascade: "Also delete songs from album",
             yes: "Yes",
             cancel: "Cancel",
             error: "Error deleting the album",

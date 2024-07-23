@@ -13,13 +13,16 @@ import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
+import {Org} from "../../types/dtos/Org";
+import {OrgService} from "../../service/orgService";
 
 const AlbumPage = () => {
-    const [album, setAlbum]: any = useState();
+    const [album, setAlbum]: Album = useState();
+    const [org, setOrg]: Org = useState();
     const [songs, setSongs] = useState<Song[]>([]);
     const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
-    const [loading, setLoading] = useState<boolean>(true);
     const [errorCode, setErrorCode] = useState<number>();
+    const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
 
@@ -61,6 +64,16 @@ const AlbumPage = () => {
             fetchImage(album.image);
         }
     }, [album, imageReload]);
+
+    useEffect( () => {
+        if (album) {
+            OrgService.getOrg(album.org).then(async (rsp) => {
+                const o = await rsp.json()
+                setOrg(o)
+            }
+        )
+        }
+    }, [album]);
 
     const fetchImage = async (url: string) => {
         setImage(ORG_IMAGE_DEFAULT)
@@ -123,9 +136,11 @@ const AlbumPage = () => {
                                 <h1 className="text-start text-5xl text-fuchsia-950 drop-shadow-lg">
                                     {album.name}
                                 </h1>
-                                <h1 className="text-start text-lg text-fuchsia-700">
-                                    From organization {album.org}
-                                </h1>
+                                {org &&
+                                    <h1 className="text-start text-lg text-fuchsia-700">
+                                        {t("pages.album.from")}{org.name}
+                                    </h1>
+                                }
                             </div>
                             <div className="flex gap-2 items-start mr-5">
                                 <DeleteAlbumModal id={album.id} />

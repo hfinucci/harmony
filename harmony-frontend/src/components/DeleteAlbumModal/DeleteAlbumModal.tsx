@@ -13,7 +13,11 @@ const DeleteAlbumModal = ({id}) => {
     const navigate = useNavigate();
 
     const submitDeleteAlbum = async () => {
-        const deleted = await AlbumService.deleteAlbum(id);
+        let deleted
+        if(document.getElementById("cascade").checked)
+            deleted = await AlbumService.deleteAlbumCascade(id)
+        else
+            deleted = await AlbumService.deleteAlbum(id);
         if (deleted?.status == 200) {
             setShowModal(false);
             navigate("/albums");
@@ -39,12 +43,24 @@ const DeleteAlbumModal = ({id}) => {
                     >
                         <div className="relative p-4 w-full max-w-md max-h-full">
                             <div className="relative bg-white rounded-lg shadow">
-                                <div className="p-4 md:p-5 text-center">
-                                    <h3 className="mb-5 text-lg font-normal text-gray-500">
+                                <form className="p-4 md:p-5 text-center">
+                                    <h3 className="mb-3 text-lg font-normal text-gray-500">
                                         {t(
                                             "components.deleteAlbumModal.title"
                                         )}
                                     </h3>
+                                    <div className="mb-5">
+                                        <input id="cascade"
+                                               type="checkbox"
+                                               className="w-4 h-4 text-fuchsia-950 bg-gray-100 border-gray-300 rounded focus:ring-fuchsia-950 focus:ring-2"
+                                        />
+                                        <label htmlFor="cascade"
+                                               className="ml-2 text-sm text-gray-400">
+                                            {t(
+                                                "components.deleteAlbumModal.cascade"
+                                            )}
+                                        </label>
+                                    </div>
                                     {error && (
                                         <div className="text-red-500">
                                             {error}
@@ -68,7 +84,7 @@ const DeleteAlbumModal = ({id}) => {
                                     >
                                         {t("components.deleteAlbumModal.yes")}
                                     </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>

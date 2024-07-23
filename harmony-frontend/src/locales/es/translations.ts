@@ -123,6 +123,17 @@ export const TRANSLATIONS_ES = {
             },
             members: "Integrantes",
         },
+        album: {
+            from: "De la organización ",
+            songs: {
+                title: "Canciones",
+                name: "Nombre",
+                creationDate: "Fecha de Creación",
+                lastModified: "Última de Modificación",
+                actions: "Acciones",
+                none: "¡Oops! No tienes canciones",
+            }
+        },
         songs: {
             title: "Canciones de tus organizaciones",
             name: "Nombre",
@@ -180,6 +191,13 @@ export const TRANSLATIONS_ES = {
             cancel: "Cancelar",
             error: "Error al eliminar la organización",
         },
+        deleteAlbumModal: {
+            title: "¿Estás seguro que querés eliminar el álbum?",
+            cascade: "También eliminar las canciones del álbum",
+            yes: "Sí",
+            cancel: "Cancelar",
+            error: "Error al eliminar el álbum",
+        },
         deleteSongModal: {
             title: "¿Estás seguro que querés eliminar la canción?",
             yes: "Sí",
@@ -203,6 +221,17 @@ export const TRANSLATIONS_ES = {
             error: {
                 name: "El nombre de la organización debe tener menos de 50 caracteres",
                 edit: "Error al editar organización, por favor volver a intentar",
+                image: "Error al subir la imagen, el tamaño máximo es 4MB",
+            },
+        },
+        editAlbumModal: {
+            title: "Editar Álbum",
+            edit: "Editar",
+            cancel: "Cancelar",
+            upload: "Subir Imagen",
+            error: {
+                name: "El nombre del álbum debe tener menos de 50 caracteres",
+                edit: "Error al editar álbum, por favor volver a intentar",
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },

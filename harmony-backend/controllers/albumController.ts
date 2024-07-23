@@ -73,7 +73,9 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
 
-                await checkIfRequesterIsMember(user.person.id, id);
+                const album = await AlbumService.getAlbumById(id)
+
+                await checkIfRequesterIsMember(user.person.id, album.org);
 
                 logger.info("Fetching songs from album with id: " + id);
                 return await SongService.getSongsByAlbum(id);

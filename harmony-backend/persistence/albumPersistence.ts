@@ -15,7 +15,7 @@ export class AlbumPersistence {
 
     public static async updateAlbum(updatedAlbum: any): Promise<any> {
         const query = {
-            text: 'UPDATE albums SET name = $1, last_modified = NOW() WHERE id = $2 RETURNING (id)',
+            text: 'UPDATE albums SET name = $1, last_modified = NOW() WHERE id = $2 RETURNING *',
             values: [updatedAlbum.name, updatedAlbum.id],
         };
         const result: QueryResult = await dbpool.query(query);

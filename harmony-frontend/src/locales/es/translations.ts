@@ -148,7 +148,14 @@ export const TRANSLATIONS_ES = {
                 edit: "Editar",
                 preview: "Preview",
             },
-            me: "Me"
+            me: "Yo",
+            showPiano: "Mostrar piano",
+            hidePiano: "Ocultar piano",
+            chord: "Acorde",
+            lyrics: "Letra",
+            chordInfo: "Sólo se permite cifrado americano",
+            loadingDocument: "Cargando documento...",
+            exportPDF: "Exportar a PDF",
         },
         orgInvitation: {
             loading: "Procesando invitación...",

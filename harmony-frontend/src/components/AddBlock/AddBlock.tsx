@@ -63,7 +63,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
 
     return (
         <div className="">
-            <div className="flex">
+            <div className="flex p-2">
                 <form name={"form" + rowIndex + "_" + blockIndex} autoComplete="off" className={"flex flex-col gap-4 h-24 w-fit"}>
                     <div className="flex flex-row justify-between">
                         <input
@@ -93,7 +93,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
                         style={{ width: width + 25 }}
                         onChange={changeHandler}
                         onBlur={submitBlock}
-                        className="rounded-lg border-0 w-full focus:ring-0" />
+                        className="rounded-lg ring-1 ring-gray-300 w-full focus:ring-2 focus:ring-purple-300" />
                     <input hidden type="submit"/>
                 </form>
 

@@ -4,10 +4,9 @@ import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {SongService} from "../../service/songService";
-import {IoAddCircleSharp, IoPeopleSharp} from "react-icons/io5";
+import {IoAddCircleSharp, IoInformationCircleSharp, IoPeopleSharp} from "react-icons/io5";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
-import {FaMusic} from "react-icons/fa";
-import {CgExport} from "react-icons/cg";
+import { CgExport, CgPiano } from "react-icons/cg";
 import {useTranslation} from "react-i18next";
 import {Block} from "../../types/dtos/Block";
 import PreviewSongComponent from "../../components/PreviewSongComponent/PreviewSongComponent";
@@ -20,6 +19,7 @@ import {Contributors} from "../../types/dtos/Contributors";
 import "./EditPage.css"
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import {Document, Page, PDFDownloadLink, StyleSheet, Text, View} from '@react-pdf/renderer'
+import Tooltip from "../../components/Tooltip/Tooltip.tsx";
 
 
 const EditPage = () => {
@@ -317,23 +317,29 @@ const EditPage = () => {
                         </div>
                         <div className="flex items-center space-x-3">
                             {piano &&
-                                <button onClick={togglePiano}
-                                        className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-300 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                    <FaMusic/></button>
+                                <Tooltip message={t("pages.edit.hidePiano")} margin="top-8">
+                                    <button onClick={togglePiano}
+                                            className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-300 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                        <CgPiano/></button>
+                                </Tooltip>
                             }
                             {!piano &&
+                                <Tooltip message={t("pages.edit.showPiano")} margin="top-8">
                                 <button onClick={togglePiano}
                                         className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                    <FaMusic/></button>
+                                    <CgPiano/></button>
+                                </Tooltip>
                             }
                             { blocks &&
                             <PDFDownloadLink document={<Pdf blocks={blocks} />} fileName={song.name ? song.name + ".pdf" : "song.pdf"}>
                                 {({blob, url, loading, error}) =>
-                                    loading ? 'Loading document...' : (
-                                        <button
-                                            className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                            <CgExport/>
-                                        </button>)
+                                    loading ? t("pages.edit.loadingDocument") : (
+                                        <Tooltip message={t("pages.edit.exportPDF")} margin="top-8">
+                                            <button
+                                                className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                                <CgExport/>
+                                            </button>
+                                        </Tooltip>)
                                 }
                             </PDFDownloadLink>
                             }
@@ -345,6 +351,19 @@ const EditPage = () => {
                                 {blocks && blocks.map((row, rowIndex) => (
                                     <div key={rowIndex} className="block flex flex-row flex-wrap"
                                          style={{position: 'relative'}}>
+                                        <div className="flex flex-col gap-4 h-24 w-fit justify-between p-2 my-3">
+                                            <div className="flex text-xl text-fuchsia-900 flex-row items-center">
+                                                <p>{t("pages.edit.chord")}</p>
+                                                { rowIndex == 0 &&
+                                                    <Tooltip message={t("pages.edit.chordInfo")} margin="top-2">
+                                                        <a className="text-lg"><IoInformationCircleSharp/></a>
+                                                    </Tooltip>
+                                                }
+                                            </div>
+                                            <div className="text-xl text-fuchsia-900">
+                                                {t("pages.edit.lyrics")}
+                                            </div>
+                                        </div>
                                         {row.map((block: Block, blockIndex) => (
                                             <div key={blockIndex}>
                                                 <AddBlock
@@ -358,14 +377,14 @@ const EditPage = () => {
                                         ))}
                                         {blocks[rowIndex].length < 4 && (
                                             <button onClick={() => handleAddBlockInRow(rowIndex)}
-                                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
+                                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300 mt-2">
                                                 <IoAddCircleSharp className="h-10 w-10"/>
                                             </button>
                                         )}
                                     </div>
                                 ))}
                                 <button onClick={handleAddBlockNewRow}
-                                        className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300">
+                                        className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300 mt-2">
                                     <IoAddCircleSharp className="h-10 w-10"/>
                                 </button>
                                 <button onClick={submit} className="hidden">submit</button>

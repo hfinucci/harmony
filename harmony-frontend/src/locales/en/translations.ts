@@ -148,7 +148,14 @@ export const TRANSLATIONS_EN = {
                 edit: "Edit",
                 preview: "Preview",
             },
-            me: "Yo"
+            me: "Me",
+            showPiano: "Show piano",
+            hidePiano: "Hide piano",
+            chord: "Chord",
+            lyrics: "Lyrics",
+            chordInfo: "Only accepts letter notation",
+            loadingDocument: "Loading document...",
+            exportPDF: "Export to PDF",
         },
         orgInvitation: {
             loading: "Processing invitation...",

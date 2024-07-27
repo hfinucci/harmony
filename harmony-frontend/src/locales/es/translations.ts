@@ -12,6 +12,8 @@ export const TRANSLATIONS_ES = {
             noOrgs: "¡Oops! No tienes ninguna organización",
             recentSongs: "Canciones Recientes",
             noSongs: "¡Oops! No tienes ninguna canción",
+            myAlbums: "Mis Álbumes",
+            noAlbums: "¡Oops! No tienes ningún álbum",
             song: {
                 name: "Nombre",
                 org: "Organización",

@@ -12,6 +12,8 @@ export const TRANSLATIONS_EN = {
             noOrgs: "Oops! You don't have any organizations yet",
             recentSongs: "Recent Songs",
             noSongs: "Oops! You don't have any songs yet",
+            myAlbums: "My Albums",
+            noAlbums: "Oops! You don't have any albums yet",
             song: {
                 name: "Name",
                 org: "Organization",

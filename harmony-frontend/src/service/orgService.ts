@@ -31,6 +31,26 @@ export class OrgService {
         });
     }
 
+    public static async getOrgSingles(id: number) {
+        return await fetch(BASE_URL + "/api/orgs/" + id + "/singles", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
+            },
+        });
+    }
+
+    public static async getOrgAlbums(id: number) {
+        return await fetch(BASE_URL + "/api/orgs/" + id + "/albums", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
+            },
+        });
+    }
+
     public static async deleteOrg(id: number) {
         return await fetch(BASE_URL + "/api/orgs/" + id, {
             method: "DELETE",

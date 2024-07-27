@@ -123,6 +123,16 @@ export const TRANSLATIONS_EN = {
                 actions: "Actions",
                 none: "Oops! You have no songs",
             },
+            singles: {
+                title: "Singles",
+                none: "Oops! You have no singles",
+            },
+            albums: {
+                title: "Albums",
+                noneSongs: "Oops! You have no songs in this album",
+                none: "Oops! You have no albums in this organization",
+                see: "See full album"
+            },
             members: "Members",
         },
         album: {

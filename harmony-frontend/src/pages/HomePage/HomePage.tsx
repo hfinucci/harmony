@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserService } from "../../service/userService";
 import { FaMusic, FaPeopleGroup } from "react-icons/fa6";
+import { RiAlbumFill } from "react-icons/ri";
 import { Org } from "../../types/dtos/Org";
 import { Song } from "../SongsPage/SongsPage";
 import { useTranslation } from "react-i18next";
@@ -105,7 +106,7 @@ const HomePage = () => {
             <div className="my-4">
                 <div className="flex flex-row justify-between mb-4">
                     <h1 className="text-fuchsia-950 text-4xl flex flex-row gap-2">
-                        <FaPeopleGroup />
+                        <RiAlbumFill />
                         {t("pages.home.myAlbums")}
                     </h1>
                     <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)}/>

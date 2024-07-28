@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {socket} from "../../socket.ts";
 import {KeyboardShortcuts, MidiNumbers, Piano as ReactPiano} from "react-piano";
 import 'react-piano/dist/styles.css';
@@ -18,6 +18,13 @@ interface MIDIEvent {
 }
 
 const midiToNoteMap: Map<number, string> = new Map([
+    [41, "F2"],
+    [42, "F#2"],
+    [43, "G2"],
+    [44, "G#2"],
+    [45, "A2"],
+    [46, "A#2"],
+    [47, "B2"],
     [48, "C3"],
     [49, "C#3"],
     [50, "D3"],
@@ -41,7 +48,14 @@ const midiToNoteMap: Map<number, string> = new Map([
     [68, "G#4"],
     [69, "A4"],
     [70, "A#4"],
-    [71, "B4"]
+    [71, "B4"],
+    [72, "C5"],
+    [73, "C#5"],
+    [74, "D5"],
+    [75, "D#5"],
+    [76, "E5"],
+    [77, "F5"],
+    [78, "F#5"],
 ]);
 
 
@@ -54,9 +68,17 @@ const PianoPage = ({song, enabled}) => {
     const [activeNotes, setActiveNotes] = useState<number[]>([]);
     const [colorId, setColorId] = useState(1);
     const [playedPianoNotes, setPlayedPianoNotes] = useState<number[]>([]);
+    const [transposeOffset, setTransposeOffset] = useState<number>(0)
+    const transposeOffsetRef = useRef(transposeOffset);
 
+    const MAX_TRANSPOSE_OFFSET = 7
+    const MIN_TRANSPOSE_OFFSET = -7
     let midi: MIDIAccess | undefined;
     let tonePiano: Piano
+
+    useEffect(() => {
+        transposeOffsetRef.current = transposeOffset;
+    }, [transposeOffset]);
 
     useEffect(() => {
         if (!isSampleLoaded) {
@@ -112,7 +134,7 @@ const PianoPage = ({song, enabled}) => {
     function onMIDImessage(messageData: MIDIMessageEvent) {
         const note: Note = {
             on: messageData.data[0],
-            pitch: messageData.data[1],
+            pitch: messageData.data[1] + transposeOffsetRef.current,
             velocity: messageData.data[2]
         }
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
@@ -122,19 +144,19 @@ const PianoPage = ({song, enabled}) => {
     }
 
     const playPianoOn = (note: Note) => {
-        const letter = midiToNoteMap.get(note.pitch)
+        const pitch = note.pitch
+        const letter = midiToNoteMap.get(pitch)
         if (!letter) {
             return
         }
-        setPlayedPianoNotes((prevNotes) => [...prevNotes, note.pitch]);
-        console.log("tonePiano: " + tonePiano.loaded)
-        console.log("letter: " + letter)
+        setPlayedPianoNotes((prevNotes) => [...prevNotes, pitch]);
         tonePiano.keyDown({note: letter})
     };
 
     const playPianoStop = (note: Note) => {
-        const letter = midiToNoteMap.get(note.pitch)
-        setPlayedPianoNotes((prevNotes) => prevNotes.filter((n) => n !== note.pitch));
+        const pitch = note.pitch
+        const letter = midiToNoteMap.get(pitch)
+        setPlayedPianoNotes((prevNotes) => prevNotes.filter((n) => n !== pitch));
         tonePiano.keyUp({note: letter})
     };
 
@@ -195,10 +217,17 @@ const PianoPage = ({song, enabled}) => {
         console.log("No puede haber tiki tiki porque no se encontro un MIDI.");
     }
 
+    const handleTransposeOffset = (offset: number) => {
+        if (offset > 0 && transposeOffset < MAX_TRANSPOSE_OFFSET
+            || offset < 0 && transposeOffset > MIN_TRANSPOSE_OFFSET) {
+            setTransposeOffset((prevOffset) => prevOffset + offset)
+        }
+    }
+
     return (
         <div className={"flex justify-center"}>
             {(isConnected && isSampleLoaded) ? (
-                <div>
+                <div className={"flex justify-center"}>
                     <ReactPiano
                         noteRange={{first: MidiNumbers.fromNote('c3'), last: MidiNumbers.fromNote('b4')}}
                         playNote={(midiNumber) => {
@@ -208,6 +237,21 @@ const PianoPage = ({song, enabled}) => {
                         width={1000}
                         activeNotes={activeNotes}
                     />
+                    <div className={"flex flex-col items-center mb-8 justify-center space-x-4 mt-4"}>
+                        <div className={"flex flex-col items-center"}>
+                            <button
+                                onClick={() => handleTransposeOffset(-1)}
+                                className="px-4 py-2 bg-purple-500 font-bold text-white rounded hover:bg-blue-700"
+                            >-
+                            </button>
+                            <h1 className="text-2xl font-bold">{transposeOffset}</h1>
+                            <button
+                                onClick={() => handleTransposeOffset(1)}
+                                className="px-4 ml-0.5 py-2 bg-purple-500 text-white font-bold rounded hover:bg-blue-700"
+                            > +
+                            </button>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className={"mb-28"}>
@@ -216,6 +260,7 @@ const PianoPage = ({song, enabled}) => {
             )}
         </div>
     );
+
 }
 
 export default PianoPage;

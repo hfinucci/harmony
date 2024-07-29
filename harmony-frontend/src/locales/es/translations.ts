@@ -186,6 +186,12 @@ export const TRANSLATIONS_ES = {
             send: "Enviar",
             close: "Cerrar",
         },
+        piano: {
+            metronome: {
+                start: "Iniciar",
+                stop: "Detener",
+            }
+        },
         deleteAccountModal: {
             title: "¿Estás seguro que querés eliminar tu cuenta?",
             yes: "Sí",

@@ -185,6 +185,12 @@ export const TRANSLATIONS_EN = {
             send: "Send",
             close: "Close",
         },
+        piano: {
+            metronome: {
+                start: "Start",
+                stop: "Stop",
+            }
+        },
         deleteAccountModal: {
             title: "Are you sure you want to delete your account?",
             yes: "Yes",

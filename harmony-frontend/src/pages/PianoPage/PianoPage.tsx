@@ -6,6 +6,7 @@ import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnec
 import { Piano } from "@tonejs/piano/build/piano/Piano";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMusic, faVolumeUp} from "@fortawesome/free-solid-svg-icons";
+import {useTranslation} from "react-i18next";
 
 interface Note {
     on: number;
@@ -81,6 +82,8 @@ const PianoPage = ({song, enabled}) => {
     const MIN_TRANSPOSE_OFFSET = -7
     let midi: MIDIAccess | undefined;
     let tonePiano: Piano
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         transposeOffsetRef.current = transposeOffset;
@@ -308,7 +311,7 @@ const PianoPage = ({song, enabled}) => {
                             onClick={toggleMetronome}
                             className="px-4 py-2 mt-2 bg-purple-500 text-white font-bold rounded hover:bg-purple-700"
                         >
-                            {isMetronomeOn ? 'Stop' : 'Start'}
+                            {isMetronomeOn ? t("piano.metronome.stop") : t('piano.metronome.start')}
                         </button>
                     </div>
                     <ReactPiano

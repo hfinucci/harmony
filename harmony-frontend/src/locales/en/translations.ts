@@ -143,6 +143,12 @@ export const TRANSLATIONS_EN = {
             actions: "Actions",
             none: "Oops! You don't have any songs yet",
         },
+        piano: {
+            metronome: {
+                start: "Start",
+                stop: "Stop",
+            }
+        },
         edit: {
             view: {
                 edit: "Edit",

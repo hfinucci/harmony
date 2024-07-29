@@ -311,7 +311,7 @@ const PianoPage = ({song, enabled}) => {
                             onClick={toggleMetronome}
                             className="px-4 py-2 mt-2 bg-purple-500 text-white font-bold rounded hover:bg-purple-700"
                         >
-                            {isMetronomeOn ? t("piano.metronome.stop") : t('piano.metronome.start')}
+                            {isMetronomeOn ? t("components.piano.metronome.stop") : t('components.piano.metronome.start')}
                         </button>
                     </div>
                     <ReactPiano

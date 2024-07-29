@@ -143,12 +143,6 @@ export const TRANSLATIONS_ES = {
             actions: "Acciones",
             none: "¡Oops! No tenés canciones",
         },
-        piano: {
-            metronome: {
-                start: "Iniciar",
-                stop: "Detener",
-            }
-        },
         edit: {
             view: {
                 edit: "Editar",
@@ -191,6 +185,12 @@ export const TRANSLATIONS_ES = {
             },
             send: "Enviar",
             close: "Cerrar",
+        },
+        piano: {
+            metronome: {
+                start: "Iniciar",
+                stop: "Detener",
+            }
         },
         deleteAccountModal: {
             title: "¿Estás seguro que querés eliminar tu cuenta?",

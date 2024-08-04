@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./AlbumCard.css";
 import { useTranslation } from "react-i18next";
-import { ORG_IMAGE_DEFAULT } from "../../utils";
+import { ALBUM_IMAGE_DEFAULT } from "../../utils";
 import { Album } from "../../types/dtos/Album";
 import {Link} from "react-router-dom";
 import {Org} from "../../types/dtos/Org";
@@ -31,7 +31,7 @@ const AlbumCard = (album: Album) => {
                     className="h-full object-contain rounded-t-lg justify-center"
                     src={image + "?reload=" + Date.now()}
                     onError={() => {
-                        setImage(ORG_IMAGE_DEFAULT);
+                        setImage(ALBUM_IMAGE_DEFAULT);
                     }}
                     alt="album image"
                 />

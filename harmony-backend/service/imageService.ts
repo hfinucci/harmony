@@ -47,7 +47,11 @@ export class ImageService {
         return this.uploadImage(`${orgId}/profile.png`, image, `Error uploading image for org with id: ${orgId}`);
     }
 
-    // Dejo esto para reutilizarlo en albums
+    public static async uploadAlbumImage(albumId: number, orgId: number, image: string) {
+        logger.info("Change image for album with id: " + albumId)
+        return this.uploadImage(`${orgId}/${albumId}.png`, image, `Error uploading image for album with id: ${albumId}`);
+    }
+
     private static async uploadImage(path: string, image: string, errorMsg: string) {
         const { data, error } = await supabase.storage
             .from(ORG_IMAGES_BUCKET)
@@ -66,7 +70,10 @@ export class ImageService {
         return this.deleteImage(`${orgId}/profile.png`, `Error deleting image for org with id: ${orgId}`);
     }
 
-    // Dejo esto para reutilizarlo en albums
+    public static async deleteAlbumImage(albumId: number, orgId: number) {
+        return this.deleteImage(`${orgId}/${albumId}.png`, `Error deleting image for album with id: ${albumId}`);
+    }
+
     private static async deleteImage(path: string, errorMsg: string) {
         const { data, error } = await supabase.storage
             .from(ORG_IMAGES_BUCKET)

@@ -44,12 +44,12 @@ export class ImageService {
 
     public static async uploadOrgImage(orgId: number, image: string) {
         logger.info("Change image for organization with id: " + orgId)
-        return this.uploadImage(`${orgId}/profile.png`, image, `Error uploading image for org with id: ${orgId}`);
+        return this.uploadImage(`orgs/${orgId}.png`, image, `Error uploading image for org with id: ${orgId}`);
     }
 
     public static async uploadAlbumImage(albumId: number, orgId: number, image: string) {
         logger.info("Change image for album with id: " + albumId)
-        return this.uploadImage(`${orgId}/${albumId}.png`, image, `Error uploading image for album with id: ${albumId}`);
+        return this.uploadImage(`albums/${albumId}.png`, image, `Error uploading image for album with id: ${albumId}`);
     }
 
     private static async uploadImage(path: string, image: string, errorMsg: string) {
@@ -67,11 +67,11 @@ export class ImageService {
     }
 
     public static async deleteOrgImage(orgId: number) {
-        return this.deleteImage(`${orgId}/profile.png`, `Error deleting image for org with id: ${orgId}`);
+        return this.deleteImage(`orgs/${orgId}.png`, `Error deleting image for org with id: ${orgId}`);
     }
 
     public static async deleteAlbumImage(albumId: number, orgId: number) {
-        return this.deleteImage(`${orgId}/${albumId}.png`, `Error deleting image for album with id: ${albumId}`);
+        return this.deleteImage(`albums/${albumId}.png`, `Error deleting image for album with id: ${albumId}`);
     }
 
     private static async deleteImage(path: string, errorMsg: string) {

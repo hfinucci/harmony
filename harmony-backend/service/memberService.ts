@@ -25,7 +25,7 @@ export class MemberService {
             (org) =>
                 ({
                 ...org,
-                image: process.env.IMAGE_PATH + "orgs_images/" + org.id + "/profile.png"
+                image: process.env.IMAGE_PATH + "orgs_images/orgs/" + org.id + ".png"
             })
         );
     }

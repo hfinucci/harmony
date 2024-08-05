@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
 import { Album } from "../../types/dtos/Album";
 import {useTranslation} from "react-i18next";
+import {toBase64} from "../../utils.ts";
 
 const CreateAlbumModal = ({
                              org,
@@ -46,7 +47,8 @@ const CreateAlbumModal = ({
     watch();
 
     const onSubmit = async (data: any, e: any) => {
-        const album = await AlbumService.createAlbum(data.name, data.org);
+        const image = data.image[0] ? await toBase64(data.image[0]) : null;
+        const album = await AlbumService.createAlbum(data.name, data.org, image);
         if (album?.status == 200) {
             setShowModal(false);
             const body = await album.json();
@@ -152,6 +154,32 @@ const CreateAlbumModal = ({
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {t("components.createAlbumModal.error.org")}
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {error}
+                                                </p>
+                                            </>
+                                        )}
+                                        <label className="block mb-2 text-sm font-medium text-fuchsia-950">
+                                            {t(
+                                                "components.createOrgModal.upload"
+                                            )}
+                                        </label>
+                                        <input
+                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
+                                            aria-describedby="user_avatar_help"
+                                            data-testid="org-image"
+                                            id="user_avatar"
+                                            type="file"
+                                            accept="image/*"
+                                            {...register("image")}
+                                        />
+                                        {errors.image && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {t(
+                                                        "components.createOrgModal.error.image"
+                                                    )}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}

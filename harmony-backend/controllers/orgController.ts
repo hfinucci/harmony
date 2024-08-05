@@ -74,9 +74,9 @@ export default async function orgController(
                 return {
                     ...org,
                     image:
-                        process.env.IMAGE_PATH + "orgs_images/" +
+                        process.env.IMAGE_PATH + "orgs_images/orgs/" +
                         id +
-                        "/profile.png",
+                        ".png",
                 };
             } catch (err) {
                 logger.error(err);

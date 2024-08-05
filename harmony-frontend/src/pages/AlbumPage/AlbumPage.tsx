@@ -9,7 +9,7 @@ import EditAlbumModal from "../../components/EditAlbumModal/EditAlbumModal";
 import { useTranslation } from "react-i18next";
 import { Song } from "../SongsPage/SongsPage.tsx";
 import { Album } from "../../types/dtos/Album.ts";
-import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
+import { ALBUM_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
@@ -20,7 +20,7 @@ const AlbumPage = () => {
     const [album, setAlbum]: Album = useState();
     const [org, setOrg]: Org = useState();
     const [songs, setSongs] = useState<Song[]>([]);
-    const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
+    const [image, setImage] = useState(ALBUM_IMAGE_DEFAULT);
     const [errorCode, setErrorCode] = useState<number>();
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string>("");
@@ -76,14 +76,14 @@ const AlbumPage = () => {
     }, [album]);
 
     const fetchImage = async (url: string) => {
-        setImage(ORG_IMAGE_DEFAULT)
-        // const response = await ImageService.getAlbumImage(url);
-        // if (response.ok) {
-        //     url = URL.createObjectURL(await response.blob());
-        //     setImage(url);
-        // } else {
-        //     setImage(ORG_IMAGE_DEFAULT)
-        // }
+        setImage(ALBUM_IMAGE_DEFAULT)
+        const response = await ImageService.getImage(url);
+        if (response.ok) {
+            url = URL.createObjectURL(await response.blob());
+            setImage(url);
+        } else {
+            setImage(ALBUM_IMAGE_DEFAULT)
+        }
     }
 
     const fetchSongs = async () => {

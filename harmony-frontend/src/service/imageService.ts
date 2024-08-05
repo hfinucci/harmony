@@ -12,7 +12,7 @@ export class ImageService {
         });
     }
 
-    public static async getOrgImage(url: string) {
+    public static async getImage(url: string) {
         return await fetch(url, {
             method: "GET",
             headers: {

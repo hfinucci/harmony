@@ -1,12 +1,14 @@
 import {CreateAlbumRequest} from "../models/createAlbumRequest";
 import {AlbumPersistence} from "../persistence/albumPersistence";
 import {UpdateAlbumRequest} from "../models/updateAlbumRequest";
+import {ImageService} from "./imageService";
 
 export class AlbumService {
 
     public static async createAlbum(request: CreateAlbumRequest) {
         const album = await AlbumPersistence.createAlbum(request);
-        //TODO: Handle image
+        if (request.image != null)
+            await ImageService.uploadAlbumImage(album.id, request.org, request.image);
         if (!album)
             throw new Error("Error creating album")
         return album;
@@ -15,6 +17,9 @@ export class AlbumService {
     public static async updateAlbum(id: number, request: UpdateAlbumRequest) {
         const storedAlbum = await this.getAlbumById(id)
         const updatedAlbum = {...storedAlbum, ...request}
+        if (request.image != null) {
+            await ImageService.uploadAlbumImage(updatedAlbum.id, updatedAlbum.org, request.image);
+        }
         return await AlbumPersistence.updateAlbum(updatedAlbum);
     }
 

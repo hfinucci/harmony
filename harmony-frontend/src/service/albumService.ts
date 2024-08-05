@@ -2,7 +2,7 @@ const BASE_URL = "http://127.0.0.1:3000";
 
 export class AlbumService {
 
-    static async createAlbum(name: string, org: number) {
+    static async createAlbum(name: string, org: number, image: string | null) {
         return await fetch(BASE_URL + "/api/albums", {
             method: "POST",
             headers: {
@@ -11,7 +11,8 @@ export class AlbumService {
             },
             body: JSON.stringify({
                 name: name,
-                org: +org
+                org: +org,
+                image: image,
             }),
         })
     }
@@ -56,7 +57,7 @@ export class AlbumService {
         });
     }
 
-    static async editAlbum(id: number, name: string) {
+    static async editAlbum(id: number, name: string, image: string | null) {
         return await fetch(BASE_URL + "/api/albums/" + id, {
             method: "PUT",
             headers: {
@@ -65,6 +66,7 @@ export class AlbumService {
             },
             body: JSON.stringify({
                 name: name,
+                image: image,
             }),
         });
     }

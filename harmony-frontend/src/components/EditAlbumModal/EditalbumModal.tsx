@@ -38,8 +38,8 @@ const EditAlbumModal = ({ album, callback, reloadImage }: EditAlbumModalProps) =
             setShowModal(false);
             return;
         }
-        // const image = data.image[0] ? await toBase64(data.image[0]) : null;
-        const edit = await AlbumService.editAlbum(album.id, data.name);
+        const image = data.image[0] ? await toBase64(data.image[0]) : null;
+        const edit = await AlbumService.editAlbum(album.id, data.name, image);
         if (edit?.status == 200) {
             setShowModal(false);
             edit.json().then((rsp) => {
@@ -47,9 +47,9 @@ const EditAlbumModal = ({ album, callback, reloadImage }: EditAlbumModalProps) =
                 callback(rsp);
             });
 
-            // if (image != null) {
-            //     reloadImage(Date.now())
-            // }
+            if (image != null) {
+                reloadImage(Date.now())
+            }
         } else setError(t("components.editAlbumModal.error.edit"));
     };
 
@@ -108,31 +108,31 @@ const EditAlbumModal = ({ album, callback, reloadImage }: EditAlbumModalProps) =
                                                 </p>
                                             </>
                                         )}
-                                        {/*<label className="block mb-2 text-sm font-medium text-fuchsia-950">*/}
-                                        {/*    {t(*/}
-                                        {/*        "components.editAlbumModal.upload"*/}
-                                        {/*    )}*/}
-                                        {/*</label>*/}
-                                        {/*<input*/}
-                                        {/*    className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"*/}
-                                        {/*    aria-describedby="user_avatar_help"*/}
-                                        {/*    id="user_avatar"*/}
-                                        {/*    type="file"*/}
-                                        {/*    accept="image/*"*/}
-                                        {/*    {...register("image")}*/}
-                                        {/*/>*/}
-                                        {/*{errors.image && (*/}
-                                        {/*    <>*/}
-                                        {/*        <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">*/}
-                                        {/*            {t(*/}
-                                        {/*                "components.createAlbumModal.error.image"*/}
-                                        {/*            )}*/}
-                                        {/*        </p>*/}
-                                        {/*        <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">*/}
-                                        {/*            {error}*/}
-                                        {/*        </p>*/}
-                                        {/*    </>*/}
-                                        {/*)}*/}
+                                        <label className="block mb-2 text-sm font-medium text-fuchsia-950">
+                                            {t(
+                                                "components.editAlbumModal.upload"
+                                            )}
+                                        </label>
+                                        <input
+                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
+                                            aria-describedby="user_avatar_help"
+                                            id="user_avatar"
+                                            type="file"
+                                            accept="image/*"
+                                            {...register("image")}
+                                        />
+                                        {errors.image && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {t(
+                                                        "components.createAlbumModal.error.image"
+                                                    )}
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {error}
+                                                </p>
+                                            </>
+                                        )}
                                         <div className="flex flex-row gap-5 justify-end">
                                             <button
                                                 type="button"

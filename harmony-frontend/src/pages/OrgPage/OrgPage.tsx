@@ -75,7 +75,7 @@ const OrgPage = () => {
     }, [org, imageReload]);
 
     const fetchImage = async (url: string) => {
-        const response = await ImageService.getOrgImage(url);
+        const response = await ImageService.getImage(url);
         if (response.ok) {
             url = URL.createObjectURL(await response.blob());
             setImage(url);

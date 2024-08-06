@@ -2,16 +2,24 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
 import { FaRegBell } from "react-icons/fa";
-import {useState} from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Search from "../SearchComponent/SearchComponent.tsx";
 import {SearchService} from "../../service/searchService.ts";
+import {Org} from "../../types/dtos/Org.ts";
+import OrgCard from "../OrgCard/OrgCard.tsx";
 
 export const Navbar = () => {
     const { t } = useTranslation();
 
+    interface ItemView {
+        name: string;
+        category: string;
+    }
+
     const nav = useNavigate();
     const [image, setImage] = useState<string>(localStorage.getItem("harmony-profile-image")? localStorage.getItem("harmony-profile-image") : null)
+    const [searchEntities, setSearchEntities] = useState<ItemView[]>([])
 
     window.addEventListener('harmony-pi', () => {
         setImage(localStorage.getItem("harmony-profile-image"))
@@ -29,7 +37,28 @@ export const Navbar = () => {
 
     const searchTerm = async (input: string) => {
         const response = await SearchService.searchEntities(input)
-        console.log("RESPONSE: ", response)
+        const json = await response.json()
+        console.log("RESPONSE: ", json)
+        const items = convertToItems(json)
+        console.log("ITEMS: ", items)
+        setSearchEntities(items)
+    }
+
+    function convertToItems(json: any): ItemView[] {
+        const result: ItemView[] = [];
+        for (const category in json) {
+            if (json.hasOwnProperty(category)) {
+                const elements = json[category];
+                if (Array.isArray(elements)) {
+                    elements.forEach(element => {
+                        if (element.name) {
+                            result.push({ name: element.name, category });
+                        }
+                    });
+                }
+            }
+        }
+        return result;
     }
 
     return (
@@ -42,7 +71,14 @@ export const Navbar = () => {
                     <img src={logo} alt="logo" className={"mr-3 h-9"} />
                     <h1>Harmony</h1>
                 </Link>
-                <Search onSearch={searchTerm} />
+                <div className="flex flex-col">
+                    <Search onSearch={searchTerm} setSearchEntities={setSearchEntities}/>
+                    <div className="flex flex-col bg-red-600 absolute mt-12">
+                        {searchEntities.map((item: ItemView, index: number) => (
+                            <h1 key={index}>{item.name} ---- {item.category}</h1>
+                        ))}
+                    </div>
+                </div>
                 <div
                     className="hidden w-full md:block md:w-auto"
                     id="navbar-default"

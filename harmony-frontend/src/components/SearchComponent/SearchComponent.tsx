@@ -5,8 +5,7 @@ function Search({ onSearch, setSearchEntities }) {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            console.log(searchTerm)
-            if (searchTerm === "" || searchTerm.length == 0) {
+            if (searchTerm.length == 0 || searchTerm.trim() === "") {
                 setSearchEntities([])
             }
             if (searchTerm.length >= 2) {

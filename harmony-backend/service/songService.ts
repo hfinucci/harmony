@@ -2,6 +2,7 @@ import {CreateSongRequest} from "../models/createSongRequest";
 import {SongPersistence} from '../persistence/songPersistence';
 import {UpdateSongRequest} from "../models/updateSongRequest";
 import {Block, ComposePersistence} from "../persistence/composePersistence";
+import {Person, UserAuth} from "./authService";
 
 export class SongService {
 
@@ -16,6 +17,10 @@ export class SongService {
     public static async updateSong(song: any, request: UpdateSongRequest) {
         const updatedSong = {...song, ...request}
         return await SongPersistence.updateSong(updatedSong);
+    }
+
+    public static async searchSongs(input: string, user: UserAuth) {
+        return await SongPersistence.searchSongs(input, user);
     }
 
     public static async getSongById(id: number) {

@@ -10,6 +10,7 @@ import orgController from "./controllers/orgController";
 import memberController from "./controllers/memberController";
 import imageController from "./controllers/imageController";
 import albumController from "./controllers/albumController";
+import searchController from "./controllers/searchController";
 
 const server = fastify()
     .register(cors, {
@@ -29,6 +30,7 @@ const server = fastify()
     .register(orgController)
     .register(memberController)
     .register(imageController)
+    .register(searchController)
     .register(albumController);
 
 const transport = pino.transport({

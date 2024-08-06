@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { FaRegBell } from "react-icons/fa";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import Search from "../SearchComponent/SearchComponent.tsx";
+import {SearchService} from "../../service/searchService.ts";
 
 export const Navbar = () => {
     const { t } = useTranslation();
@@ -25,6 +27,11 @@ export const Navbar = () => {
         nav("/", {replace: true})
     }
 
+    const searchTerm = async (input: string) => {
+        const response = await SearchService.searchEntities(input)
+        console.log("RESPONSE: ", response)
+    }
+
     return (
         <nav
             className="w-full pr-2 sm:px-4 py-2.5 fixed shadow-md rounded z-10"
@@ -35,6 +42,7 @@ export const Navbar = () => {
                     <img src={logo} alt="logo" className={"mr-3 h-9"} />
                     <h1>Harmony</h1>
                 </Link>
+                <Search onSearch={searchTerm} />
                 <div
                     className="hidden w-full md:block md:w-auto"
                     id="navbar-default"

@@ -3,6 +3,7 @@ import {OrgPersistence} from '../persistence/orgPersistence';
 import {UpdateOrgRequest} from "../models/updateOrgRequest";
 import {ImageService} from "./imageService";
 import {logger} from "../server";
+import {UserAuth} from "./authService";
 
 export class OrgService {
 
@@ -21,6 +22,10 @@ export class OrgService {
             await ImageService.uploadOrgImage(updatedOrg.id, request.image);
         }
         return await OrgPersistence.updateOrg(updatedOrg);
+    }
+
+    public static async searchOrgs(input: string, user: UserAuth) {
+        return await OrgPersistence.searchOrgs(input, user);
     }
 
     public static async getOrgById(id: number) {

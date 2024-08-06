@@ -2,6 +2,7 @@ import {CreateAlbumRequest} from "../models/createAlbumRequest";
 import {AlbumPersistence} from "../persistence/albumPersistence";
 import {UpdateAlbumRequest} from "../models/updateAlbumRequest";
 import {ImageService} from "./imageService";
+import {UserAuth} from "./authService";
 
 export class AlbumService {
 
@@ -21,6 +22,10 @@ export class AlbumService {
             await ImageService.uploadAlbumImage(updatedAlbum.id, updatedAlbum.org, request.image);
         }
         return await AlbumPersistence.updateAlbum(updatedAlbum);
+    }
+
+    public static async searchAlbums(input: string, user: UserAuth) {
+        return await AlbumPersistence.searchAlbums(input, user);
     }
 
     public static async getAlbumById(id: number) {

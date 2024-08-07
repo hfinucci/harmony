@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { socket } from "../../socket.ts";
 import { KeyboardShortcuts, MidiNumbers, Piano as ReactPiano } from "react-piano";
 import 'react-piano/dist/styles.css';
+import { detect } from "@tonaljs/chord-detect";
+import { Midi } from "tonal";
 import TryingToConnectIcon from "../../components/TryingToConnect/TryingToConnectIcon.tsx";
 import { Piano } from "@tonejs/piano/build/piano/Piano";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMusic, faVolumeUp} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
+import {Chord} from "tonal";
 
 interface Note {
     on: number;
@@ -69,6 +72,9 @@ const PianoPage = ({song, enabled}) => {
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [isSampleLoaded, setSampleLoaded] = useState(false);
     const [activeNotes, setActiveNotes] = useState<number[]>([]);
+    const [currentChord, setCurrentChord] = useState<string>("");
+    const [lastChord, setLastChord] = useState<string>("");
+    const [lastChordTime, setLastChordTime] = useState<number>(0);
     const [colorId, setColorId] = useState(1);
     const [playedPianoNotes, setPlayedPianoNotes] = useState<number[]>([]);
     const [transposeOffset, setTransposeOffset] = useState<number>(0)
@@ -84,6 +90,30 @@ const PianoPage = ({song, enabled}) => {
     let tonePiano: Piano
 
     const {t} = useTranslation();
+
+    useEffect(()=> {
+        const possibleChord = calculateChord();
+        if (possibleChord) {
+            const last = currentChord
+            setCurrentChord(possibleChord);
+            setLastChord(last)
+            setLastChordTime(Date.now());
+        }
+    },[activeNotes])
+
+    useEffect(() => {
+        // NO FUNCIONAAAAAAJHSHJDJASJDNJASDGNJKNJK
+        const interval = setInterval(() => {
+            console.log("LAST CHORD: ", lastChord)
+            console.log("CURRENT CHORD: ", currentChord)
+            if (lastChord !== "" && currentChord !== "" && lastChord == currentChord) {
+                console.log("LAST CHORD: ", lastChord)
+                console.log("CURRENT CHORD: ", currentChord)
+                setCurrentChord("");
+            }
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         transposeOffsetRef.current = transposeOffset;
@@ -156,6 +186,32 @@ const PianoPage = ({song, enabled}) => {
         };
     }, [bpm, isMetronomeOn]);
 
+    function calculateChord() : string | undefined{
+        const notes = removeDuplicates(activeNotes.map((pitch) => Midi.midiToNoteName(pitch)))
+        const possibleChords = Chord.detect(
+            notes.sort(),
+            { assumePerfectFifth: true }
+        )
+        if (possibleChords?.length > 0) {
+            return possibleChords[0]
+        }
+    }
+
+    function removeDuplicates(notes: string[]) {
+        const seen = {};
+        const out = [];
+        const len = notes.length;
+        let j = 0;
+        for(let i = 0; i < len; i++) {
+            const item = notes[i];
+            if(seen[item] !== 1) {
+                seen[item] = 1;
+                out[j++] = item;
+            }
+        }
+        return out;
+    }
+
     function gotExternalMidiMessage(data: MIDIEvent) {
         play(data.note)
     }
@@ -191,6 +247,7 @@ const PianoPage = ({song, enabled}) => {
 
     function play(note: Note) {
         const pitch = note.pitch;
+        console.log("Playing pitch: ", pitch)
         switch (note.on) {
             case 144:
                 playPianoOn(note)
@@ -307,12 +364,17 @@ const PianoPage = ({song, enabled}) => {
                                 className="w-64 h-2 bg-gray-200 rounded-lg accent-purple-500 cursor-pointer"
                             />
                         </div>
-                        <button
-                            onClick={toggleMetronome}
-                            className="px-4 py-2 mt-2 bg-purple-500 text-white font-bold rounded hover:bg-purple-700"
-                        >
-                            {isMetronomeOn ? t("components.piano.metronome.stop") : t('components.piano.metronome.start')}
-                        </button>
+                        <div className="flex flex-row items-center w-full">
+                            <button
+                                onClick={toggleMetronome}
+                                className="flex-grow-0 flex-basis-1/3 px-4 py-2 ml-4 mt-1 bg-purple-500 text-white font-bold rounded hover:bg-purple-700"
+                            >
+                                {isMetronomeOn ? t("components.piano.metronome.stop") : t('components.piano.metronome.start')}
+                            </button>
+                            <h1 className="flex-1 text-xl font-bold ml-4">
+                                Chord: {currentChord}
+                            </h1>
+                        </div>
                     </div>
                     <ReactPiano
                         noteRange={{first: MidiNumbers.fromNote('c3'), last: MidiNumbers.fromNote('b4')}}

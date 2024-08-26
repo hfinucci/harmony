@@ -247,6 +247,7 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
+                            <div>paginación</div>
                         </div>
                     ) : (
                         songs.length == 0 && (
@@ -269,15 +270,18 @@ const OrgPage = () => {
                     </div>
 
                     {albums.length != 0 ? (
-                        albums.map((elem: Album, index: number) => (
-                            <AlbumExtendedCard
-                                key={index}
-                                id={elem.id}
-                                name={elem.name}
-                                org={elem.org}
-                                image={elem.image}
-                            />
-                        ))
+                        <div className=" flex flex-col rounded-lg bg-white">
+                            {albums.map((elem: Album, index: number) => (
+                                <AlbumExtendedCard
+                                    key={index}
+                                    id={elem.id}
+                                    name={elem.name}
+                                    org={elem.org}
+                                    image={elem.image}
+                                />
+                            ))}
+                            <div>paginación</div>
+                        </div>
                     ) : (
                         albums.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
@@ -361,6 +365,7 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
+                            <div>paginación</div>
                         </div>
                     ) : (
                         singles.length == 0 && (

@@ -27,7 +27,7 @@ export const Navbar = () => {
 
     return (
         <nav
-            className="w-full pr-2 sm:px-4 py-2.5 fixed shadow-md rounded z-10"
+            className="w-full pr-2 sm:px-4 py-2.5 fixed shadow-md rounded z-20"
             style={{ backgroundColor: "#F9F5FF" }}
         >
             <div className="flex flex-wrap justify-between mx-auto">

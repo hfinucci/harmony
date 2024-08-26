@@ -35,7 +35,7 @@ const AlbumExtendedCard = (album: Album) => {
     }, []);
 
     return (
-        <div className=" flex flex-row rounded-lg bg-white p-10">
+        <div className=" flex flex-row shadow-md p-10 w-full">
             <img
                 className="max-h-64 max-w-64 object-contain rounded-t-lg justify-center m-5"
                 src={image + "?reload=" + Date.now()}

@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import server, { logger } from "../server";
 import { OrgService } from "../service/orgService";
-import { handleError, parseId } from "../utils";
+import {handleError, LIMIT, parseId} from "../utils";
 import { parseUpdateOrgRequest } from "../models/updateOrgRequest";
 import { parseCreateOrgRequest } from "../models/createOrgRequest";
 import { MemberService } from "../service/memberService";
@@ -132,7 +132,7 @@ export default async function orgController(
                 return rep.send({
                     page,
                     totalItems: result.totalSongs,
-                    totalPages: Math.ceil(result.totalSongs / 2),
+                    totalPages: Math.ceil(result.totalSongs / LIMIT),
                     songs: result.songs,
                 });
 
@@ -160,7 +160,7 @@ export default async function orgController(
                 return rep.send({
                     page,
                     totalItems: result.totalSingles,
-                    totalPages: Math.ceil(result.totalSingles / 2),
+                    totalPages: Math.ceil(result.totalSingles / LIMIT),
                     singles: result.singles,
                 });
             } catch (err) {
@@ -187,8 +187,11 @@ export default async function orgController(
                 return rep.send({
                     page,
                     totalItems: result.totalAlbums,
-                    totalPages: Math.ceil(result.totalAlbums / 2),
-                    albums: result.albums,
+                    totalPages: Math.ceil(result.totalAlbums / LIMIT),
+                    albums: result.albums.map((a) => ({
+                        ...a,
+                        image: process.env.IMAGE_PATH + "orgs_images/albums/" + a.id + ".png"
+                    })),
                 });
             } catch (err) {
                 logger.error(err);

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { UserService } from "../../service/userService";
 import { FaMusic, FaPeopleGroup } from "react-icons/fa6";
 import { RiAlbumFill } from "react-icons/ri";
-import { Org } from "../../types/dtos/Org";
-import { Song } from "../SongsPage/SongsPage";
+import {OrgPagination} from "../../types/dtos/Org";
+import {Song, SongPagination} from "../../types/dtos/Song";
 import { useTranslation } from "react-i18next";
 import CreateOrgModal from "../../components/CreateOrgModal/CreateOrgModal";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
@@ -12,40 +12,37 @@ import SongCard from "../../components/SongCard/SongCard";
 import OrgCard from "../../components/OrgCard/OrgCard";
 import { useNavigate } from "react-router-dom";
 
-import {Album} from "../../types/dtos/Album";
+import {AlbumPagination} from "../../types/dtos/Album";
 import AlbumCard from "../../components/AlbumCard/AlbumCard";
 import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
 
 const HomePage = () => {
-    const [orgs, setOrgs] = useState<Org[]>([]);
-    const [songs, setSongs] = useState<Song[]>([]);
-    const [albums, setAlbums] = useState<Album[]>([]);
+    const [orgs, setOrgs] = useState<OrgPagination>();
+    const [songs, setSongs] = useState<SongPagination>();
+    const [totalSongs, setTotalSongs] = useState(0);
+    const [albums, setAlbums] = useState<AlbumPagination>();
 
 
     const { t } = useTranslation();
     const nav = useNavigate();
 
     const addSong = (song: Song) => {
-        if (songs) {
-            setSongs([...songs, song]);
-        } else {
-            setSongs([song]);
-        }
         nav("/songs/" + song.id)
     };
 
     const fetchSongs = async () => {
         await UserService.getSongsByUserId(
             Number(localStorage.getItem("harmony-uid"))
-        ).then((response: Song[]) => {
+        ).then((response) => {
             setSongs(response);
+            setTotalSongs(response.totalItems)
         });
     };
 
     const fetchAlbums = async () => {
         await UserService.getUserAlbums(localStorage.getItem("harmony-uid"))
             .then(async (rsp) => {
-                const a = await rsp.json()
+                const a = await rsp.json() as AlbumPagination
                 setAlbums(a)
             })
     }
@@ -54,7 +51,7 @@ const HomePage = () => {
         const userId = localStorage.getItem("harmony-uid") as string;
         UserService.getUserOrgs(userId).then((res) => {
             if (res?.status == 200) {
-                res.json().then((data) => {
+                res.json().then((data: OrgPagination) => {
                     setOrgs(data);
                 });
             }
@@ -74,9 +71,9 @@ const HomePage = () => {
                     <CreateOrgModal />
                 </div>
 
-                {orgs.length != 0 ? (
+                {orgs && orgs.orgs.length != 0 ? (
                     <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
-                        {orgs.slice(0, 3).map((org, index) => (
+                        {orgs.orgs.slice(0, 3).map((org, index) => (
                                 <OrgCard
                                     key={index}
                                     name={org.name}
@@ -84,7 +81,7 @@ const HomePage = () => {
                                     id={org.id}
                                 />
                         ))}
-                        {albums.length > 3 && (
+                        {orgs.orgs.length > 3 && (
                             <button
                                 onClick={() => nav("/orgs")}
                                 aria-label="see more orgs"
@@ -112,9 +109,9 @@ const HomePage = () => {
                     <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)}/>
                 </div>
 
-                {albums && albums.length != 0 ? (
+                {albums && albums.albums.length != 0 ? (
                     <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
-                        {albums.slice(0, 3).map((album, index) => (
+                        {albums.albums.slice(0, 3).map((album, index) => (
                             <AlbumCard
                                 key={index}
                                 name={album.name}
@@ -123,7 +120,7 @@ const HomePage = () => {
                                 org={album.org}
                             />
                         ))}
-                        {albums.length > 3 && (
+                        {albums.albums.length > 3 && (
                             <button
                                 onClick={() => nav("/albums")}
                                 aria-label="see more albums"
@@ -152,7 +149,7 @@ const HomePage = () => {
                 </div>
 
                 <div className="flex flex-col rounded-lg bg-white p-10">
-                    {songs.length !== 0 ? (
+                    {songs && songs.songs.length !== 0 ? (
                         <table className="table table-bordered border-separate border-spacing-y-1.5">
                             <thead>
                                 <tr>
@@ -175,6 +172,7 @@ const HomePage = () => {
                             </thead>
                             <tbody>
                                 {songs
+                                    .songs
                                     .slice(0, 5)
                                     .map((elem: Song, index: number) => (
                                         <React.Fragment key={index}>
@@ -194,7 +192,7 @@ const HomePage = () => {
                                             />
                                         </React.Fragment>
                                     ))}
-                                {songs.length > 5 && (
+                                {totalSongs > songs.songs.length && (
                                     <button
                                         onClick={() => nav("/songs")}
                                         aria-label="see more songs"
@@ -207,7 +205,7 @@ const HomePage = () => {
                             </tbody>
                         </table>
                     ) : (
-                        songs.length == 0 && (
+                        songs && songs.songs.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.home.noSongs")}

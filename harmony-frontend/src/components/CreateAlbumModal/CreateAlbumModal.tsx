@@ -6,6 +6,7 @@ import { UserService } from "../../service/userService";
 import { Album } from "../../types/dtos/Album";
 import {useTranslation} from "react-i18next";
 import {toBase64} from "../../utils.ts";
+import {OrgPagination} from "../../types/dtos/Org";
 
 const CreateAlbumModal = ({
                              org,
@@ -24,8 +25,8 @@ const CreateAlbumModal = ({
         const userId = localStorage.getItem("harmony-uid") as string;
         UserService.getUserOrgs(userId).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
-                setOrgs(info);
+                const info = await rsp.json() as OrgPagination;
+                setOrgs(info.orgs);
             }
         });
     }, []);

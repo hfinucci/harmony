@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Song} from "../SongsPage/SongsPage";
+import {Song, SongPagination} from "../../types/dtos/Song";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
 import {Link, useNavigate, useParams} from "react-router-dom";
@@ -81,8 +81,8 @@ const EditPage = () => {
             });
             OrgService.getOrgSongs(Number(song?.org)).then(async (rsp) => {
                 if (rsp?.status == 200) {
-                    const info = await rsp.json();
-                    setSongs(info);
+                    const info = await rsp.json() as SongPagination;
+                    setSongs(info.songs);
                 }
             });
         }

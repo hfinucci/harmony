@@ -1,5 +1,5 @@
 import {Album} from "../../types/dtos/Album";
-import {Song} from "../../pages/SongsPage/SongsPage";
+import {Song, SongPagination} from "../../types/dtos/Song";
 import React, {useEffect, useState} from "react";
 import SongCard from "../SongCard/SongCard";
 import {useNavigate} from "react-router-dom";
@@ -19,9 +19,9 @@ const AlbumExtendedCard = (album: Album) => {
     const fetchSongs = async () => {
         await AlbumService.getAlbumSongs(Number(album.id)).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
-                setSongs(info);
-                console.log(info)
+                const info = await rsp.json() as SongPagination;
+                setSongs(info.songs);
+                console.log(info.songs)
             }
         });
     };

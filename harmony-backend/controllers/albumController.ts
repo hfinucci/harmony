@@ -1,6 +1,6 @@
 import {FastifyInstance, FastifyRequest} from 'fastify'
 import server, {logger} from "../server";
-import {handleError, parseId} from '../utils';
+import {handleError, LIMIT, parseId} from '../utils';
 import {AuthService} from "../service/authService";
 import {checkIfRequesterIsMember} from "../models/checks";
 import {parseCreateAlbumRequest} from "../models/createAlbumRequest";
@@ -88,7 +88,7 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 return rep.send({
                     page,
                     totalItems: result.totalSongs,
-                    totalPages: Math.ceil(result.totalSongs / 2),
+                    totalPages: Math.ceil(result.totalSongs / LIMIT),
                     songs: result.songs,
                 });
             } catch (err) {

@@ -1,6 +1,7 @@
 import {QueryResult} from "pg";
 import {dbpool} from "./dbConfig";
 import {CreateAlbumRequest} from "../models/createAlbumRequest";
+import {LIMIT} from "../utils";
 
 export class AlbumPersistence {
 
@@ -35,8 +36,7 @@ export class AlbumPersistence {
     }
 
     static async getAlbumsByOrg(id: number, page: number) {
-        const limit = 2;
-        const offset = (page - 1) * limit;
+        const offset = (page - 1) * LIMIT;
 
         const countQuery = {
             text: `
@@ -49,7 +49,7 @@ export class AlbumPersistence {
 
         const query = {
             text: 'SELECT * FROM albums WHERE org = $1 ORDER BY last_modified DESC LIMIT $2 OFFSET $3',
-            values: [id, limit, offset],
+            values: [id, LIMIT, offset],
         };
 
         try {
@@ -75,8 +75,7 @@ export class AlbumPersistence {
     }
 
     static async getAlbumsByUser(id: number, page: number) {
-        const limit = 2;
-        const offset = (page - 1) * limit;
+        const offset = (page - 1) * LIMIT;
 
         const countQuery = {
             text: `
@@ -89,7 +88,7 @@ export class AlbumPersistence {
 
         const query = {
             text: 'SELECT a.id as id, m.org_id as org, a.name as name FROM albums a JOIN members m ON a.org=m.org_id WHERE m.user_id = $1 ORDER BY a.last_modified DESC LIMIT $2 OFFSET $3',
-            values: [id, limit, offset],
+            values: [id, LIMIT, offset],
         };
 
         try {

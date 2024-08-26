@@ -4,7 +4,7 @@ import { AuthService, UserAuth } from "../service/authService";
 import { UserService } from "../service/userService";
 import { parseCreateUserRequest } from "../models/createUserRequest";
 import { parseChangeIconRequest } from "../models/changeIconRequest";
-import { handleError, parseId } from "../utils";
+import {handleError, LIMIT, parseId} from "../utils";
 import { MemberService } from "../service/memberService";
 import { SongService } from "../service/songService";
 import { FetchSongsByUserResponse } from "../models/dto/fetchSongsByUserResponse";
@@ -76,7 +76,7 @@ export default async function userController(
                 return rep.send({
                     page,
                     totalItems: result.totalSongs,
-                    totalPages: Math.ceil(result.totalSongs / 2),
+                    totalPages: Math.ceil(result.totalSongs / LIMIT),
                     songs: z.array(FetchSongsByUserResponse).parse(result.songs),
                 });
 
@@ -108,8 +108,11 @@ export default async function userController(
                 return rep.send({
                     page,
                     totalItems: result.totalAlbums,
-                    totalPages: Math.ceil(result.totalAlbums / 2),
-                    albums: result.albums,
+                    totalPages: Math.ceil(result.totalAlbums / LIMIT),
+                    albums: result.albums.map((a) => ({
+                        ...a,
+                        image: process.env.IMAGE_PATH + "orgs_images/albums/" + a.id + ".png"
+                    })),
                 });
 
             } catch (error: any) {
@@ -162,8 +165,11 @@ export default async function userController(
                 return rep.send({
                     page,
                     totalItems: result.totalOrgs,
-                    totalPages: Math.ceil(result.totalOrgs / 2),
-                    orgs: result.orgs,
+                    totalPages: Math.ceil(result.totalOrgs / LIMIT),
+                    orgs: result.orgs.map((o) => ({
+                        ...o,
+                        image: process.env.IMAGE_PATH + "orgs_images/orgs/" + o.id + ".png"
+                    })),
                 });
             } catch (error: any) {
                 logger.error(error);

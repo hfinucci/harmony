@@ -1,6 +1,10 @@
-import { Song } from "../pages/SongsPage/SongsPage.tsx";
+
 
 // const BASE_URL = process.env.REACT_APP_API_ENDPOINT || ''
+
+
+import {SongPagination} from "../types/dtos/Song";
+
 const BASE_URL = "http://127.0.0.1:3000";
 
 export class UserService {
@@ -91,7 +95,7 @@ export class UserService {
         });
     }
 
-    public static async getSongsByUserId(userId: number): Promise<Song[]> {
+    public static async getSongsByUserId(userId: number): Promise<SongPagination> {
         const response = await fetch(
             BASE_URL + "/api/users/" + userId + "/songs",
             {

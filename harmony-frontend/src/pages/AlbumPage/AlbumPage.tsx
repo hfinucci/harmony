@@ -7,8 +7,8 @@ import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import DeleteAlbumModal from "../../components/DeleteAlbumModal/DeleteAlbumModal";
 import EditAlbumModal from "../../components/EditAlbumModal/EditAlbumModal";
 import { useTranslation } from "react-i18next";
-import { Song } from "../SongsPage/SongsPage.tsx";
-import { Album } from "../../types/dtos/Album.ts";
+import {Song, SongPagination} from "../../types/dtos/Song";
+import {Album} from "../../types/dtos/Album.ts";
 import { ALBUM_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
@@ -89,8 +89,8 @@ const AlbumPage = () => {
     const fetchSongs = async () => {
         await AlbumService.getAlbumSongs(Number(albumId.id)).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
-                setSongs(info);
+                const info = await rsp.json() as SongPagination;
+                setSongs(info.songs);
             }
         });
     };

@@ -1,4 +1,4 @@
-import {Song} from "../../pages/SongsPage/SongsPage.tsx";
+import {Song} from "../../types/dtos/Song";
 import { FaEdit } from "react-icons/fa";
 import {SongService} from "../../service/songService.ts";
 import { useNavigate } from "react-router-dom";

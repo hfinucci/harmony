@@ -1,6 +1,7 @@
 import {dbpool} from './dbConfig';
 import {QueryResult} from "pg";
 import {AuthorizationError} from "../models/errors/AuthorizationError";
+import {LIMIT} from "../utils";
 
 export class MemberPersistence {
 
@@ -26,8 +27,7 @@ export class MemberPersistence {
     }
 
     static async getOrgsByUser(user: number, page: number) {
-        const limit = 2;
-        const offset = (page - 1) * limit;
+        const offset = (page - 1) * LIMIT;
 
         const countQuery = {
             text: `
@@ -47,7 +47,7 @@ export class MemberPersistence {
             WHERE members.user_id = $1
             LIMIT $2 OFFSET $3
         `,
-            values: [user, limit, offset],
+            values: [user, LIMIT, offset],
         };
 
         try {

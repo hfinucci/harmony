@@ -7,6 +7,8 @@ const Request = z.object({
     id: z.number(),
 }).strict();
 
+export const LIMIT = 4;
+
 export function parseId(id: any) {
     return z.number().int().positive().parse(+id)
 }

@@ -18,11 +18,16 @@ describe("Test SongsPage", () => {
 
     test("view songs", async () => {
         // Mock response
-        const mockSongs = [
-            { id: 1, name: "song1", org: "org1", composeid: "1", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "1" },
-            { id: 2, name: "song2", org: "org2", composeid: "2", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "2" },
-            { id: 3, name: "song3", org: "org3", composeid: "3", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "3" }
-        ];
+        const mockSongs = {
+            page: 1,
+            totalItems: 3,
+            totalPages: 1,
+            songs: [
+                { id: 1, name: "song1", org: "org1", composeid: "1", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "1" },
+                { id: 2, name: "song2", org: "org2", composeid: "2", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "2" },
+                { id: 3, name: "song3", org: "org3", composeid: "3", created: "2021-01-01", lastmodified: "2021-01-01", composeId: "3" }
+            ]
+        };
 
         localStorage.setItem("harmony-uid", "1")
         UserService.getSongsByUserId.mockResolvedValue(mockSongs);

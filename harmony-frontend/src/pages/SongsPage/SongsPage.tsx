@@ -3,26 +3,17 @@ import SongCard from "../../components/SongCard/SongCard.tsx";
 import {UserService} from "../../service/userService.ts";
 import {useTranslation} from "react-i18next";
 import { FaMusic } from "react-icons/fa6";
-
-export interface Song {
-    id: number;
-    name: string;
-    org?: string;
-    composeId: string;
-    created: string;
-    lastmodified: string;
-    composeid: string;
-}
+import {Song, SongPagination} from "../../types/dtos/Song";
 
 const SongsPage = () => {
 
-    const [songs, setSongs] = useState<Song[]>([]);
+    const [songs, setSongs] = useState<SongPagination>();
 
     const { t } = useTranslation();
 
     const fetchSongs = async () => {
         await UserService.getSongsByUserId(Number(localStorage.getItem('harmony-uid')))
-            .then((response: Song[]) => {
+            .then((response) => {
                 setSongs(response);
             })
     }
@@ -42,7 +33,7 @@ const SongsPage = () => {
                 {t("pages.songs.title")}
             </h1>
             <div className="flex flex-col rounded-lg bg-white p-10">
-                {songs.length !== 0 ? (
+                {songs && songs.songs.length !== 0 ? (
                     <table className="table table-bordered border-separate border-spacing-y-1.5">
                         <thead>
                         <tr>
@@ -54,7 +45,7 @@ const SongsPage = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {songs.map((elem: Song, index: number) => (
+                        {songs.songs.map((elem: Song, index: number) => (
                             <React.Fragment key={index}>
                                 <tr>
                                     <td colSpan={8} style={{backgroundColor: '#f0f0f0'}}/>
@@ -68,7 +59,7 @@ const SongsPage = () => {
                         </tbody>
                     </table>
                 ) : (
-                    songs.length == 0 &&
+                    songs.songs.length == 0 &&
                     <div className="flex items-center justify-center p-4 md:p-5">
                         <h1 className="text-2xl text-fuchsia-950">
                             {t("pages.songs.none")}

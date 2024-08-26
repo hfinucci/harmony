@@ -45,6 +45,7 @@ export class MemberPersistence {
             FROM members 
             JOIN organizations ON members.org_id = organizations.id 
             WHERE members.user_id = $1
+            ORDER BY organizations.id desc 
             LIMIT $2 OFFSET $3
         `,
             values: [user, LIMIT, offset],

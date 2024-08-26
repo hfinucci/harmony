@@ -21,8 +21,11 @@ export class OrgService {
         });
     }
 
-    public static async getOrgSongs(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id + "/songs", {
+    public static async getOrgSongs(id: number, page?: number) {
+        let url = BASE_URL + "/api/orgs/" + id + "/songs"
+        if (page)
+            url += "?page=" + page
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -31,8 +34,11 @@ export class OrgService {
         });
     }
 
-    public static async getOrgSingles(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id + "/singles", {
+    public static async getOrgSingles(id: number, page?: number) {
+        let url = BASE_URL + "/api/orgs/" + id + "/singles"
+        if (page)
+            url += "?page=" + page
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -41,8 +47,11 @@ export class OrgService {
         });
     }
 
-    public static async getOrgAlbums(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id + "/albums", {
+    public static async getOrgAlbums(id: number, page?: number) {
+        let url = BASE_URL + "/api/orgs/" + id + "/albums"
+        if (page)
+            url += "?page=" + page
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -66,16 +75,23 @@ export class OrgService {
         name: string,
         image: string | null
     ) {
+        let body: { image?: string; name: string } = {
+            name: name,
+        };
+
+        if (image) {
+            body = {
+                ...body,
+                image: image
+            };
+        }
         return await fetch(BASE_URL + "/api/orgs/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
-            body: JSON.stringify({
-                name: name,
-                image: image,
-            }),
+            body: JSON.stringify(body),
         });
     }
 

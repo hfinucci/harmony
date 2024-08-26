@@ -1,0 +1,18 @@
+.pagination {
+    display: flex;
+    justify-content: center; /* Centra la paginación horizontalmente */
+    align-items: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pagination button:disabled {
+    background-color: #cccccc; /* Estilo para botones deshabilitados */
+    cursor: not-allowed;
+}
+
+.pagination span {
+    margin: 0 10px;
+    font-size: 14px;
+    font-weight: lighter;
+}

@@ -95,9 +95,12 @@ export class UserService {
         });
     }
 
-    public static async getSongsByUserId(userId: number): Promise<SongPagination> {
+    public static async getSongsByUserId(userId: number, page?:number): Promise<SongPagination> {
+        let url = BASE_URL + "/api/users/" + userId + "/songs"
+        if (page)
+            url += "?page=" + page
         const response = await fetch(
-            BASE_URL + "/api/users/" + userId + "/songs",
+            url,
             {
                 method: "GET",
                 headers: {
@@ -109,8 +112,11 @@ export class UserService {
         return await response.json();
     }
 
-    public static async getUserOrgs(userId: string) {
-        return await fetch(BASE_URL + "/api/users/" + userId + "/orgs", {
+    public static async getUserOrgs(userId: string, page?: number) {
+        let url = BASE_URL + "/api/users/" + userId + "/orgs"
+        if (page)
+            url += "?page=" + page
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -120,8 +126,11 @@ export class UserService {
         });
     }
 
-    public static async getUserAlbums(userId: string) {
-        return await fetch(BASE_URL + "/api/users/" + userId + "/albums", {
+    public static async getUserAlbums(userId: string, page?: number) {
+        let url = BASE_URL + "/api/users/" + userId + "/albums"
+        if (page)
+            url += "?page=" + page
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

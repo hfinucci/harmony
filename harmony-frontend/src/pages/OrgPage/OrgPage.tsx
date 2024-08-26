@@ -19,6 +19,7 @@ import {ImageService} from "../../service/imageService.ts";
 import {Album, AlbumPagination} from "../../types/dtos/Album";
 import AlbumExtendedCard from "../../components/AlbumExtendedCard/AlbumExtendedCard";
 import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
+import Pagination from "../../components/Pagination/Pagination";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
@@ -31,6 +32,24 @@ const OrgPage = () => {
     const [errorCode, setErrorCode] = useState<number>();
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
+
+    const [albumPage, setAlbumPage] = useState<number>();
+
+    const handleAlbumPageChange = (newPage) => {
+        setAlbumPage(newPage);
+    };
+
+    const [songPage, setSongPage] = useState<number>();
+
+    const handleSongPageChange = (newPage) => {
+        setSongPage(newPage);
+    };
+
+    const [singlePage, setSinglePage] = useState<number>();
+
+    const handleSinglePageChange = (newPage) => {
+        setSinglePage(newPage);
+    };
 
     const orgId = useParams();
 
@@ -75,13 +94,13 @@ const OrgPage = () => {
     }, [org]);
 
     useEffect(() => {
-        OrgService.getOrgAlbums(Number(orgId.id)).then(async (rsp) => {
+        OrgService.getOrgAlbums(Number(orgId.id), albumPage).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as AlbumPagination;
                 setAlbums(info);
             }
         });
-    }, [org]);
+    }, [org, albumPage]);
 
     useEffect(() => {
         if (org) {
@@ -100,7 +119,7 @@ const OrgPage = () => {
     }
 
     const fetchSongs = async () => {
-        await OrgService.getOrgSongs(Number(orgId.id)).then(async (rsp) => {
+        await OrgService.getOrgSongs(Number(orgId.id), songPage).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SongPagination;
                 setSongs(info);
@@ -109,7 +128,7 @@ const OrgPage = () => {
     };
 
     const fetchSingles = async () => {
-        await OrgService.getOrgSingles(Number(orgId.id)).then(async (rsp) => {
+        await OrgService.getOrgSingles(Number(orgId.id), singlePage).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SinglePagination;
                 setSingles(info);
@@ -118,18 +137,19 @@ const OrgPage = () => {
     };
 
     useEffect(() => {
+        console.log("En fetch song")
         const fetch = async () => {
             await fetchSongs();
         };
         fetch();
-    }, [org]);
+    }, [org, songPage]);
 
     useEffect(() => {
         const fetch = async () => {
             await fetchSingles();
         };
         fetch();
-    }, [org]);
+    }, [org, singlePage]);
 
     const addSong = (song: any) => {
         nav("/songs/" + song.id)
@@ -215,8 +235,8 @@ const OrgPage = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {songs.songs.map((elem: Song, index: number) => (
-                                    <React.Fragment key={index}>
+                                {songs.songs.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
                                         <tr>
                                             <td
                                                 colSpan={8}
@@ -242,7 +262,9 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
-                            <div>paginación</div>
+                            {songs.totalPages > 1 &&
+                                <Pagination page={songs.page} totalPages={songs.totalPages} onPageChange={handleSongPageChange}/>
+                            }
                         </div>
                     ) : (
                         songs && songs.songs.length == 0 && (
@@ -266,16 +288,18 @@ const OrgPage = () => {
 
                     {albums && albums.albums.length != 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white">
-                            {albums.albums.map((elem: Album, index: number) => (
+                            {albums.albums.map((elem: Album) => (
                                 <AlbumExtendedCard
-                                    key={index}
+                                    key={elem.id}
                                     id={elem.id}
                                     name={elem.name}
                                     org={elem.org}
                                     image={elem.image}
                                 />
                             ))}
-                            <div>paginación</div>
+                            {albums.totalPages > 1 &&
+                                <Pagination page={albums.page} totalPages={albums.totalPages} onPageChange={handleAlbumPageChange}/>
+                            }
                         </div>
                     ) : (
                         albums && albums.albums.length == 0 && (
@@ -333,8 +357,8 @@ const OrgPage = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {singles.singles.map((elem: Song, index: number) => (
-                                    <React.Fragment key={index}>
+                                {singles.singles.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
                                         <tr>
                                             <td
                                                 colSpan={8}
@@ -360,7 +384,9 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
-                            <div>paginación</div>
+                            {singles.totalPages > 1 &&
+                                <Pagination page={singles.page} totalPages={singles.totalPages} onPageChange={handleSinglePageChange}/>
+                            }
                         </div>
                     ) : (
                         singles && singles.singles.length == 0 && (

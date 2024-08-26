@@ -188,6 +188,10 @@ export const TRANSLATIONS_ES = {
         }
     },
     components: {
+        pagination: {
+            page: "Página",
+            of: "de"
+        },
         changePasswordModal: {
             title: "Cambiar contraseña",
             label: "Contraseña nueva",

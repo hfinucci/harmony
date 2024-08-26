@@ -58,16 +58,25 @@ export class AlbumService {
     }
 
     static async editAlbum(id: number, name: string, image: string | null) {
+
+        let body: { image?: string; name: string } = {
+            name: name,
+        };
+
+        if (image) {
+            body = {
+                ...body,
+                image: image
+            };
+        }
+
         return await fetch(BASE_URL + "/api/albums/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
-            body: JSON.stringify({
-                name: name,
-                image: image,
-            }),
+            body: JSON.stringify(body),
         });
     }
 }

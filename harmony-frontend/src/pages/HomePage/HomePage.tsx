@@ -72,7 +72,7 @@ const HomePage = () => {
                 </div>
 
                 {orgs && orgs.orgs.length != 0 ? (
-                    <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
+                    <div className="flex flex-row gap-5 justify-start content-center rounded-lg p-5">
                         {orgs.orgs.slice(0, 3).map((org, index) => (
                                 <OrgCard
                                     key={index}
@@ -110,7 +110,7 @@ const HomePage = () => {
                 </div>
 
                 {albums && albums.albums.length != 0 ? (
-                    <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
+                    <div className="flex flex-row gap-5 justify-start content-center rounded-lg p-5">
                         {albums.albums.slice(0, 3).map((album, index) => (
                             <AlbumCard
                                 key={index}

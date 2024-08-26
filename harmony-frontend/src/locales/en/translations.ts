@@ -269,7 +269,8 @@ export const TRANSLATIONS_EN = {
             name: "Name",
             select: {
                 org: "Select an organization",
-                album: "Select an album"
+                album: "Select an album",
+                noAlbum: "By not selecting an album, a single will be created"
             },
             create: "Create",
             cancel: "Cancel",

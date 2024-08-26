@@ -209,6 +209,11 @@ const CreateSongModal = ({
                                                         />
                                                     )}
                                                 </select>
+                                                <>
+                                                    <p className="text-gray-500 text-xs pl-2.5">
+                                                        {t("components.createSongModal.select.noAlbum")}
+                                                    </p>
+                                                </>
                                             </div>
                                         )}
                                         {errors.album && (

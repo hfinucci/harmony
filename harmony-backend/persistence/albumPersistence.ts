@@ -34,10 +34,13 @@ export class AlbumPersistence {
         })();
     }
 
-    static async getAlbumsByOrg(id: number) {
+    static async getAlbumsByOrg(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT * FROM albums WHERE org = $1 ORDER BY last_modified DESC',
-            values: [id],
+            text: 'SELECT * FROM albums WHERE org = $1  ORDER BY last_modified DESC LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const albums = result.rows;
@@ -46,10 +49,13 @@ export class AlbumPersistence {
         })();
     }
 
-    static async getAlbumsByUser(id: number) {
+    static async getAlbumsByUser(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT a.id as id, m.org_id as org, a.name as name FROM albums a JOIN members m ON a.org=m.org_id WHERE m.user_id = $1 ORDER BY a.last_modified DESC',
-            values: [id],
+            text: 'SELECT a.id as id, m.org_id as org, a.name as name FROM albums a JOIN members m ON a.org=m.org_id WHERE m.user_id = $1 ORDER BY a.last_modified DESC LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const albums = result.rows;

@@ -22,20 +22,20 @@ export class SongService {
         return await SongPersistence.getSongById(id);
     }
 
-    public static async getSongsByOrg(id: number) {
-        return await SongPersistence.getSongsByOrg(id);
+    public static async getSongsByOrg(id: number, page: number) {
+        return await SongPersistence.getSongsByOrg(id, page);
     }
 
-    public static async getSinglesByOrg(id: number) {
-        return await SongPersistence.getSinglesByOrg(id);
+    public static async getSinglesByOrg(id: number, page: number) {
+        return await SongPersistence.getSinglesByOrg(id, page);
     }
 
-    public static async getSongsByAlbum(id: number) {
-        return await SongPersistence.getSongsByAlbum(id);
+    public static async getSongsByAlbum(id: number, page: number) {
+        return await SongPersistence.getSongsByAlbum(id, page);
     }
 
-    public static async getSongsByUser(id: number) {
-        return await SongPersistence.getSongsByUser(id);
+    public static async getSongsByUser(id: number, page: number) {
+        return await SongPersistence.getSongsByUser(id, page);
     }
 
     static async deleteSongById(id: number) {

@@ -27,12 +27,12 @@ export class AlbumService {
         return await AlbumPersistence.getAlbumById(id);
     }
 
-    public static async getAlbumsByOrg(id: number) {
-        return await AlbumPersistence.getAlbumsByOrg(id);
+    public static async getAlbumsByOrg(id: number, page: number) {
+        return await AlbumPersistence.getAlbumsByOrg(id, page);
     }
 
-    public static async getAlbumsByUser(id: number) {
-        return await AlbumPersistence.getAlbumsByUser(id);
+    public static async getAlbumsByUser(id: number, page: number) {
+        return await AlbumPersistence.getAlbumsByUser(id, page);
     }
 
     static async deleteAlbumById(id: number) {

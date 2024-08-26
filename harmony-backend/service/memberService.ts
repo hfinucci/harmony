@@ -20,8 +20,8 @@ export class MemberService {
         return await MemberPersistence.getMembersByOrg(org);
     }
 
-    public static async getOrgsByUser(user: number) {
-        return (await MemberPersistence.getOrgsByUser(user)).map(
+    public static async getOrgsByUser(user: number, page: number) {
+        return (await MemberPersistence.getOrgsByUser(user, page)).map(
             (org) =>
                 ({
                 ...org,

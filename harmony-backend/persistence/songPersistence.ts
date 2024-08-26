@@ -34,10 +34,13 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByOrg(id: number) {
+    static async getSongsByOrg(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT * FROM songs WHERE org = $1',
-            values: [id],
+            text: 'SELECT * FROM songs WHERE org = $1 LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows;
@@ -46,10 +49,13 @@ export class SongPersistence {
         })();
     }
 
-    static async getSinglesByOrg(id: number) {
+    static async getSinglesByOrg(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT * FROM songs WHERE org = $1 and album is null',
-            values: [id],
+            text: 'SELECT * FROM songs WHERE org = $1 and album is null LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows;
@@ -58,10 +64,13 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByAlbum(id: number) {
+    static async getSongsByAlbum(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC',
-            values: [id],
+            text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows;
@@ -82,7 +91,10 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByUser(id: number) {
+    static async getSongsByUser(id: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
             text: `SELECT
                 s.id as id,
@@ -94,8 +106,10 @@ export class SongPersistence {
                 INNER JOIN members m
                 ON o.id = m.org_id
                 INNER JOIN songs s on m.org_id = s.org
-                WHERE m.user_id = $1;`,
-            values: [id],
+                WHERE m.user_id = $1
+                LIMIT $2 OFFSET $3
+                `,
+            values: [id, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows;

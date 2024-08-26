@@ -70,8 +70,10 @@ export default async function albumController(fastify: FastifyInstance, opts: an
 
     server.get(
         BASE_URL + "/:id/songs",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }, Querystring: { page: number } }>, rep) => {
             const id = req.params.id;
+            const { page = 1 } = req.query
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -81,7 +83,7 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 await checkIfRequesterIsMember(user.person.id, album.org);
 
                 logger.info("Fetching songs from album with id: " + id);
-                return await SongService.getSongsByAlbum(id);
+                return await SongService.getSongsByAlbum(id, page);
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

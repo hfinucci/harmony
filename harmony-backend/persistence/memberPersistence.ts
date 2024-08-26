@@ -26,10 +26,19 @@ export class MemberPersistence {
         })();
     }
 
-    static async getOrgsByUser(user: number) {
+    static async getOrgsByUser(user: number, page: number) {
+        const limit = 2;
+        const offset = (page - 1) * limit;
+
         const query = {
-            text: 'SELECT id, name FROM members JOIN organizations ON members.org_id = organizations.id WHERE members.user_id = $1',
-            values: [user],
+            text: `
+            SELECT id, name 
+            FROM members 
+            JOIN organizations ON members.org_id = organizations.id 
+            WHERE members.user_id = $1
+            LIMIT $2 OFFSET $3
+        `,
+            values: [user, limit, offset],
         };
         const result: QueryResult = await dbpool.query(query);
         const song = result.rows;

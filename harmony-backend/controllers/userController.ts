@@ -58,8 +58,10 @@ export default async function userController(
 
     server.get(
         BASE_URL + "/:id/songs",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: number}  }>, rep) => {
             const id = req.params.id;
+            const { page = 1 } = req.query
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -69,7 +71,7 @@ export default async function userController(
                 }
 
                 logger.info("Getting songs from user with id: " + id);
-                const songs = await SongService.getSongsByUser(id);
+                const songs = await SongService.getSongsByUser(id, page);
                 return z.array(FetchSongsByUserResponse).parse(songs);
             } catch (error: any) {
                 logger.error(error);
@@ -80,8 +82,10 @@ export default async function userController(
 
     server.get(
         BASE_URL + "/:id/albums",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: number} }>, rep) => {
             const id = req.params.id;
+            const { page = 1 } = req.query
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -91,7 +95,7 @@ export default async function userController(
                 }
 
                 logger.info("Getting albums from user with id: " + id);
-                return await AlbumService.getAlbumsByUser(id);
+                return await AlbumService.getAlbumsByUser(id, page);
             } catch (error: any) {
                 logger.error(error);
                 return handleError(error, rep);
@@ -123,8 +127,11 @@ export default async function userController(
 
     server.get(
         BASE_URL + "/:id/orgs",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: { page?: number} }>, rep) => {
             const id = req.params.id;
+
+            const { page = 1 } = req.query;
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -134,7 +141,7 @@ export default async function userController(
                 }
 
                 logger.info("Getting orgs from user with id: " + id);
-                return await MemberService.getOrgsByUser(id);
+                return await MemberService.getOrgsByUser(id, page);
             } catch (error: any) {
                 logger.error(error);
                 return handleError(error, rep);

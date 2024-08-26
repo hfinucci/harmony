@@ -12,6 +12,8 @@ export const TRANSLATIONS_ES = {
             noOrgs: "¡Oops! No tienes ninguna organización",
             recentSongs: "Canciones Recientes",
             noSongs: "¡Oops! No tienes ninguna canción",
+            myAlbums: "Mis Álbumes",
+            noAlbums: "¡Oops! No tienes ningún álbum",
             song: {
                 name: "Nombre",
                 org: "Organización",
@@ -120,6 +122,16 @@ export const TRANSLATIONS_ES = {
                 lastModified: "Última de Modificación",
                 actions: "Acciones",
                 none: "¡Oops! No tienes canciones",
+            },
+            singles: {
+                title: "Singles",
+                none: "¡Oops! No tienes singles",
+            },
+            albums: {
+                title: "Álbumes",
+                noneSongs: "¡Oops! No tienes canciones en este álbum",
+                none: "¡Oops! No tienes álbumes en esta organización",
+                see: "Ver álbum completo"
             },
             members: "Integrantes",
         },
@@ -262,7 +274,11 @@ export const TRANSLATIONS_ES = {
         createSongModal: {
             title: "Crear Canción",
             name: "Nombre",
-            select: "Seleccionar una organización",
+            select: {
+                org: "Seleccionar una organización",
+                album: "Seleccionar un álbum",
+                noAlbum: "Al no seleccionar un álbum, se creara un single"
+            },
             create: "Crear",
             cancel: "Cancelar",
             button: "Agregar Canción",

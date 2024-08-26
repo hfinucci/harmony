@@ -5,17 +5,24 @@ import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
 import { Song } from "../../pages/SongsPage/SongsPage";
 import {useTranslation} from "react-i18next";
+import {Album} from "../../types/dtos/Album";
+import {Org} from "../../types/dtos/Org";
+import {OrgService} from "../../service/orgService";
 
 const CreateSongModal = ({
     org,
+    album,
     callback,
 }: {
     org?: number;
+    album?: number;
     callback: (song: Song) => void;
 }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
-    const [orgs, setOrgs] = useState<any>();
+    const [orgs, setOrgs] = useState<Org[]>();
+    const [albums, setAlbums] = useState<Album[]>()
+    const [orgSelected, setOrgSelected] = useState<number>(org);
 
     const { t } = useTranslation();
 
@@ -29,9 +36,21 @@ const CreateSongModal = ({
         });
     }, []);
 
+    useEffect(() => {
+        console.log(orgSelected)
+        if (orgSelected)
+            OrgService.getOrgAlbums(orgSelected).then(async (rsp) => {
+                if (rsp?.status == 200) {
+                    const info = await rsp.json();
+                    setAlbums(info)
+                }
+            })
+    }, [orgSelected]);
+
     type CreateSongFormData = {
         name: string;
         org: number;
+        album: number;
     };
 
     const {
@@ -45,7 +64,7 @@ const CreateSongModal = ({
     watch();
 
     const onSubmit = async (data: any, e: any) => {
-        const song = await SongService.createSong(data.name, data.org);
+        const song = await SongService.createSong(data.name, data.org, data.album);
         if (song?.status == 200) {
             setShowModal(false);
             const body = await song.json();
@@ -75,7 +94,7 @@ const CreateSongModal = ({
             </button>
             {showModal && (
                 <>
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-10 transition-opacity"></div>
                     <div
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"
@@ -123,6 +142,10 @@ const CreateSongModal = ({
                                                     data-testid="create-song-org"
                                                     defaultValue={org == null? 0: org}
                                                     {...register("org", {
+                                                        onChange: (o) => {
+                                                            console.log("adentro")
+                                                            setOrgSelected(o.target.value)
+                                                        },
                                                         required: true,
                                                         min: 1,
                                                     })}
@@ -140,7 +163,7 @@ const CreateSongModal = ({
                                                         <option
                                                             value={0}
                                                             label={
-                                                                t("components.createSongModal.select")
+                                                                t("components.createSongModal.select.org")
                                                             }
                                                         />
                                                     )}
@@ -148,6 +171,52 @@ const CreateSongModal = ({
                                             </div>
                                         )}
                                         {errors.org && (
+                                            <>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {t("components.createSongModal.error.org")}
+                                                </p>
+                                                <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
+                                                    {error}
+                                                </p>
+                                            </>
+                                        )}
+                                        {albums && albums.length != 0 && (
+                                            <div>
+                                                <select
+                                                    id="name"
+                                                    data-testid="create-song-org"
+                                                    defaultValue={album == null? 0: album}
+                                                    {...register("album", {
+                                                        required: true,
+                                                        min: 0,
+                                                    })}
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                    required
+                                                >
+                                                    {albums.map((a: Album, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={a.id}
+                                                            label={a.name}
+                                                        />
+                                                    ))}
+                                                    {!album && (
+                                                        <option
+                                                            value={0}
+                                                            label={
+                                                                t("components.createSongModal.select.album")
+                                                            }
+                                                        />
+                                                    )}
+                                                </select>
+                                                <>
+                                                    <p className="text-gray-500 text-xs pl-2.5">
+                                                        {t("components.createSongModal.select.noAlbum")}
+                                                    </p>
+                                                </>
+                                            </div>
+                                        )}
+                                        {errors.album && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {t("components.createSongModal.error.org")}

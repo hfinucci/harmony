@@ -133,6 +133,25 @@ export default async function orgController(
     );
 
     server.get(
+        BASE_URL + "/:id/singles",
+        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+            const id = req.params.id;
+            try {
+                const user = AuthService.parseJWT(req.headers.authorization);
+                parseId(id);
+
+                await checkIfRequesterIsMember(user.person.id, id);
+
+                logger.info("Fetching songs from org with id: " + id);
+                return await SongService.getSinglesByOrg(id);
+            } catch (err) {
+                logger.error(err);
+                return handleError(err, rep);
+            }
+        }
+    );
+
+    server.get(
         BASE_URL + "/:id/albums",
         async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
             const id = req.params.id;

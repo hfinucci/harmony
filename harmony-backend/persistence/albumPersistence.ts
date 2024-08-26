@@ -36,7 +36,7 @@ export class AlbumPersistence {
 
     static async getAlbumsByOrg(id: number) {
         const query = {
-            text: 'SELECT * FROM albums WHERE org = $1',
+            text: 'SELECT * FROM albums WHERE org = $1 ORDER BY last_modified DESC',
             values: [id],
         };
         const result: QueryResult = await dbpool.query(query);

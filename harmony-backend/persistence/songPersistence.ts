@@ -46,6 +46,18 @@ export class SongPersistence {
         })();
     }
 
+    static async getSinglesByOrg(id: number) {
+        const query = {
+            text: 'SELECT * FROM songs WHERE org = $1 and album is null',
+            values: [id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        const song = result.rows;
+        return song ?? (() => {
+            throw new Error("Songs not found")
+        })();
+    }
+
     static async getSongsByAlbum(id: number) {
         const query = {
             text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC',

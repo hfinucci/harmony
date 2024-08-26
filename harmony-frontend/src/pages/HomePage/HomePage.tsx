@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserService } from "../../service/userService";
 import { FaMusic, FaPeopleGroup } from "react-icons/fa6";
+import { RiAlbumFill } from "react-icons/ri";
 import { Org } from "../../types/dtos/Org";
 import { Song } from "../SongsPage/SongsPage";
 import { useTranslation } from "react-i18next";
@@ -11,9 +12,15 @@ import SongCard from "../../components/SongCard/SongCard";
 import OrgCard from "../../components/OrgCard/OrgCard";
 import { useNavigate } from "react-router-dom";
 
+import {Album} from "../../types/dtos/Album";
+import AlbumCard from "../../components/AlbumCard/AlbumCard";
+import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
+
 const HomePage = () => {
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [songs, setSongs] = useState<Song[]>([]);
+    const [albums, setAlbums] = useState<Album[]>([]);
+
 
     const { t } = useTranslation();
     const nav = useNavigate();
@@ -35,6 +42,14 @@ const HomePage = () => {
         });
     };
 
+    const fetchAlbums = async () => {
+        await UserService.getUserAlbums(localStorage.getItem("harmony-uid"))
+            .then(async (rsp) => {
+                const a = await rsp.json()
+                setAlbums(a)
+            })
+    }
+
     useEffect(() => {
         const userId = localStorage.getItem("harmony-uid") as string;
         UserService.getUserOrgs(userId).then((res) => {
@@ -45,6 +60,7 @@ const HomePage = () => {
             }
         });
         fetchSongs();
+        fetchAlbums();
     }, []);
 
     return (
@@ -68,7 +84,7 @@ const HomePage = () => {
                                     id={org.id}
                                 />
                         ))}
-                        {orgs.length > 3 && (
+                        {albums.length > 3 && (
                             <button
                                 onClick={() => nav("/orgs")}
                                 aria-label="see more orgs"
@@ -83,6 +99,45 @@ const HomePage = () => {
                     <div className="flex items-center justify-center p-4 md:p-5">
                         <h1 className="text-2xl text-fuchsia-950">
                             {t("pages.home.noOrgs")}
+                        </h1>
+                    </div>
+                )}
+            </div>
+            <div className="my-4">
+                <div className="flex flex-row justify-between mb-4">
+                    <h1 className="text-fuchsia-950 text-4xl flex flex-row gap-2">
+                        <RiAlbumFill />
+                        {t("pages.home.myAlbums")}
+                    </h1>
+                    <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)}/>
+                </div>
+
+                {albums && albums.length != 0 ? (
+                    <div className="flex flex-row gap-5 justify-start content-center w-fit rounded-lg p-5">
+                        {albums.slice(0, 3).map((album, index) => (
+                            <AlbumCard
+                                key={index}
+                                name={album.name}
+                                image={album.image}
+                                id={album.id}
+                                org={album.org}
+                            />
+                        ))}
+                        {albums.length > 3 && (
+                            <button
+                                onClick={() => nav("/albums")}
+                                aria-label="see more albums"
+                                type="button"
+                                className="bg-white flex w-fit h-fit items-center self-center text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
+                            >
+                                {t("pages.home.more")}
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center p-4 md:p-5">
+                        <h1 className="text-2xl text-fuchsia-950">
+                            {t("pages.home.noAlbums")}
                         </h1>
                     </div>
                 )}

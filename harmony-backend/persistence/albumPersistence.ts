@@ -38,30 +38,80 @@ export class AlbumPersistence {
         const limit = 2;
         const offset = (page - 1) * limit;
 
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM albums 
+                WHERE org = $1
+            `,
+            values: [id]
+        };
+
         const query = {
-            text: 'SELECT * FROM albums WHERE org = $1  ORDER BY last_modified DESC LIMIT $2 OFFSET $3',
+            text: 'SELECT * FROM albums WHERE org = $1 ORDER BY last_modified DESC LIMIT $2 OFFSET $3',
             values: [id, limit, offset],
         };
-        const result: QueryResult = await dbpool.query(query);
-        const albums = result.rows;
-        return albums ?? (() => {
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalAlbums = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const albums = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalAlbums,
+                albums
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching albums:', error);
             throw new Error("Albums not found")
-        })();
+        }
     }
 
     static async getAlbumsByUser(id: number, page: number) {
         const limit = 2;
         const offset = (page - 1) * limit;
 
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM albums a JOIN members m ON a.org=m.org_id 
+                WHERE m.user_id = $1
+            `,
+            values: [id]
+        };
+
         const query = {
             text: 'SELECT a.id as id, m.org_id as org, a.name as name FROM albums a JOIN members m ON a.org=m.org_id WHERE m.user_id = $1 ORDER BY a.last_modified DESC LIMIT $2 OFFSET $3',
             values: [id, limit, offset],
         };
-        const result: QueryResult = await dbpool.query(query);
-        const albums = result.rows;
-        return albums ?? (() => {
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalAlbums = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const albums = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalAlbums,
+                albums
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching albums:', error);
             throw new Error("Albums not found")
-        })();
+        }
     }
 
     static async deleteAlbumById(id: number) {

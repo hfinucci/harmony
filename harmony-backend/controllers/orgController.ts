@@ -115,10 +115,10 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/songs",
-        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: number} }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: string} }>, rep) => {
             const id = req.params.id;
 
-            const { page = 1 } = req.query
+            const page = parseInt(req.query.page, 10) || 1;
 
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
@@ -127,7 +127,15 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching songs from org with id: " + id);
-                return await SongService.getSongsByOrg(id, page);
+                const result = await SongService.getSongsByOrg(id, page);
+
+                return rep.send({
+                    page,
+                    totalItems: result.totalSongs,
+                    totalPages: Math.ceil(result.totalSongs / 2),
+                    songs: result.songs,
+                });
+
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -137,9 +145,9 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/singles",
-        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: number} }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: string} }>, rep) => {
             const id = req.params.id;
-            const { page = 1 } = req.query
+            const page = parseInt(req.query.page, 10) || 1;
 
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
@@ -148,7 +156,13 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching songs from org with id: " + id);
-                return await SongService.getSinglesByOrg(id, page);
+                const result = await SongService.getSinglesByOrg(id, page);
+                return rep.send({
+                    page,
+                    totalItems: result.totalSingles,
+                    totalPages: Math.ceil(result.totalSingles / 2),
+                    singles: result.singles,
+                });
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -158,9 +172,9 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/albums",
-        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: number} }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: {page: string} }>, rep) => {
             const id = req.params.id;
-            const { page = 1 } = req.query
+            const page = parseInt(req.query.page, 10) || 1;
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -168,7 +182,14 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching albums from org with id: " + id);
-                return await AlbumService.getAlbumsByOrg(id, page);
+                const result = await AlbumService.getAlbumsByOrg(id, page);
+
+                return rep.send({
+                    page,
+                    totalItems: result.totalAlbums,
+                    totalPages: Math.ceil(result.totalAlbums / 2),
+                    albums: result.albums,
+                });
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

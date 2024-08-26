@@ -1,5 +1,4 @@
 import {dbpool} from './dbConfig';
-import {CreateMemberRequest} from "../models/createMemberRequest";
 import {QueryResult} from "pg";
 import {AuthorizationError} from "../models/errors/AuthorizationError";
 
@@ -30,6 +29,16 @@ export class MemberPersistence {
         const limit = 2;
         const offset = (page - 1) * limit;
 
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM members
+                         JOIN organizations ON members.org_id = organizations.id
+                WHERE members.user_id = $1
+            `,
+            values: [user]
+        };
+
         const query = {
             text: `
             SELECT id, name 
@@ -40,11 +49,27 @@ export class MemberPersistence {
         `,
             values: [user, limit, offset],
         };
-        const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalOrgs = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const orgs = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalOrgs,
+                orgs
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching orgs:', error);
             throw new Error("Orgs not found")
-        })();
+        }
     }
 
     static async getMembership(user: number, org: number) {

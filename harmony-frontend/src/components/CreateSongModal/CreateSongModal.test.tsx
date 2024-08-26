@@ -14,7 +14,8 @@ vi.mock("../../service/songService.ts", () => ({
 }));
 vi.mock("../../service/userService.ts", () => ({
     UserService: {
-        getUserOrgs: vi.fn()
+        getUserOrgs: vi.fn(),
+        getOrgAlbums: vi.fn()
     }
 }));
 

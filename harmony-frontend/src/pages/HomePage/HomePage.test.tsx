@@ -11,7 +11,8 @@ import {Org} from "../../types/dtos/Org.ts";
 vi.mock("../../service/userService.ts", () => ({
     UserService: {
         getUserOrgs: vi.fn(),
-        getSongsByUserId: vi.fn()
+        getSongsByUserId: vi.fn(),
+        getUserAlbums: vi.fn()
     },
 }));
 vi.mock("../../service/orgService.ts", () => ({

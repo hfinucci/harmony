@@ -131,7 +131,7 @@ const AlbumPage = () => {
                         <div className="h-1/4 w-1/4">
                             <img src={image}  alt="album image" className="shadow-lg rounded"/>
                         </div>
-                        <div className="m-5 flex w-full z-10 justify-between">
+                        <div className="m-5 flex w-full justify-between">
                             <div className="flex flex-col gap-2">
                                 <h1 className="text-start text-5xl text-fuchsia-950 drop-shadow-lg">
                                     {album.name}
@@ -150,9 +150,11 @@ const AlbumPage = () => {
                     </div>
                 }
                 <div className="flex flex-col grow gap-2">
-                    <div className="flex justify-end">
-                        <CreateSongModal album={albumId.id} callback={addSong} />
-                    </div>
+                    {org &&
+                        <div className="flex justify-end">
+                            <CreateSongModal album={albumId} org={org.id} callback={addSong}/>
+                        </div>
+                    }
                     {songs.length !== 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">

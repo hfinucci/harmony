@@ -268,7 +268,10 @@ export const TRANSLATIONS_ES = {
         createSongModal: {
             title: "Crear Canción",
             name: "Nombre",
-            select: "Seleccionar una organización",
+            select: {
+                org: "Seleccionar una organización",
+                album: "Seleccionar un álbum"
+            },
             create: "Crear",
             cancel: "Cancelar",
             button: "Agregar Canción",

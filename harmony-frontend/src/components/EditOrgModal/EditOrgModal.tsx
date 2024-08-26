@@ -66,7 +66,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
             </button>
             {showModal && (
                 <>
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-10 transition-opacity"></div>
                     <div
                         tabIndex={-1}
                         className="fixed inset-0 z-10 w-screen overflow-y-auto flex justify-center items-center"

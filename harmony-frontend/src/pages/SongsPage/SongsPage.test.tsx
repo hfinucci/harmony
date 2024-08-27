@@ -10,6 +10,12 @@ vi.mock("../../service/userService.ts", () => ({
     },
 }));
 
+vi.mock("../../utils", () => ({
+    UserService: {
+        getSongsByUserId: vi.fn()
+    },
+}));
+
 describe("Test SongsPage", () => {
     // Clean up mocks
     afterEach(() => {
@@ -30,6 +36,7 @@ describe("Test SongsPage", () => {
         };
 
         localStorage.setItem("harmony-uid", "1")
+        localStorage.setItem("i18nextLng", "es-AR")
         UserService.getSongsByUserId.mockResolvedValue(mockSongs);
 
         render(

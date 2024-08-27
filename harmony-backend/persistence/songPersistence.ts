@@ -1,7 +1,6 @@
 import {dbpool} from './dbConfig';
 import {CreateSongRequest} from "../models/createSongRequest";
 import {QueryResult} from "pg";
-import {LIMIT} from "../utils";
 
 export class SongPersistence {
 
@@ -35,8 +34,10 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByOrg(id: number, page: number) {
-        const offset = (page - 1) * LIMIT;
+    static async getSongsByOrg(id: number, page: number, limit: number | null) {
+        let offset = null
+        if (limit)
+            offset = (page - 1) * limit;
 
         const countQuery = {
             text: `
@@ -49,7 +50,7 @@ export class SongPersistence {
 
         const query = {
             text: 'SELECT * FROM songs WHERE org = $1 LIMIT $2 OFFSET $3',
-            values: [id, LIMIT, offset],
+            values: [id, limit, offset],
         };
 
         try {
@@ -74,8 +75,8 @@ export class SongPersistence {
         }
     }
 
-    static async getSinglesByOrg(id: number, page: number) {
-        const offset = (page - 1) * LIMIT;
+    static async getSinglesByOrg(id: number, page: number, limit: number) {
+        const offset = (page - 1) * limit;
 
         const countQuery = {
             text: `
@@ -88,7 +89,7 @@ export class SongPersistence {
 
         const query = {
             text: 'SELECT * FROM songs WHERE org = $1 and album is null LIMIT $2 OFFSET $3',
-            values: [id, LIMIT, offset],
+            values: [id, limit, offset],
         };
 
         try {
@@ -113,8 +114,10 @@ export class SongPersistence {
         }
     }
 
-    static async getSongsByAlbum(id: number, page: number) {
-        const offset = (page - 1) * LIMIT;
+    static async getSongsByAlbum(id: number, page: number, limit: number | null) {
+        let offset
+        if (limit)
+            offset = (page - 1) * limit;
 
         const countQuery = {
             text: `
@@ -127,7 +130,7 @@ export class SongPersistence {
 
         const query = {
             text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC LIMIT $2 OFFSET $3',
-            values: [id, LIMIT, offset],
+            values: [id, limit, offset],
         };
 
         try {
@@ -164,8 +167,8 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByUser(id: number, page: number) {
-        const offset = (page - 1) * LIMIT;
+    static async getSongsByUser(id: number, page: number, limit: number) {
+        const offset = (page - 1) * limit;
 
         const countQuery = {
             text: `
@@ -193,7 +196,7 @@ export class SongPersistence {
                 WHERE m.user_id = $1
                 LIMIT $2 OFFSET $3
                 `,
-            values: [id, LIMIT, offset],
+            values: [id, limit, offset],
         };
 
         try {

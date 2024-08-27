@@ -15,16 +15,23 @@ import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
+import Pagination from "../../components/Pagination/Pagination";
 
 const AlbumPage = () => {
     const [album, setAlbum]: Album = useState();
     const [org, setOrg]: Org = useState();
-    const [songs, setSongs] = useState<Song[]>([]);
+    const [songs, setSongs] = useState<SongPagination>();
     const [image, setImage] = useState(ALBUM_IMAGE_DEFAULT);
     const [errorCode, setErrorCode] = useState<number>();
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
+
+    const [page, setPage] = useState<number>(1);
+
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+    };
 
     const albumId = useParams();
 
@@ -87,10 +94,10 @@ const AlbumPage = () => {
     }
 
     const fetchSongs = async () => {
-        await AlbumService.getAlbumSongs(Number(albumId.id)).then(async (rsp) => {
+        await AlbumService.getAlbumSongs(Number(albumId.id), page, 10).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SongPagination;
-                setSongs(info.songs);
+                setSongs(info);
             }
         });
     };
@@ -100,14 +107,9 @@ const AlbumPage = () => {
             await fetchSongs();
         };
         fetch();
-    }, [album]);
+    }, [album, page]);
 
     const addSong = (song: any) => {
-        if (songs) {
-            setSongs([...songs, song]);
-        } else {
-            setSongs([song]);
-        }
         nav("/songs/" + song.id)
     };
 
@@ -155,7 +157,7 @@ const AlbumPage = () => {
                             <CreateSongModal album={albumId} org={org.id} callback={addSong}/>
                         </div>
                     }
-                    {songs.length !== 0 ? (
+                    {songs && songs.songs.length !== 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
@@ -191,7 +193,7 @@ const AlbumPage = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {songs.map((elem: Song, index: number) => (
+                                {songs.songs.map((elem: Song, index: number) => (
                                     <React.Fragment key={index}>
                                         <tr>
                                             <td
@@ -218,9 +220,13 @@ const AlbumPage = () => {
                                 ))}
                                 </tbody>
                             </table>
+                            {songs.totalPages > 1 &&
+                                <Pagination page={songs.page} totalPages={songs.totalPages}
+                                            onPageChange={handlePageChange}/>
+                            }
                         </div>
                     ) : (
-                        songs.length == 0 && (
+                        songs && songs.songs.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.album.songs.none")}

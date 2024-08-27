@@ -9,7 +9,7 @@ import Pagination from "../../components/Pagination/Pagination";
 const SongsPage = () => {
 
     const [songs, setSongs] = useState<SongPagination>();
-    const [page, setPage] = useState<number>();
+    const [page, setPage] = useState<number>(1);
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -18,7 +18,7 @@ const SongsPage = () => {
     const { t } = useTranslation();
 
     const fetchSongs = async () => {
-        await UserService.getSongsByUserId(Number(localStorage.getItem('harmony-uid')), page)
+        await UserService.getSongsByUserId(Number(localStorage.getItem('harmony-uid')), page, 10)
             .then((response) => {
                 setSongs(response);
             })

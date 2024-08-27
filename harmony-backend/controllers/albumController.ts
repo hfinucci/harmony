@@ -1,6 +1,6 @@
 import {FastifyInstance, FastifyRequest} from 'fastify'
 import server, {logger} from "../server";
-import {handleError, LIMIT, parseId} from '../utils';
+import {handleError, parseId} from '../utils';
 import {AuthService} from "../service/authService";
 import {checkIfRequesterIsMember} from "../models/checks";
 import {parseCreateAlbumRequest} from "../models/createAlbumRequest";
@@ -70,9 +70,10 @@ export default async function albumController(fastify: FastifyInstance, opts: an
 
     server.get(
         BASE_URL + "/:id/songs",
-        async (req: FastifyRequest<{ Params: { id: number }, Querystring: { page: string } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }, Querystring: { page: string, limit: string } }>, rep) => {
             const id = req.params.id;
             const page = parseInt(req.query.page, 10) || 1;
+            const limit = parseInt(req.query.limit, 10) || null;
 
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
@@ -83,12 +84,12 @@ export default async function albumController(fastify: FastifyInstance, opts: an
                 await checkIfRequesterIsMember(user.person.id, album.org);
 
                 logger.info("Fetching songs from album with id: " + id);
-                const result = await SongService.getSongsByAlbum(id, page);
+                const result = await SongService.getSongsByAlbum(id, page, limit);
 
                 return rep.send({
                     page,
                     totalItems: result.totalSongs,
-                    totalPages: Math.ceil(result.totalSongs / LIMIT),
+                    totalPages: limit? Math.ceil(result.totalSongs / limit) : 1,
                     songs: result.songs,
                 });
             } catch (err) {

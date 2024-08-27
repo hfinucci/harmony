@@ -9,7 +9,7 @@ import Pagination from "../../components/Pagination/Pagination";
 
 const OrgsPage = () => {
     const [orgs, setOrgs] = useState<OrgPagination>();
-    const [page, setPage] = useState<number>();
+    const [page, setPage] = useState<number>(1);
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -21,7 +21,7 @@ const OrgsPage = () => {
         (async () => {
             setOrgs(null)
             const userId = localStorage.getItem("harmony-uid") as string;
-            const response = await UserService.getUserOrgs(userId, page);
+            const response = await UserService.getUserOrgs(userId, page, 9);
             const orgs = (await response.json()) as OrgPagination;
             setOrgs(orgs);
         })();

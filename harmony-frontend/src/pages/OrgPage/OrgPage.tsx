@@ -33,19 +33,19 @@ const OrgPage = () => {
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
 
-    const [albumPage, setAlbumPage] = useState<number>();
+    const [albumPage, setAlbumPage] = useState<number>(1);
 
     const handleAlbumPageChange = (newPage) => {
         setAlbumPage(newPage);
     };
 
-    const [songPage, setSongPage] = useState<number>();
+    const [songPage, setSongPage] = useState<number>(1);
 
     const handleSongPageChange = (newPage) => {
         setSongPage(newPage);
     };
 
-    const [singlePage, setSinglePage] = useState<number>();
+    const [singlePage, setSinglePage] = useState<number>(1);
 
     const handleSinglePageChange = (newPage) => {
         setSinglePage(newPage);
@@ -94,7 +94,7 @@ const OrgPage = () => {
     }, [org]);
 
     useEffect(() => {
-        OrgService.getOrgAlbums(Number(orgId.id), albumPage).then(async (rsp) => {
+        OrgService.getOrgAlbums(Number(orgId.id), albumPage, 3).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as AlbumPagination;
                 setAlbums(info);
@@ -119,7 +119,7 @@ const OrgPage = () => {
     }
 
     const fetchSongs = async () => {
-        await OrgService.getOrgSongs(Number(orgId.id), songPage).then(async (rsp) => {
+        await OrgService.getOrgSongs(Number(orgId.id), songPage, 5).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SongPagination;
                 setSongs(info);
@@ -128,7 +128,7 @@ const OrgPage = () => {
     };
 
     const fetchSingles = async () => {
-        await OrgService.getOrgSingles(Number(orgId.id), singlePage).then(async (rsp) => {
+        await OrgService.getOrgSingles(Number(orgId.id), singlePage, 5).then(async (rsp) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SinglePagination;
                 setSingles(info);
@@ -137,7 +137,6 @@ const OrgPage = () => {
     };
 
     useEffect(() => {
-        console.log("En fetch song")
         const fetch = async () => {
             await fetchSongs();
         };

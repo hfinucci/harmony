@@ -10,7 +10,7 @@ import Pagination from "../../components/Pagination/Pagination";
 
 const AlbumsPage = () => {
     const [albums, setAlbums] = useState<AlbumPagination>();
-    const [page, setPage] = useState<number>();
+    const [page, setPage] = useState<number>(1);
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -23,7 +23,7 @@ const AlbumsPage = () => {
     useEffect(() => {
         (async () => {
             const userId = localStorage.getItem("harmony-uid") as string;
-            const response = await UserService.getUserAlbums(userId, page);
+            const response = await UserService.getUserAlbums(userId, page, 9);
             const albums = (await response.json()) as AlbumPagination;
             setAlbums(albums);
         })();

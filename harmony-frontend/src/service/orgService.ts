@@ -21,10 +21,16 @@ export class OrgService {
         });
     }
 
-    public static async getOrgSongs(id: number, page?: number) {
+    public static async getOrgSongs(id: number, page?: number, limit?: number) {
         let url = BASE_URL + "/api/orgs/" + id + "/songs"
-        if (page)
+        console.log("limit: " + limit)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
+
+        console.log("url:" + url)
         return await fetch(url, {
             method: "GET",
             headers: {
@@ -34,10 +40,13 @@ export class OrgService {
         });
     }
 
-    public static async getOrgSingles(id: number, page?: number) {
+    public static async getOrgSingles(id: number, page?: number, limit?: number) {
         let url = BASE_URL + "/api/orgs/" + id + "/singles"
-        if (page)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
         return await fetch(url, {
             method: "GET",
             headers: {
@@ -47,10 +56,13 @@ export class OrgService {
         });
     }
 
-    public static async getOrgAlbums(id: number, page?: number) {
+    public static async getOrgAlbums(id: number, page?: number, limit?: number) {
         let url = BASE_URL + "/api/orgs/" + id + "/albums"
-        if (page)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
         return await fetch(url, {
             method: "GET",
             headers: {

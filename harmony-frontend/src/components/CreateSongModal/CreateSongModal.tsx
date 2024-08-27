@@ -38,7 +38,6 @@ const CreateSongModal = ({
     }, []);
 
     useEffect(() => {
-        console.log(orgSelected)
         if (orgSelected)
             OrgService.getOrgAlbums(orgSelected).then(async (rsp) => {
                 if (rsp?.status == 200) {
@@ -144,7 +143,6 @@ const CreateSongModal = ({
                                                     defaultValue={org == null? 0: org}
                                                     {...register("org", {
                                                         onChange: (o) => {
-                                                            console.log("adentro")
                                                             setOrgSelected(o.target.value)
                                                         },
                                                         required: true,

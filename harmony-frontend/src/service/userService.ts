@@ -95,10 +95,13 @@ export class UserService {
         });
     }
 
-    public static async getSongsByUserId(userId: number, page?:number): Promise<SongPagination> {
+    public static async getSongsByUserId(userId: number, page?: number, limit?: number): Promise<SongPagination> {
         let url = BASE_URL + "/api/users/" + userId + "/songs"
-        if (page)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
         const response = await fetch(
             url,
             {
@@ -112,10 +115,13 @@ export class UserService {
         return await response.json();
     }
 
-    public static async getUserOrgs(userId: string, page?: number) {
+    public static async getUserOrgs(userId: string, page?: number, limit?: number) {
         let url = BASE_URL + "/api/users/" + userId + "/orgs"
-        if (page)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
         return await fetch(url, {
             method: "GET",
             headers: {
@@ -126,10 +132,13 @@ export class UserService {
         });
     }
 
-    public static async getUserAlbums(userId: string, page?: number) {
+    public static async getUserAlbums(userId: string, page?: number, limit?: number) {
         let url = BASE_URL + "/api/users/" + userId + "/albums"
-        if (page)
+        if (page) {
             url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
         return await fetch(url, {
             method: "GET",
             headers: {

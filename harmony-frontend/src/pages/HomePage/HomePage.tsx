@@ -19,7 +19,6 @@ import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal
 const HomePage = () => {
     const [orgs, setOrgs] = useState<OrgPagination>();
     const [songs, setSongs] = useState<SongPagination>();
-    const [totalSongs, setTotalSongs] = useState(0);
     const [albums, setAlbums] = useState<AlbumPagination>();
 
 
@@ -32,15 +31,16 @@ const HomePage = () => {
 
     const fetchSongs = async () => {
         await UserService.getSongsByUserId(
-            Number(localStorage.getItem("harmony-uid"))
+            Number(localStorage.getItem("harmony-uid")),
+            1,
+            5
         ).then((response) => {
             setSongs(response);
-            setTotalSongs(response.totalItems)
         });
     };
 
     const fetchAlbums = async () => {
-        await UserService.getUserAlbums(localStorage.getItem("harmony-uid"))
+        await UserService.getUserAlbums(localStorage.getItem("harmony-uid"), 1, 3)
             .then(async (rsp) => {
                 const a = await rsp.json() as AlbumPagination
                 setAlbums(a)
@@ -49,7 +49,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const userId = localStorage.getItem("harmony-uid") as string;
-        UserService.getUserOrgs(userId).then((res) => {
+        UserService.getUserOrgs(userId, 1, 3).then((res) => {
             if (res?.status == 200) {
                 res.json().then((data: OrgPagination) => {
                     setOrgs(data);
@@ -73,7 +73,7 @@ const HomePage = () => {
 
                 {orgs && orgs.orgs.length != 0 ? (
                     <div className="flex flex-row gap-5 justify-start content-center rounded-lg p-5">
-                        {orgs.orgs.slice(0, 3).map((org, index) => (
+                        {orgs.orgs.map((org, index) => (
                                 <OrgCard
                                     key={index}
                                     name={org.name}
@@ -81,7 +81,7 @@ const HomePage = () => {
                                     id={org.id}
                                 />
                         ))}
-                        {orgs.orgs.length > 3 && (
+                        {orgs.totalItems > 3 && (
                             <button
                                 onClick={() => nav("/orgs")}
                                 aria-label="see more orgs"
@@ -111,7 +111,7 @@ const HomePage = () => {
 
                 {albums && albums.albums.length != 0 ? (
                     <div className="flex flex-row gap-5 justify-start content-center rounded-lg p-5">
-                        {albums.albums.slice(0, 3).map((album, index) => (
+                        {albums.albums.map((album, index) => (
                             <AlbumCard
                                 key={index}
                                 name={album.name}
@@ -120,7 +120,7 @@ const HomePage = () => {
                                 org={album.org}
                             />
                         ))}
-                        {albums.albums.length > 3 && (
+                        {albums.totalItems > 3 && (
                             <button
                                 onClick={() => nav("/albums")}
                                 aria-label="see more albums"
@@ -173,7 +173,6 @@ const HomePage = () => {
                             <tbody>
                                 {songs
                                     .songs
-                                    .slice(0, 5)
                                     .map((elem: Song, index: number) => (
                                         <React.Fragment key={index}>
                                             <tr>
@@ -192,7 +191,7 @@ const HomePage = () => {
                                             />
                                         </React.Fragment>
                                     ))}
-                                {totalSongs > songs.songs.length && (
+                                {songs.totalItems > 5 && (
                                     <button
                                         onClick={() => nav("/songs")}
                                         aria-label="see more songs"

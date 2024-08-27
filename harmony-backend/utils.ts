@@ -3,8 +3,6 @@ import {FastifyReply} from "fastify";
 import {AuthenticationError} from "./models/errors/AuthenticationError";
 import {AuthorizationError} from "./models/errors/AuthorizationError";
 
-export const LIMIT = 3;
-
 export function parseId(id: any) {
     return z.number().int().positive().parse(+id)
 }

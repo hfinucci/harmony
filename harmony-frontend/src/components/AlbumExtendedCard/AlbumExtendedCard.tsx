@@ -13,6 +13,7 @@ const AlbumExtendedCard = (album: Album) => {
     const [image, setImage] = useState<string>(album.image);
 
 
+
     const nav = useNavigate();
     const { t } = useTranslation();
 
@@ -21,7 +22,6 @@ const AlbumExtendedCard = (album: Album) => {
             if (rsp?.status == 200) {
                 const info = await rsp.json() as SongPagination;
                 setSongs(info.songs);
-                console.log(info.songs)
             }
         });
     };
@@ -30,7 +30,6 @@ const AlbumExtendedCard = (album: Album) => {
         const fetch = async () => {
             await fetchSongs();
         };
-        console.log("aca")
         fetch();
     }, []);
 

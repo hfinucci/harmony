@@ -23,14 +23,12 @@ export class OrgService {
 
     public static async getOrgSongs(id: number, page?: number, limit?: number) {
         let url = BASE_URL + "/api/orgs/" + id + "/songs"
-        console.log("limit: " + limit)
         if (page) {
             url += "?page=" + page
             if (limit)
                 url += "&limit=" + limit
         }
 
-        console.log("url:" + url)
         return await fetch(url, {
             method: "GET",
             headers: {

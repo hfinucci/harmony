@@ -154,7 +154,7 @@ const AlbumPage = () => {
                 <div className="flex flex-col grow gap-2">
                     {org &&
                         <div className="flex justify-end">
-                            <CreateSongModal album={albumId} org={org.id} callback={addSong}/>
+                            <CreateSongModal album={albumId.id} org={org.id} callback={addSong}/>
                         </div>
                     }
                     {songs && songs.songs.length !== 0 ? (

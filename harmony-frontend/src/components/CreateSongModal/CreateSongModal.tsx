@@ -24,6 +24,8 @@ const CreateSongModal = ({
     const [orgs, setOrgs] = useState<Org[]>();
     const [albums, setAlbums] = useState<Album[]>()
     const [orgSelected, setOrgSelected] = useState<number>(org);
+    
+    console.log("album: " + album)
 
     const { t } = useTranslation();
 

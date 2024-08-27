@@ -18,7 +18,7 @@ const SongCard = (
     const nav = useNavigate();
 
     return (
-        <tr>
+        <tr  className={song.org? "grid grid-cols-5 w-full" : "grid grid-cols-4 w-full"}>
             <td className={"text-gray-500"}>{song.name}</td>
             {song.org && <td className={"text-gray-500"}>{song.org}</td>}
             <td className={"text-gray-500"}>{song.created}</td>

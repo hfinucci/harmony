@@ -203,7 +203,7 @@ const OrgPage = () => {
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
-                                <tr>
+                                <tr className="grid grid-cols-4 w-full">
                                     <th
                                         className={
                                             "text-left text-gray-500"
@@ -325,7 +325,7 @@ const OrgPage = () => {
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
-                                <tr>
+                                <tr className="grid grid-cols-4 w-full">
                                     <th
                                         className={
                                             "text-left text-gray-500"

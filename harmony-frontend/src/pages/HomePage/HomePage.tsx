@@ -152,7 +152,7 @@ const HomePage = () => {
                     {songs && songs.songs.length !== 0 ? (
                         <table className="table table-bordered border-separate border-spacing-y-1.5">
                             <thead>
-                                <tr>
+                                <tr className="grid grid-cols-5 w-full">
                                     <th className={"text-left text-gray-500"}>
                                         {t("pages.home.song.name")}
                                     </th>

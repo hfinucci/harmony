@@ -34,40 +34,125 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByOrg(id: number) {
-        const query = {
-            text: 'SELECT * FROM songs WHERE org = $1',
-            values: [id],
+    static async getSongsByOrg(id: number, page: number, limit: number | null) {
+        let offset = null
+        if (limit)
+            offset = (page - 1) * limit;
+
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM songs 
+                WHERE org = $1
+            `,
+            values: [id]
         };
-        const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
-            throw new Error("Songs not found")
-        })();
+
+        const query = {
+            text: 'SELECT * FROM songs WHERE org = $1 LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
+        };
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalSongs = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const songs = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalSongs,
+                songs
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching songs:', error);
+            throw new Error("Songs not found");
+        }
     }
 
-    static async getSinglesByOrg(id: number) {
-        const query = {
-            text: 'SELECT * FROM songs WHERE org = $1 and album is null',
-            values: [id],
+    static async getSinglesByOrg(id: number, page: number, limit: number) {
+        const offset = (page - 1) * limit;
+
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM songs 
+                WHERE org = $1 and album is null
+            `,
+            values: [id]
         };
-        const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
-            throw new Error("Songs not found")
-        })();
+
+        const query = {
+            text: 'SELECT * FROM songs WHERE org = $1 and album is null LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
+        };
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalSingles = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const singles = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalSingles,
+                singles
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching singles:', error);
+            throw new Error("Singles not found");
+        }
     }
 
-    static async getSongsByAlbum(id: number) {
-        const query = {
-            text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC',
-            values: [id],
+    static async getSongsByAlbum(id: number, page: number, limit: number | null) {
+        let offset
+        if (limit)
+            offset = (page - 1) * limit;
+
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM songs 
+                WHERE album = $1
+            `,
+            values: [id]
         };
-        const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
-            throw new Error("Songs not found")
-        })();
+
+        const query = {
+            text: 'SELECT * FROM songs WHERE album = $1 ORDER BY lastmodified DESC LIMIT $2 OFFSET $3',
+            values: [id, limit, offset],
+        };
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalSongs = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const songs = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalSongs,
+                songs
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching songs:', error);
+            throw new Error("Songs not found");
+        }
     }
 
     static async deleteSongById(id: number) {
@@ -82,7 +167,21 @@ export class SongPersistence {
         })();
     }
 
-    static async getSongsByUser(id: number) {
+    static async getSongsByUser(id: number, page: number, limit: number) {
+        const offset = (page - 1) * limit;
+
+        const countQuery = {
+            text: `
+                SELECT COUNT(*)
+                FROM organizations o
+                         INNER JOIN members m
+                                    ON o.id = m.org_id
+                         INNER JOIN songs s on m.org_id = s.org
+                WHERE m.user_id = $1
+            `,
+            values: [id]
+        };
+
         const query = {
             text: `SELECT
                 s.id as id,
@@ -94,13 +193,32 @@ export class SongPersistence {
                 INNER JOIN members m
                 ON o.id = m.org_id
                 INNER JOIN songs s on m.org_id = s.org
-                WHERE m.user_id = $1;`,
-            values: [id],
+                WHERE m.user_id = $1
+                LIMIT $2 OFFSET $3
+                `,
+            values: [id, limit, offset],
         };
-        const result: QueryResult = await dbpool.query(query);
-        const song = result.rows;
-        return song ?? (() => {
-            throw new Error("Songs not found")
-        })();
+
+        try {
+            await dbpool.query('BEGIN');
+
+            const totalResult: QueryResult = await dbpool.query(countQuery)
+            const totalSongs = parseInt(totalResult.rows[0].count, 10);
+
+            const result: QueryResult = await dbpool.query(query);
+            const songs = result.rows;
+
+            await dbpool.query('COMMIT');
+
+            return {
+                totalSongs,
+                songs
+            };
+        } catch (error) {
+            await dbpool.query('ROLLBACK'); // Revierte la transacción en caso de error
+            console.error('Error fetching songs:', error);
+            throw new Error('Error fetching songs');
+        }
+
     }
 }

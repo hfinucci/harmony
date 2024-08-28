@@ -10,27 +10,46 @@ import AddMemberModal from "../../components/AddMemberModal/AddMemberModal";
 import DeleteOrgModal from "../../components/DeleteOrgModal/DeleteOrgModal";
 import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import { useTranslation } from "react-i18next";
-import { Song } from "../SongsPage/SongsPage.tsx";
-import { Org } from "../../types/dtos/Org.ts";
+import {SinglePagination, Song, SongPagination} from "../../types/dtos/Song";
+import { Org } from "../../types/dtos/Org";
 import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
-import {Album} from "../../types/dtos/Album";
+import {Album, AlbumPagination} from "../../types/dtos/Album";
 import AlbumExtendedCard from "../../components/AlbumExtendedCard/AlbumExtendedCard";
 import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
+import Pagination from "../../components/Pagination/Pagination";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
-    const [songs, setSongs] = useState<Song[]>([]);
-    const [singles, setSingles] = useState<Song[]>([]);
-    const [albums, setAlbums] = useState<Album[]>([])
+    const [songs, setSongs] = useState<SongPagination>();
+    const [singles, setSingles] = useState<SinglePagination>();
+    const [albums, setAlbums] = useState<AlbumPagination>()
     const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
     const [loading, setLoading] = useState<boolean>(true);
     const [errorCode, setErrorCode] = useState<number>();
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
+
+    const [albumPage, setAlbumPage] = useState<number>(1);
+
+    const handleAlbumPageChange = (newPage) => {
+        setAlbumPage(newPage);
+    };
+
+    const [songPage, setSongPage] = useState<number>(1);
+
+    const handleSongPageChange = (newPage) => {
+        setSongPage(newPage);
+    };
+
+    const [singlePage, setSinglePage] = useState<number>(1);
+
+    const handleSinglePageChange = (newPage) => {
+        setSinglePage(newPage);
+    };
 
     const orgId = useParams();
 
@@ -75,13 +94,13 @@ const OrgPage = () => {
     }, [org]);
 
     useEffect(() => {
-        OrgService.getOrgAlbums(Number(orgId.id)).then(async (rsp) => {
+        OrgService.getOrgAlbums(Number(orgId.id), albumPage, 3).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
+                const info = await rsp.json() as AlbumPagination;
                 setAlbums(info);
             }
         });
-    }, [org]);
+    }, [org, albumPage]);
 
     useEffect(() => {
         if (org) {
@@ -100,18 +119,18 @@ const OrgPage = () => {
     }
 
     const fetchSongs = async () => {
-        await OrgService.getOrgSongs(Number(orgId.id)).then(async (rsp) => {
+        await OrgService.getOrgSongs(Number(orgId.id), songPage, 5).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
+                const info = await rsp.json() as SongPagination;
                 setSongs(info);
             }
         });
     };
 
     const fetchSingles = async () => {
-        await OrgService.getOrgSingles(Number(orgId.id)).then(async (rsp) => {
+        await OrgService.getOrgSingles(Number(orgId.id), singlePage, 5).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
+                const info = await rsp.json() as SinglePagination;
                 setSingles(info);
             }
         });
@@ -122,21 +141,16 @@ const OrgPage = () => {
             await fetchSongs();
         };
         fetch();
-    }, [org]);
+    }, [org, songPage]);
 
     useEffect(() => {
         const fetch = async () => {
             await fetchSingles();
         };
         fetch();
-    }, [org]);
+    }, [org, singlePage]);
 
     const addSong = (song: any) => {
-        if (songs) {
-            setSongs([...songs, song]);
-        } else {
-            setSongs([song]);
-        }
         nav("/songs/" + song.id)
     };
 
@@ -184,11 +198,11 @@ const OrgPage = () => {
                         </div>
                         <CreateSongModal org={orgId.id} callback={addSong} />
                     </div>
-                    {songs.length !== 0 ? (
+                    {songs && songs.songs.length !== 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
-                                <tr>
+                                <tr className="grid grid-cols-4 w-full">
                                     <th
                                         className={
                                             "text-left text-gray-500"
@@ -220,8 +234,8 @@ const OrgPage = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {songs.map((elem: Song, index: number) => (
-                                    <React.Fragment key={index}>
+                                {songs.songs.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
                                         <tr>
                                             <td
                                                 colSpan={8}
@@ -247,10 +261,12 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
-                            <div>paginación</div>
+                            {songs.totalPages > 1 &&
+                                <Pagination page={songs.page} totalPages={songs.totalPages} onPageChange={handleSongPageChange}/>
+                            }
                         </div>
                     ) : (
-                        songs.length == 0 && (
+                        songs && songs.songs.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.org.songs.none")}
@@ -269,21 +285,23 @@ const OrgPage = () => {
                         <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)} />
                     </div>
 
-                    {albums.length != 0 ? (
+                    {albums && albums.albums.length != 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white">
-                            {albums.map((elem: Album, index: number) => (
+                            {albums.albums.map((elem: Album) => (
                                 <AlbumExtendedCard
-                                    key={index}
+                                    key={elem.id}
                                     id={elem.id}
                                     name={elem.name}
                                     org={elem.org}
                                     image={elem.image}
                                 />
                             ))}
-                            <div>paginación</div>
+                            {albums.totalPages > 1 &&
+                                <Pagination page={albums.page} totalPages={albums.totalPages} onPageChange={handleAlbumPageChange}/>
+                            }
                         </div>
                     ) : (
-                        albums.length == 0 && (
+                        albums && albums.albums.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.org.albums.none")}
@@ -302,11 +320,11 @@ const OrgPage = () => {
                         </div>
                         <CreateSongModal org={orgId.id} callback={addSong} />
                     </div>
-                    {singles.length !== 0 ? (
+                    {singles && singles.singles.length !== 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
-                                <tr>
+                                <tr className="grid grid-cols-4 w-full">
                                     <th
                                         className={
                                             "text-left text-gray-500"
@@ -338,8 +356,8 @@ const OrgPage = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {singles.map((elem: Song, index: number) => (
-                                    <React.Fragment key={index}>
+                                {singles.singles.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
                                         <tr>
                                             <td
                                                 colSpan={8}
@@ -365,10 +383,12 @@ const OrgPage = () => {
                                 ))}
                                 </tbody>
                             </table>
-                            <div>paginación</div>
+                            {singles.totalPages > 1 &&
+                                <Pagination page={singles.page} totalPages={singles.totalPages} onPageChange={handleSinglePageChange}/>
+                            }
                         </div>
                     ) : (
-                        singles.length == 0 && (
+                        singles && singles.singles.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.org.singles.none")}

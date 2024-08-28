@@ -131,7 +131,9 @@ export const TRANSLATIONS_ES = {
                 title: "Álbumes",
                 noneSongs: "¡Oops! No tienes canciones en este álbum",
                 none: "¡Oops! No tienes álbumes en esta organización",
-                see: "Ver álbum completo"
+                see: "Ver álbum completo",
+                moreSongs: "canciones más...",
+                oneSong: "canción más..."
             },
             members: "Integrantes",
         },
@@ -188,6 +190,10 @@ export const TRANSLATIONS_ES = {
         }
     },
     components: {
+        pagination: {
+            page: "Página",
+            of: "de"
+        },
         changePasswordModal: {
             title: "Cambiar contraseña",
             label: "Contraseña nueva",

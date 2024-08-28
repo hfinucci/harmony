@@ -3,11 +3,12 @@ import { IoAddSharp } from "react-icons/io5";
 import { SongService } from "../../service/songService";
 import { useForm } from "react-hook-form";
 import { UserService } from "../../service/userService";
-import { Song } from "../../pages/SongsPage/SongsPage";
+
 import {useTranslation} from "react-i18next";
-import {Album} from "../../types/dtos/Album";
-import {Org} from "../../types/dtos/Org";
+import {Album, AlbumPagination} from "../../types/dtos/Album";
+import {Org, OrgPagination} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
+import {Song} from "../../types/dtos/Song";
 
 const CreateSongModal = ({
     org,
@@ -23,6 +24,8 @@ const CreateSongModal = ({
     const [orgs, setOrgs] = useState<Org[]>();
     const [albums, setAlbums] = useState<Album[]>()
     const [orgSelected, setOrgSelected] = useState<number>(org);
+    
+    console.log("album: " + album)
 
     const { t } = useTranslation();
 
@@ -30,19 +33,18 @@ const CreateSongModal = ({
         const userId = localStorage.getItem("harmony-uid") as string;
         UserService.getUserOrgs(userId).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
-                setOrgs(info);
+                const info = await rsp.json() as OrgPagination;
+                setOrgs(info.orgs);
             }
         });
     }, []);
 
     useEffect(() => {
-        console.log(orgSelected)
         if (orgSelected)
             OrgService.getOrgAlbums(orgSelected).then(async (rsp) => {
                 if (rsp?.status == 200) {
-                    const info = await rsp.json();
-                    setAlbums(info)
+                    const info = await rsp.json() as AlbumPagination;
+                    setAlbums(info.albums)
                 }
             })
     }, [orgSelected]);
@@ -143,7 +145,6 @@ const CreateSongModal = ({
                                                     defaultValue={org == null? 0: org}
                                                     {...register("org", {
                                                         onChange: (o) => {
-                                                            console.log("adentro")
                                                             setOrgSelected(o.target.value)
                                                         },
                                                         required: true,

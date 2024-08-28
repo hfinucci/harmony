@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import server, { logger } from "../server";
 import { OrgService } from "../service/orgService";
-import { handleError, parseId } from "../utils";
+import {handleError, parseId} from "../utils";
 import { parseUpdateOrgRequest } from "../models/updateOrgRequest";
 import { parseCreateOrgRequest } from "../models/createOrgRequest";
 import { MemberService } from "../service/memberService";
@@ -115,8 +115,13 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/songs",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: { page: string, limit: string } }>, rep) => {
             const id = req.params.id;
+            const page = parseInt(req.query.page, 10) || 1;
+            const limit = parseInt(req.query.limit, 10) || null;
+
+            logger.info("Limit for org songs is: " + req.query.limit)
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -124,7 +129,15 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching songs from org with id: " + id);
-                return await SongService.getSongsByOrg(id);
+                const result = await SongService.getSongsByOrg(id, page, limit);
+
+                return rep.send({
+                    page,
+                    totalItems: result.totalSongs,
+                    totalPages: limit? Math.ceil(result.totalSongs / limit) : 1,
+                    songs: result.songs,
+                });
+
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -134,8 +147,11 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/singles",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: { page: string, limit: string } }>, rep) => {
             const id = req.params.id;
+            const page = parseInt(req.query.page, 10) || 1;
+            const limit = parseInt(req.query.limit, 10) || 10;
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -143,7 +159,13 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching songs from org with id: " + id);
-                return await SongService.getSinglesByOrg(id);
+                const result = await SongService.getSinglesByOrg(id, page, limit);
+                return rep.send({
+                    page,
+                    totalItems: result.totalSingles,
+                    totalPages: Math.ceil(result.totalSingles / limit),
+                    singles: result.singles,
+                });
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -153,8 +175,11 @@ export default async function orgController(
 
     server.get(
         BASE_URL + "/:id/albums",
-        async (req: FastifyRequest<{ Params: { id: number } }>, rep) => {
+        async (req: FastifyRequest<{ Params: { id: number }; Querystring: { page: string, limit: string } }>, rep) => {
             const id = req.params.id;
+            const page = parseInt(req.query.page, 10) || 1;
+            const limit = parseInt(req.query.limit, 10) || 10;
+
             try {
                 const user = AuthService.parseJWT(req.headers.authorization);
                 parseId(id);
@@ -162,7 +187,17 @@ export default async function orgController(
                 await checkIfRequesterIsMember(user.person.id, id);
 
                 logger.info("Fetching albums from org with id: " + id);
-                return await AlbumService.getAlbumsByOrg(id);
+                const result = await AlbumService.getAlbumsByOrg(id, page, limit);
+
+                return rep.send({
+                    page,
+                    totalItems: result.totalAlbums,
+                    totalPages: Math.ceil(result.totalAlbums / limit),
+                    albums: result.albums.map((a) => ({
+                        ...a,
+                        image: process.env.IMAGE_PATH + "orgs_images/albums/" + a.id + ".png"
+                    })),
+                });
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

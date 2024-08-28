@@ -3,7 +3,7 @@ import { UserService } from "../../service/userService.ts";
 import { OrgService } from "../../service/orgService.ts";
 import {render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import {Org} from "../../types/dtos/Org.ts";
+import {OrgPagination} from "../../types/dtos/Org.ts";
 import OrgsPage from "./OrgsPage.tsx";
 
 vi.mock("../../service/userService.ts", () => ({
@@ -25,11 +25,16 @@ describe("Test OrgsPage", () => {
 
     test("view orgs", async () => {
         // Mock response
-        const mockOrgs: Org[] = [
-            { id: 1, name: "org1", image: "https://example.com/image1.jpg" },
-            { id: 2, name: "org2", image: "https://example.com/image2.jpg" },
-            { id: 3, name: "org3", image: "https://example.com/image3.jpg" }
-        ];
+        const mockOrgs: OrgPagination = {
+            page: 1,
+            totalItems: 3,
+            totalPages: 1,
+            orgs: [
+                { id: 1, name: "org1", image: "https://example.com/image1.jpg" },
+                { id: 2, name: "org2", image: "https://example.com/image2.jpg" },
+                { id: 3, name: "org3", image: "https://example.com/image3.jpg" }
+            ]
+        };
         const mockOrgMembers = [
             { id: 1, name: "member1" },
             { id: 2, name: "member2" },

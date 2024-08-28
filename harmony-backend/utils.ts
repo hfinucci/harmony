@@ -3,10 +3,6 @@ import {FastifyReply} from "fastify";
 import {AuthenticationError} from "./models/errors/AuthenticationError";
 import {AuthorizationError} from "./models/errors/AuthorizationError";
 
-const Request = z.object({
-    id: z.number(),
-}).strict();
-
 export function parseId(id: any) {
     return z.number().int().positive().parse(+id)
 }

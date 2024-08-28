@@ -131,7 +131,9 @@ export const TRANSLATIONS_EN = {
                 title: "Albums",
                 noneSongs: "Oops! You have no songs in this album",
                 none: "Oops! You have no albums in this organization",
-                see: "See full album"
+                see: "See full album",
+                moreSongs: "more songs...",
+                oneSong: "more song..."
             },
             members: "Members",
         },
@@ -187,6 +189,10 @@ export const TRANSLATIONS_EN = {
         }
     },
     components: {
+        pagination: {
+            page: "Page",
+            of: "of"
+        },
         changePasswordModal: {
             title: "Change password",
             label: "New password",

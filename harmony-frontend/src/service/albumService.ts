@@ -27,8 +27,14 @@ export class AlbumService {
         })
     }
 
-    static async getAlbumSongs(id: number) {
-        return await fetch(BASE_URL + "/api/albums/" + id + "/songs", {
+    static async getAlbumSongs(id: number, page?: number, limit?: number) {
+        let url = BASE_URL + "/api/albums/" + id + "/songs"
+        if (page) {
+            url += "?page=" + page
+            if (limit)
+                url += "&limit=" + limit
+        }
+        return await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -58,16 +64,25 @@ export class AlbumService {
     }
 
     static async editAlbum(id: number, name: string, image: string | null) {
+
+        let body: { image?: string; name: string } = {
+            name: name,
+        };
+
+        if (image) {
+            body = {
+                ...body,
+                image: image
+            };
+        }
+
         return await fetch(BASE_URL + "/api/albums/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string
             },
-            body: JSON.stringify({
-                name: name,
-                image: image,
-            }),
+            body: JSON.stringify(body),
         });
     }
 }

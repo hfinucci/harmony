@@ -24,8 +24,6 @@ const CreateSongModal = ({
     const [orgs, setOrgs] = useState<Org[]>();
     const [albums, setAlbums] = useState<Album[]>()
     const [orgSelected, setOrgSelected] = useState<number>(org);
-    
-    console.log("album: " + album)
 
     const { t } = useTranslation();
 
@@ -66,6 +64,7 @@ const CreateSongModal = ({
     watch();
 
     const onSubmit = async (data: any, e: any) => {
+        e.preventDefault()
         const song = await SongService.createSong(data.name, data.org, data.album);
         if (song?.status == 200) {
             setShowModal(false);
@@ -220,7 +219,7 @@ const CreateSongModal = ({
                                         {errors.album && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t("components.createSongModal.error.org")}
+                                                    {t("components.createSongModal.error.album")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}

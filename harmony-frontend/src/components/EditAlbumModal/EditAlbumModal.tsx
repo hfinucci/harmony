@@ -33,7 +33,7 @@ const EditAlbumModal = ({ album, callback, reloadImage }: EditAlbumModalProps) =
 
     const { t } = useTranslation();
 
-    const onSubmit = async (data: any, e: any) => {
+    const onSubmit = async (data: any) => {
         if (data.name == album.name && !data.image) {
             setShowModal(false);
             return;

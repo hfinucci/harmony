@@ -36,7 +36,6 @@ const EditSongModal = ({ song, callback }: EditSongModalProps) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        console.log("Album: " + song.album)
         if (song.org)
             OrgService.getOrgAlbums(song.org as number).then(async (rsp) => {
                 if (rsp?.status == 200) {

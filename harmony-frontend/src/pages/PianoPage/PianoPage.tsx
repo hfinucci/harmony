@@ -104,11 +104,7 @@ const PianoPage = ({song, enabled}) => {
     useEffect(() => {
         // NO FUNCIONAAAAAAJHSHJDJASJDNJASDGNJKNJK
         const interval = setInterval(() => {
-            console.log("LAST CHORD: ", lastChord)
-            console.log("CURRENT CHORD: ", currentChord)
             if (lastChord !== "" && currentChord !== "" && lastChord == currentChord) {
-                console.log("LAST CHORD: ", lastChord)
-                console.log("CURRENT CHORD: ", currentChord)
                 setCurrentChord("");
             }
         }, 5000);
@@ -247,7 +243,6 @@ const PianoPage = ({song, enabled}) => {
 
     function play(note: Note) {
         const pitch = note.pitch;
-        console.log("Playing pitch: ", pitch)
         switch (note.on) {
             case 144:
                 playPianoOn(note)

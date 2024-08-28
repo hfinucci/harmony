@@ -2,7 +2,6 @@ const BASE_URL = "http://127.0.0.1:3000";
 
 export class MemberService {
     public static async createMembership(email: string, oid: number) {
-        console.log("JWT: " + localStorage.getItem('harmony-jwt'))
         return await fetch(BASE_URL + "/api/members", {
             method: "POST",
             headers: {

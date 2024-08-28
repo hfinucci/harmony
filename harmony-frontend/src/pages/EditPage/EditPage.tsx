@@ -117,7 +117,6 @@ const EditPage = () => {
 
     function gotComposeResponse(data: any) {
         const json : Block[][] = JSON.parse(data)["message"]
-        console.log("blocks setting")
         setBlocks(json)
     }
 

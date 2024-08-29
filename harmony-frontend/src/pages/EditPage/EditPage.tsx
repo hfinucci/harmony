@@ -20,6 +20,7 @@ import "./EditPage.css"
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import {Document, Page, PDFDownloadLink, StyleSheet, Text, View} from '@react-pdf/renderer'
 import Tooltip from "../../components/Tooltip/Tooltip.tsx";
+import EditSongModal from "../../components/EditSongModal/EditSongModal";
 
 
 const EditPage = () => {
@@ -116,7 +117,6 @@ const EditPage = () => {
 
     function gotComposeResponse(data: any) {
         const json : Block[][] = JSON.parse(data)["message"]
-        console.log("blocks setting")
         setBlocks(json)
     }
 
@@ -246,6 +246,10 @@ const EditPage = () => {
         return <ErrorPage code={errorCode} msg={errorMsg}/>;
     }
 
+    const editSong = (song: Song) => {
+        setSong(song);
+    };
+
     return (
         <div className="container h-screen">
             <aside id="sidebar-multi-level-sidebar"
@@ -278,7 +282,10 @@ const EditPage = () => {
             </aside>
             {song &&
                 <div key={songId} className="h-full">
-                    <p className="ml-72 py-5 text-4xl text-fuchsia-800">{song?.name}</p>
+                    <div className="flex flex-row gap-4 content-end">
+                        <p className="ml-72 py-5 text-4xl text-fuchsia-800">{song?.name}</p>
+                        {/*<EditSongModal song={song} callback={editSong}/>*/}
+                    </div>
                     <div className="ml-72 flex justify-between items-center">
                         <ul className=" text-sm font-medium text-center text-fuchsia-500 w-1/2 rounded-lg shadow sm:flex">
                             <li className="w-full focus-within:z-10">
@@ -316,6 +323,7 @@ const EditPage = () => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
+                            <EditSongModal song={song} callback={editSong} />
                             {piano &&
                                 <Tooltip message={t("pages.edit.hidePiano")} margin="top-8">
                                     <button onClick={togglePiano}
@@ -331,17 +339,17 @@ const EditPage = () => {
                                 </Tooltip>
                             }
                             { blocks &&
-                            <PDFDownloadLink document={<Pdf blocks={blocks} />} fileName={song.name ? song.name + ".pdf" : "song.pdf"}>
-                                {({blob, url, loading, error}) =>
-                                    loading ? t("pages.edit.loadingDocument") : (
-                                        <Tooltip message={t("pages.edit.exportPDF")} margin="top-8">
-                                            <button
-                                                className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
-                                                <CgExport/>
-                                            </button>
-                                        </Tooltip>)
-                                }
-                            </PDFDownloadLink>
+                                <PDFDownloadLink document={<Pdf blocks={blocks} />} fileName={song.name ? song.name + ".pdf" : "song.pdf"}>
+                                    {({loading}) =>
+                                        loading ? t("pages.edit.loadingDocument") : (
+                                            <Tooltip message={t("pages.edit.exportPDF")} margin="top-8">
+                                                <button
+                                                    className="flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300">
+                                                    <CgExport/>
+                                                </button>
+                                            </Tooltip>)
+                                    }
+                                </PDFDownloadLink>
                             }
                         </div>
                     </div>

@@ -170,6 +170,7 @@ export const TRANSLATIONS_ES = {
             chordInfo: "Sólo se permite cifrado americano",
             loadingDocument: "Cargando documento...",
             exportPDF: "Exportar a PDF",
+            edit: "Editar canción"
         },
         orgInvitation: {
             loading: "Procesando invitación...",
@@ -266,6 +267,20 @@ export const TRANSLATIONS_ES = {
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
+        editSongModal: {
+            title: "Editar Canción",
+            edit: "Editar",
+            cancel: "Cancelar",
+            error: {
+                name: "El nombre de la canción debe tener menos de 50 caracteres",
+                edit: "Error al editar la canción, por favor volver a intentar",
+                album: "Seleccionar un álbum válido"
+            },
+            select: {
+                noAlbum: "Sin álbum",
+                single: "Al no seleccionar un álbum, la canción será un single"
+            }
+        },
         createOrgModal: {
             title: "Crear Organización",
             create: "Crear",
@@ -290,7 +305,8 @@ export const TRANSLATIONS_ES = {
             button: "Agregar Canción",
             error: {
                 name: "El nombre de la canción debe tener menos de 50 caracteres",
-                org: "Seleccionar una organización válida"
+                org: "Seleccionar una organización válida",
+                album: "Seleccionar un álbum válido"
             },
         },
         createAlbumModal: {

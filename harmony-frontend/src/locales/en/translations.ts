@@ -170,6 +170,7 @@ export const TRANSLATIONS_EN = {
             chordInfo: "Only accepts letter notation",
             loadingDocument: "Loading document...",
             exportPDF: "Export to PDF",
+            edit: "Edit song"
         },
         orgInvitation: {
             loading: "Processing invitation...",
@@ -265,6 +266,20 @@ export const TRANSLATIONS_EN = {
                 image: "Error uploading image, the size must be less than 4MB",
             },
         },
+        editSongModal: {
+            title: "Edit Song",
+            edit: "Edit",
+            cancel: "Cancel",
+            error: {
+                name: "The name of the song cannot be longer than 50 characters",
+                edit: "Error editing song, please try again",
+                album: "Select a valid album"
+            },
+            select: {
+                noAlbum: "Without album",
+                single: "By not selecting an album, the song will be a single"
+            }
+        },
         createOrgModal: {
             title: "Create Organization",
             create: "Create",
@@ -289,7 +304,8 @@ export const TRANSLATIONS_EN = {
             button: "Add Song",
             error: {
                 name: "The name of the song cannot be longer than 50 characters",
-                org: "Please select a valid organization"
+                org: "Please select a valid organization",
+                album: "Please select a valid album"
             },
         },
         createAlbumModal: {

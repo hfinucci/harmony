@@ -19,11 +19,11 @@ function Search({ onSearch, setSearchEntities }) {
     return (
         <input
             type="text"
-            autoComplete='off'
+            autoComplete="off"
             onBlur={() => setSearchEntities([])}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search here..."
-            className="py-1 px-6 border mt-3 mb-3 border-fuchsia-900 rounded-full"
+            className="py-1 px-6 mt-3 mb-3 rounded-full ring-1 ring-gray-300 focus:ring-violet-500"
         />
     )
 }

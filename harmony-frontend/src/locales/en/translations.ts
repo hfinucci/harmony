@@ -12,6 +12,8 @@ export const TRANSLATIONS_EN = {
             noOrgs: "Oops! You don't have any organizations yet",
             recentSongs: "Recent Songs",
             noSongs: "Oops! You don't have any songs yet",
+            myAlbums: "My Albums",
+            noAlbums: "Oops! You don't have any albums yet",
             song: {
                 name: "Name",
                 org: "Organization",
@@ -127,6 +129,18 @@ export const TRANSLATIONS_EN = {
                 actions: "Actions",
                 none: "Oops! You have no songs",
             },
+            singles: {
+                title: "Singles",
+                none: "Oops! You have no singles",
+            },
+            albums: {
+                title: "Albums",
+                noneSongs: "Oops! You have no songs in this album",
+                none: "Oops! You have no albums in this organization",
+                see: "See full album",
+                moreSongs: "more songs...",
+                oneSong: "more song..."
+            },
             members: "Members",
         },
         album: {
@@ -162,6 +176,7 @@ export const TRANSLATIONS_EN = {
             chordInfo: "Only accepts letter notation",
             loadingDocument: "Loading document...",
             exportPDF: "Export to PDF",
+            edit: "Edit song"
         },
         orgInvitation: {
             loading: "Processing invitation...",
@@ -181,6 +196,10 @@ export const TRANSLATIONS_EN = {
         }
     },
     components: {
+        pagination: {
+            page: "Page",
+            of: "of"
+        },
         changePasswordModal: {
             title: "Change password",
             label: "New password",
@@ -253,6 +272,20 @@ export const TRANSLATIONS_EN = {
                 image: "Error uploading image, the size must be less than 4MB",
             },
         },
+        editSongModal: {
+            title: "Edit Song",
+            edit: "Edit",
+            cancel: "Cancel",
+            error: {
+                name: "The name of the song cannot be longer than 50 characters",
+                edit: "Error editing song, please try again",
+                album: "Select a valid album"
+            },
+            select: {
+                noAlbum: "Without album",
+                single: "By not selecting an album, the song will be a single"
+            }
+        },
         createOrgModal: {
             title: "Create Organization",
             create: "Create",
@@ -267,13 +300,18 @@ export const TRANSLATIONS_EN = {
         createSongModal: {
             title: "Create Song",
             name: "Name",
-            select: "Select an organization",
+            select: {
+                org: "Select an organization",
+                album: "Select an album",
+                noAlbum: "By not selecting an album, a single will be created"
+            },
             create: "Create",
             cancel: "Cancel",
             button: "Add Song",
             error: {
                 name: "The name of the song cannot be longer than 50 characters",
-                org: "Please select a valid organization"
+                org: "Please select a valid organization",
+                album: "Please select a valid album"
             },
         },
         createAlbumModal: {

@@ -12,6 +12,8 @@ export const TRANSLATIONS_ES = {
             noOrgs: "¡Oops! No tienes ninguna organización",
             recentSongs: "Canciones Recientes",
             noSongs: "¡Oops! No tienes ninguna canción",
+            myAlbums: "Mis Álbumes",
+            noAlbums: "¡Oops! No tienes ningún álbum",
             song: {
                 name: "Nombre",
                 org: "Organización",
@@ -127,6 +129,18 @@ export const TRANSLATIONS_ES = {
                 actions: "Acciones",
                 none: "¡Oops! No tienes canciones",
             },
+            singles: {
+                title: "Singles",
+                none: "¡Oops! No tienes singles",
+            },
+            albums: {
+                title: "Álbumes",
+                noneSongs: "¡Oops! No tienes canciones en este álbum",
+                none: "¡Oops! No tienes álbumes en esta organización",
+                see: "Ver álbum completo",
+                moreSongs: "canciones más...",
+                oneSong: "canción más..."
+            },
             members: "Integrantes",
         },
         album: {
@@ -162,6 +176,7 @@ export const TRANSLATIONS_ES = {
             chordInfo: "Sólo se permite cifrado americano",
             loadingDocument: "Cargando documento...",
             exportPDF: "Exportar a PDF",
+            edit: "Editar canción"
         },
         orgInvitation: {
             loading: "Procesando invitación...",
@@ -182,6 +197,10 @@ export const TRANSLATIONS_ES = {
         }
     },
     components: {
+        pagination: {
+            page: "Página",
+            of: "de"
+        },
         changePasswordModal: {
             title: "Cambiar contraseña",
             label: "Contraseña nueva",
@@ -254,6 +273,20 @@ export const TRANSLATIONS_ES = {
                 image: "Error al subir la imagen, el tamaño máximo es 4MB",
             },
         },
+        editSongModal: {
+            title: "Editar Canción",
+            edit: "Editar",
+            cancel: "Cancelar",
+            error: {
+                name: "El nombre de la canción debe tener menos de 50 caracteres",
+                edit: "Error al editar la canción, por favor volver a intentar",
+                album: "Seleccionar un álbum válido"
+            },
+            select: {
+                noAlbum: "Sin álbum",
+                single: "Al no seleccionar un álbum, la canción será un single"
+            }
+        },
         createOrgModal: {
             title: "Crear Organización",
             create: "Crear",
@@ -268,13 +301,18 @@ export const TRANSLATIONS_ES = {
         createSongModal: {
             title: "Crear Canción",
             name: "Nombre",
-            select: "Seleccionar una organización",
+            select: {
+                org: "Seleccionar una organización",
+                album: "Seleccionar un álbum",
+                noAlbum: "Al no seleccionar un álbum, se creara un single"
+            },
             create: "Crear",
             cancel: "Cancelar",
             button: "Agregar Canción",
             error: {
                 name: "El nombre de la canción debe tener menos de 50 caracteres",
-                org: "Seleccionar una organización válida"
+                org: "Seleccionar una organización válida",
+                album: "Seleccionar un álbum válido"
             },
         },
         createAlbumModal: {

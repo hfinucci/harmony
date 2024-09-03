@@ -20,14 +20,18 @@ export class MemberService {
         return await MemberPersistence.getMembersByOrg(org);
     }
 
-    public static async getOrgsByUser(user: number) {
-        return (await MemberPersistence.getOrgsByUser(user)).map(
+    public static async getOrgsByUser(user: number, page: number, limit: number) {
+        const result = await MemberPersistence.getOrgsByUser(user, page, limit)
+
+        result.orgs = result.orgs.map(
             (org) =>
                 ({
-                ...org,
-                image: process.env.IMAGE_PATH + "orgs_images/orgs/" + org.id + ".png"
-            })
-        );
+                    ...org,
+                    image: process.env.IMAGE_PATH + "orgs_images/orgs/" + org.id + ".png"
+                })
+        )
+
+        return result
     }
 
     public static async getMembership(user: number, org: number) {

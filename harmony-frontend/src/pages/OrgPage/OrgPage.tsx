@@ -3,28 +3,53 @@ import {useNavigate, useParams} from "react-router-dom";
 import SongCard from "../../components/SongCard/SongCard";
 import { OrgService } from "../../service/orgService";
 import { FaMusic } from "react-icons/fa";
+import { RiAlbumFill } from "react-icons/ri";
 import CreateSongModal from "../../components/CreateSongModal/CreateSongModal";
 import AddMemberModal from "../../components/AddMemberModal/AddMemberModal";
 
 import DeleteOrgModal from "../../components/DeleteOrgModal/DeleteOrgModal";
 import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import { useTranslation } from "react-i18next";
-import { Song } from "../SongsPage/SongsPage.tsx";
-import { Org } from "../../types/dtos/Org.ts";
+import {SinglePagination, Song, SongPagination} from "../../types/dtos/Song";
+import { Org } from "../../types/dtos/Org";
 import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
+import {Album, AlbumPagination} from "../../types/dtos/Album";
+import AlbumExtendedCard from "../../components/AlbumExtendedCard/AlbumExtendedCard";
+import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
+import Pagination from "../../components/Pagination/Pagination";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
     const [members, setMembers]: any = useState();
-    const [songs, setSongs] = useState<Song[]>([]);
+    const [songs, setSongs] = useState<SongPagination>();
+    const [singles, setSingles] = useState<SinglePagination>();
+    const [albums, setAlbums] = useState<AlbumPagination>()
     const [image, setImage] = useState(ORG_IMAGE_DEFAULT);
     const [loading, setLoading] = useState<boolean>(true);
     const [errorCode, setErrorCode] = useState<number>();
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [imageReload, setImageReload] = useState<number>(Date.now())
+
+    const [albumPage, setAlbumPage] = useState<number>(1);
+
+    const handleAlbumPageChange = (newPage) => {
+        setAlbumPage(newPage);
+    };
+
+    const [songPage, setSongPage] = useState<number>(1);
+
+    const handleSongPageChange = (newPage) => {
+        setSongPage(newPage);
+    };
+
+    const [singlePage, setSinglePage] = useState<number>(1);
+
+    const handleSinglePageChange = (newPage) => {
+        setSinglePage(newPage);
+    };
 
     const orgId = useParams();
 
@@ -69,6 +94,15 @@ const OrgPage = () => {
     }, [org]);
 
     useEffect(() => {
+        OrgService.getOrgAlbums(Number(orgId.id), albumPage, 3).then(async (rsp) => {
+            if (rsp?.status == 200) {
+                const info = await rsp.json() as AlbumPagination;
+                setAlbums(info);
+            }
+        });
+    }, [org, albumPage]);
+
+    useEffect(() => {
         if (org) {
             fetchImage(org.image);
         }
@@ -85,10 +119,19 @@ const OrgPage = () => {
     }
 
     const fetchSongs = async () => {
-        await OrgService.getOrgSongs(Number(orgId.id)).then(async (rsp) => {
+        await OrgService.getOrgSongs(Number(orgId.id), songPage, 5).then(async (rsp) => {
             if (rsp?.status == 200) {
-                const info = await rsp.json();
+                const info = await rsp.json() as SongPagination;
                 setSongs(info);
+            }
+        });
+    };
+
+    const fetchSingles = async () => {
+        await OrgService.getOrgSingles(Number(orgId.id), singlePage, 5).then(async (rsp) => {
+            if (rsp?.status == 200) {
+                const info = await rsp.json() as SinglePagination;
+                setSingles(info);
             }
         });
     };
@@ -98,14 +141,16 @@ const OrgPage = () => {
             await fetchSongs();
         };
         fetch();
-    }, [org]);
+    }, [org, songPage]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            await fetchSingles();
+        };
+        fetch();
+    }, [org, singlePage]);
 
     const addSong = (song: any) => {
-        if (songs) {
-            setSongs([...songs, song]);
-        } else {
-            setSongs([song]);
-        }
         nav("/songs/" + song.id)
     };
 
@@ -153,75 +198,200 @@ const OrgPage = () => {
                         </div>
                         <CreateSongModal org={orgId.id} callback={addSong} />
                     </div>
-                    {songs.length !== 0 ? (
+                    {songs && songs.songs.length !== 0 ? (
                         <div className=" flex flex-col rounded-lg bg-white p-10">
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <thead>
-                                    <tr>
-                                        <th
-                                            className={
-                                                "text-left text-gray-500"
-                                            }
-                                        >
-                                            {t("pages.org.songs.name")}
-                                        </th>
-                                        <th
-                                            className={
-                                                "text-left text-gray-500"
-                                            }
-                                        >
-                                            {t("pages.org.songs.creationDate")}
-                                        </th>
-                                        <th
-                                            className={
-                                                "text-left text-gray-500"
-                                            }
-                                        >
-                                            {t("pages.org.songs.lastModified")}
-                                        </th>
-                                        <th
-                                            className={
-                                                "text-left text-gray-500"
-                                            }
-                                        >
-                                            {t("pages.org.songs.actions")}
-                                        </th>
-                                    </tr>
+                                <tr className="grid grid-cols-4 w-full">
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.name")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.creationDate")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.lastModified")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.actions")}
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {songs.map((elem: Song, index: number) => (
-                                        <React.Fragment key={index}>
-                                            <tr>
-                                                <td
-                                                    colSpan={8}
-                                                    style={{
-                                                        backgroundColor:
-                                                            "#f0f0f0",
-                                                    }}
-                                                />
-                                            </tr>
-                                            <SongCard
-                                                song={
-                                                    {
-                                                        name: elem.name,
-                                                        id: elem.id,
-                                                        created: elem.created,
-                                                        lastmodified:
-                                                            elem.lastmodified,
-                                                    } as Song
-                                                }
-                                                fetchSongs={fetchSongs}
+                                {songs.songs.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
+                                        <tr>
+                                            <td
+                                                colSpan={8}
+                                                style={{
+                                                    backgroundColor:
+                                                        "#f0f0f0",
+                                                }}
                                             />
-                                        </React.Fragment>
-                                    ))}
+                                        </tr>
+                                        <SongCard
+                                            song={
+                                                {
+                                                    name: elem.name,
+                                                    id: elem.id,
+                                                    created: elem.created,
+                                                    lastmodified:
+                                                    elem.lastmodified,
+                                                } as Song
+                                            }
+                                            fetchSongs={fetchSongs}
+                                        />
+                                    </React.Fragment>
+                                ))}
                                 </tbody>
                             </table>
+                            {songs.totalPages > 1 &&
+                                <Pagination page={songs.page} totalPages={songs.totalPages} onPageChange={handleSongPageChange}/>
+                            }
                         </div>
                     ) : (
-                        songs.length == 0 && (
+                        songs && songs.songs.length == 0 && (
                             <div className="flex items-center justify-center p-4 md:p-5">
                                 <h1 className="text-2xl text-fuchsia-950">
                                     {t("pages.org.songs.none")}
+                                </h1>
+                            </div>
+                        )
+                    )}
+
+                    <div className="flex justify-between mt-5">
+                        <div className="flex items-center gap-3">
+                            <RiAlbumFill className="text-2xl text-fuchsia-950" />
+                            <h1 className="text-2xl text-fuchsia-950 font-semibold">
+                                {t("pages.org.albums.title")}
+                            </h1>
+                        </div>
+                        <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)} />
+                    </div>
+
+                    {albums && albums.albums.length != 0 ? (
+                        <div className=" flex flex-col rounded-lg bg-white">
+                            {albums.albums.map((elem: Album) => (
+                                <AlbumExtendedCard
+                                    key={elem.id}
+                                    id={elem.id}
+                                    name={elem.name}
+                                    org={elem.org}
+                                    image={elem.image}
+                                />
+                            ))}
+                            {albums.totalPages > 1 &&
+                                <Pagination page={albums.page} totalPages={albums.totalPages} onPageChange={handleAlbumPageChange}/>
+                            }
+                        </div>
+                    ) : (
+                        albums && albums.albums.length == 0 && (
+                            <div className="flex items-center justify-center p-4 md:p-5">
+                                <h1 className="text-2xl text-fuchsia-950">
+                                    {t("pages.org.albums.none")}
+                                </h1>
+                            </div>
+                        )
+                    )
+                    }
+
+                    <div className="flex justify-between mt-5">
+                        <div className="flex items-center gap-3">
+                            <FaMusic className="text-2xl text-fuchsia-950" />
+                            <h1 className="text-2xl text-fuchsia-950 font-semibold">
+                                {t("pages.org.singles.title")}
+                            </h1>
+                        </div>
+                        <CreateSongModal org={orgId.id} callback={addSong} />
+                    </div>
+                    {singles && singles.singles.length !== 0 ? (
+                        <div className=" flex flex-col rounded-lg bg-white p-10">
+                            <table className="table table-bordered border-separate border-spacing-y-1.5">
+                                <thead>
+                                <tr className="grid grid-cols-4 w-full">
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.name")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.creationDate")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.lastModified")}
+                                    </th>
+                                    <th
+                                        className={
+                                            "text-left text-gray-500"
+                                        }
+                                    >
+                                        {t("pages.org.songs.actions")}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {singles.singles.map((elem: Song) => (
+                                    <React.Fragment key={elem.id}>
+                                        <tr>
+                                            <td
+                                                colSpan={8}
+                                                style={{
+                                                    backgroundColor:
+                                                        "#f0f0f0",
+                                                }}
+                                            />
+                                        </tr>
+                                        <SongCard
+                                            song={
+                                                {
+                                                    name: elem.name,
+                                                    id: elem.id,
+                                                    created: elem.created,
+                                                    lastmodified:
+                                                    elem.lastmodified,
+                                                } as Song
+                                            }
+                                            fetchSongs={fetchSingles}
+                                        />
+                                    </React.Fragment>
+                                ))}
+                                </tbody>
+                            </table>
+                            {singles.totalPages > 1 &&
+                                <Pagination page={singles.page} totalPages={singles.totalPages} onPageChange={handleSinglePageChange}/>
+                            }
+                        </div>
+                    ) : (
+                        singles && singles.singles.length == 0 && (
+                            <div className="flex items-center justify-center p-4 md:p-5">
+                                <h1 className="text-2xl text-fuchsia-950">
+                                    {t("pages.org.singles.none")}
                                 </h1>
                             </div>
                         )
@@ -235,22 +405,22 @@ const OrgPage = () => {
                         {members && (
                             <table className="table table-bordered border-separate border-spacing-y-1.5">
                                 <tbody>
-                                    {members.map((elem: any, index: number) => (
-                                        <React.Fragment key={index}>
-                                            <tr>
-                                                <td>{elem.name}</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    colSpan={8}
-                                                    style={{
-                                                        backgroundColor:
-                                                            "#f0f0f0",
-                                                    }}
-                                                />
-                                            </tr>
-                                        </React.Fragment>
-                                    ))}
+                                {members.map((elem: any, index: number) => (
+                                    <React.Fragment key={index}>
+                                        <tr>
+                                            <td>{elem.name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                colSpan={8}
+                                                style={{
+                                                    backgroundColor:
+                                                        "#f0f0f0",
+                                                }}
+                                            />
+                                        </tr>
+                                    </React.Fragment>
+                                ))}
                                 </tbody>
                             </table>
                         )}

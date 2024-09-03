@@ -1,24 +1,26 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { OrgService } from "../../service/orgService";
-import { Org } from "../../types/dtos/Org";
-import { toBase64 } from "../../utils";
+import {Album, AlbumPagination} from "../../types/dtos/Album";
+import {Song} from "../../types/dtos/Song";
+import {SongService} from "../../service/songService";
+import {OrgService} from "../../service/orgService";
+import Tooltip from "../Tooltip/Tooltip";
 
-interface EditOrgModalProps {
-    org: Org;
-    callback: (org: Org) => void;
-    reloadImage:  React.Dispatch<React.SetStateAction<number>>;
+interface EditSongModalProps {
+    song: Song;
+    callback: (song: Song) => void
 }
 
-const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
+const EditSongModal = ({ song, callback }: EditSongModalProps) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
+    const [albums, setAlbums] = useState<AlbumPagination>();
 
-    type EditOrgFormData = {
+    type EditSongFormData = {
         name: string;
-        image: FileList;
+        album: number;
     };
 
     const {
@@ -27,19 +29,29 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
         watch,
         formState: { errors },
         reset
-    } = useForm<EditOrgFormData>();
+    } = useForm<EditSongFormData>();
 
     watch();
 
     const { t } = useTranslation();
 
+    useEffect(() => {
+        if (song.org)
+            OrgService.getOrgAlbums(song.org as number).then(async (rsp) => {
+                if (rsp?.status == 200) {
+                    const info = await rsp.json() as AlbumPagination;
+                    setAlbums(info)
+                }
+            })
+    }, []);
+
     const onSubmit = async (data: any, e: any) => {
-        if (data.name == org.name && !data.image) {
+        e.preventDefault()
+        if (data.name == song.name && data.album == song.album) {
             setShowModal(false);
             return;
         }
-        const image = data.image[0] ? await toBase64(data.image[0]) : null;
-        const edit = await OrgService.editOrg(org.id, data.name, image);
+        const edit = await SongService.editSong(song.id, data.name, data.album);
         if (edit?.status == 200) {
             setShowModal(false);
             edit.json().then((rsp) => {
@@ -47,23 +59,19 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                 callback(rsp);
             });
 
-            if (image != null) {
-                reloadImage(Date.now())
-            }
-        } else setError(t("components.editOrgModal.error.edit"));
+        } else setError(t("components.editSongModal.error.edit"));
     };
 
     return (
         <>
-            <button
-                aria-label="edit org"
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="bg-white w-fit h-fit flex items-center gap-2 text-fuchsia-950 hover:bg-fuchsia-950 hover:text-white border border-fuchsia-950 py-1 px-4 rounded-full"
-            >
-                <FaRegEdit />
-                {t("pages.orgs.edit")}
-            </button>
+            <Tooltip message={t("pages.edit.edit")} margin="top-8">
+                <button onClick={() => setShowModal(true)}
+                        className={!showModal ?
+                            "flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-100 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"
+                            : "flex text-xl text-fuchsia-950 rounded-full bg-fuchsia-300 h-10 w-10 justify-center items-center hover:bg-fuchsia-300"
+                        }>
+                    <FaRegEdit /></button>
+            </Tooltip>
             {showModal && (
                 <>
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-10 transition-opacity"></div>
@@ -75,7 +83,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                             <div className="relative bg-white rounded-lg shadow">
                                 <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
                                     <h3 className="text-xl text-gray-500 font-light">
-                                        {t("components.editOrgModal.title")}
+                                        {t("components.editSongModal.title")}
                                     </h3>
                                 </div>
                                 <div className="p-4 md:p-5">
@@ -87,7 +95,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                                             <input
                                                 type="text"
                                                 id="name"
-                                                defaultValue={org.name}
+                                                defaultValue={song.name}
                                                 {...register("name", {
                                                     required: true,
                                                     maxLength: 50,
@@ -100,7 +108,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {t(
-                                                        "components.editOrgModal.error.name"
+                                                        "components.editSongModal.error.name"
                                                     )}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
@@ -108,25 +116,46 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                                                 </p>
                                             </>
                                         )}
-                                        <label className="block mb-2 text-sm font-medium text-fuchsia-950">
-                                            {t(
-                                                "components.editOrgModal.upload"
-                                            )}
-                                        </label>
-                                        <input
-                                            className="block w-full text-sm text-fuchsia-950 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:bg-fuchsia-400"
-                                            aria-describedby="user_avatar_help"
-                                            id="user_avatar"
-                                            type="file"
-                                            accept="image/*"
-                                            {...register("image")}
-                                        />
-                                        {errors.image && (
+                                        {albums && albums.albums.length != 0 && (
+                                            <div>
+                                                <select
+                                                    id="name"
+                                                    data-testid="create-song-org"
+                                                    defaultValue={song.album? song.album : 0}
+                                                    {...register("album", {
+                                                        required: true,
+                                                        min: 0,
+                                                    })}
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                    required
+                                                >
+                                                    {albums.albums.map((a: Album, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={a.id}
+                                                            label={a.name}
+                                                        />
+                                                    ))}
+                                                    <option
+                                                        className="text-gray-500"
+                                                        value={0}
+                                                        label={
+                                                            t("components.editSongModal.select.noAlbum")
+                                                        }
+                                                    />
+
+                                                </select>
+                                                <>
+                                                    <p className="text-gray-500 text-xs pl-2.5">
+                                                        {t("components.editSongModal.select.single")}
+                                                    </p>
+                                                </>
+                                            </div>
+                                        )}
+                                        {errors.album && (
                                             <>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
-                                                    {t(
-                                                        "components.createOrgModal.error.image"
-                                                    )}
+                                                    {t("components.editSongModal.error.album")}
                                                 </p>
                                                 <p className="text-red-500 text-xs col-span-5 col-start-2 mt-2">
                                                     {error}
@@ -142,7 +171,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                                                 className="bg-transparent text-fuchsia-950 border hover:border-fuchsia-950 border-white py-2 px-4 rounded-full"
                                             >
                                                 {t(
-                                                    "components.editOrgModal.cancel"
+                                                    "components.editSongModal.cancel"
                                                 )}
                                             </button>
                                             <button
@@ -150,7 +179,7 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                                                 className="hover:text-white text-fuchsia-950 hover:bg-fuchsia-950 bg-slate-200 py-2 px-4 rounded-full"
                                             >
                                                 {t(
-                                                    "components.editOrgModal.edit"
+                                                    "components.editSongModal.edit"
                                                 )}
                                             </button>
                                         </div>
@@ -165,4 +194,4 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
     );
 };
 
-export default EditOrgModal;
+export default EditSongModal;

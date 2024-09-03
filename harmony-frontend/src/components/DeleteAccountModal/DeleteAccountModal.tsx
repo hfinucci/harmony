@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const DeleteAccountModal = () => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState<string>();
-    const [goToHome, setGoToHome] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -37,7 +36,7 @@ const DeleteAccountModal = () => {
             </button>
             {showModal && (
                 <>
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-10 transition-opacity"></div>
                     <div
                         id="delete-account-modal"
                         tabIndex={-1}

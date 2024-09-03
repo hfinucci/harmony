@@ -73,8 +73,7 @@ export const Navbar = () => {
     return (
         <nav
             className="w-full pr-2 sm:px-4 py-2.5 fixed shadow-md rounded z-10"
-            style={{backgroundColor: "#F9F5FF"}}
-        >
+            style={{ backgroundColor: "#F9F5FF" }}>
             <div className="flex flex-wrap justify-between mx-auto">
                 <Link to="/" className="flex items-center">
                     <img src={logo} alt="logo" className={"mr-3 h-9"}/>

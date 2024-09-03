@@ -1,17 +1,46 @@
 const BASE_URL = "http://127.0.0.1:3000";
 
 export class SongService {
-    public static async createSong(name: string, org: number) {
+    public static async createSong(name: string, org: number, album: number) {
+        let body: { org: number; album?: number; name: string } = {
+            name: name,
+            org: +org,
+        };
+
+        if (album != 0) {
+            body = {
+                ...body, // Propaga las propiedades existentes de 'body'
+                album: +album // Agrega la propiedad 'album' solo si 'album' es diferente de 0
+            };
+        }
         return await fetch(BASE_URL + "/api/songs", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
             },
-            body: JSON.stringify({
-                name: name,
-                org: +org
-            }),
+            body: JSON.stringify(body),
+        })
+    }
+
+    public static async editSong(id: number, name: string, album: number) {
+        let body: { album?: number | null; name: string } = {
+            name: name,
+        };
+
+        if (album >= 0) {
+            body = {
+                ...body, // Propaga las propiedades existentes de 'body'
+                album: album > 0? +album : null // Agrega la propiedad 'album' solo si 'album' es diferente de 0
+            };
+        }
+        return await fetch(BASE_URL + "/api/songs/" + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('harmony-jwt') as string
+            },
+            body: JSON.stringify(body),
         })
     }
 

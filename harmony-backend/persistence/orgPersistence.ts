@@ -1,6 +1,7 @@
 import {dbpool} from './dbConfig';
 import {CreateOrgRequest} from "../models/createOrgRequest";
 import {QueryResult} from "pg";
+import {UserAuth} from "../service/authService";
 
 export class OrgPersistence {
 
@@ -20,6 +21,15 @@ export class OrgPersistence {
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;
+    }
+
+    public static async searchOrgs(input: string, user: UserAuth) {
+        const query = {
+            text: 'select * from members, organizations where members.org_id = organizations.id and name ilike $1 and user_id = $2 LIMIT 3',
+            values: [`%${input}%`, user.person.id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        return result.rows ?? []
     }
 
     static async getOrgById(id: number) {

@@ -1,6 +1,7 @@
 import {dbpool} from './dbConfig';
 import {CreateSongRequest} from "../models/createSongRequest";
 import {QueryResult} from "pg";
+import {Person, UserAuth} from "../service/authService";
 
 export class SongPersistence {
 
@@ -20,6 +21,15 @@ export class SongPersistence {
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;
+    }
+
+    public static async searchSongs(input: string, user: UserAuth) {
+        const query = {
+            text: 'SELECT * FROM songs, members WHERE songs.org = members.org_id AND songs.name ILIKE $1 AND members.user_id = $2 LIMIT 3',
+            values: [`%${input}%`, user.person.id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        return result.rows ?? []
     }
 
     static async getSongById(id: number) {

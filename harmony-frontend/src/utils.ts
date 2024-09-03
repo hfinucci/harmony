@@ -1,5 +1,7 @@
 import {useEffect, useRef} from "react";
 
+export const BASE_URI = "http://127.0.0.1:3000";
+
 export const ORG_IMAGE_DEFAULT =
     "http://localhost:54321/storage/v1/object/public/orgs_images/org-default-image.png";
 

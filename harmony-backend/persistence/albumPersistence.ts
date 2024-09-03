@@ -1,6 +1,7 @@
 import {QueryResult} from "pg";
 import {dbpool} from "./dbConfig";
 import {CreateAlbumRequest} from "../models/createAlbumRequest";
+import {UserAuth} from "../service/authService";
 
 export class AlbumPersistence {
 
@@ -20,6 +21,15 @@ export class AlbumPersistence {
         };
         const result: QueryResult = await dbpool.query(query);
         return result.rows[0] ?? null;
+    }
+
+    public static async searchAlbums(input: string, user: UserAuth) {
+        const query = {
+            text: 'SELECT * FROM albums, members WHERE albums.org = members.org_id AND albums.name ILIKE $1 AND members.user_id = $2 LIMIT 3',
+            values: [`%${input}%`, user.person.id],
+        };
+        const result: QueryResult = await dbpool.query(query);
+        return result.rows ?? []
     }
 
     static async getAlbumById(id: number) {

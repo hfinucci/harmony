@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { FaAngleRight } from 'react-icons/fa';
 
-function ItemComponent({ item }) {
+export interface ItemView {
+    name: string;
+    category: string;
+    id: number;
+}
+
+function SearchItemRow({ item, onClick }) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
-            className="flex flex-col bg-white hover:bg-gray-200 rounded pl-3 pr-3 pb-2 pt-2 transition-colors duration-100 cursor-pointer relative"
+            className="flex flex-col bg-white hover:bg-gray-200 rounded pl-3 pr-3 pb-2 pt-2 transition-colors duration-100 cursor-pointer relative z-50"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => onClick(item)}
         >
             <div className="flex justify-between items-center">
                 <h1 className={"text-lg"}>{item.name}</h1>
@@ -19,4 +26,4 @@ function ItemComponent({ item }) {
     );
 }
 
-export default ItemComponent;
+export default SearchItemRow;

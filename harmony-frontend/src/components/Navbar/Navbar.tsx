@@ -6,8 +6,6 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Search from "../SearchComponent/SearchComponent.tsx";
 import {SearchService} from "../../service/searchService.ts";
-import {Org} from "../../types/dtos/Org.ts";
-import OrgCard from "../OrgCard/OrgCard.tsx";
 import SearchItemRow, {ItemView} from "../SearchItemRow/SearchItemRow.tsx";
 
 export const Navbar = () => {
@@ -46,13 +44,30 @@ export const Navbar = () => {
                 if (Array.isArray(elements)) {
                     elements.forEach(element => {
                         if (element.name) {
-                            result.push({name: element.name, category});
+                            result.push({name: element.name, category, id: element.id});
                         }
                     });
                 }
             }
         }
         return result;
+    }
+
+    function handleEntitySelect(item: ItemView) {
+        setSearchEntities([])
+        const link = buildLink(item)
+        if (!link)
+            return
+        nav(link)
+    }
+
+    function buildLink(item: ItemView): string | undefined {
+        if (!item.id || !item.category)
+            return undefined
+        let category = item.category
+        if (item.category === "organizations")
+            category = "orgs"
+        return `/${category}/${item.id}`
     }
 
     return (
@@ -66,11 +81,11 @@ export const Navbar = () => {
                     <h1>Harmony</h1>
                 </Link>
                 <div className="flex flex-col rounded-xl w-2/12">
-                    <Search onSearch={searchTerm} setSearchEntities={setSearchEntities} />
+                    <Search onSearch={searchTerm} setSearchEntities={setSearchEntities}/>
                     {searchEntities.length > 0 && (
-                        <div className="flex flex-col w-2/12 absolute mt-12 bg-white p-2">
+                        <div className="flex flex-col w-2/12 absolute mt-12 bg-white p-2 z-50">
                             {searchEntities.map((item: ItemView) => (
-                                <SearchItemRow item={item} />
+                                <SearchItemRow item={item} onClick={handleEntitySelect}/>
                             ))}
                         </div>
                     )}

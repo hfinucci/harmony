@@ -131,7 +131,7 @@ const AlbumPage = () => {
                         <div className="h-1/4 w-1/4">
                             <img src={image}  alt="album image" className="shadow-lg rounded"/>
                         </div>
-                        <div className="m-5 flex w-full z-10 justify-between">
+                        <div className="m-5 flex w-full justify-between">
                             <div className="flex flex-col gap-2">
                                 <h1 className="text-start text-5xl text-fuchsia-950 drop-shadow-lg">
                                     {album.name}

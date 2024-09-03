@@ -16,11 +16,20 @@ function Search({ onSearch, setSearchEntities }) {
         return () => clearTimeout(delayDebounceFn)
     }, [searchTerm])
 
+    // Si entendes lo que estoy haciendo aca ignoralo y segui con tu vida
+    function cleanContent() {
+        setTimeout(function(){
+            setSearchEntities([])
+            setSearchTerm('')
+        }, 500);
+    }
+
     return (
         <input
             type="text"
             autoComplete="off"
-            onBlur={() => setSearchEntities([])}
+            value={searchTerm}
+            onBlur={cleanContent}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search here..."
             className="py-1 px-6 mt-3 mb-3 rounded-full ring-1 ring-gray-300 focus:ring-violet-500"

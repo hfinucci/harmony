@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import { FaAngleRight } from 'react-icons/fa';
+import {useTranslation} from "react-i18next";
 
 export interface ItemView {
     name: string;
@@ -9,6 +10,7 @@ export interface ItemView {
 
 function SearchItemRow({ item, onClick }) {
     const [isHovered, setIsHovered] = useState(false);
+    const { t } = useTranslation();
 
     return (
         <div
@@ -21,7 +23,7 @@ function SearchItemRow({ item, onClick }) {
                 <h1 className={"text-lg"}>{item.name}</h1>
                 {isHovered && <FaAngleRight className="text-gray-600 transition-transform duration-100" />}
             </div>
-            <h1 className={"text-sm text-gray-600"}>{item.category}</h1>
+            <h1 className={"text-sm text-gray-600"}>{t("pages.search." + item.category)}</h1>
         </div>
     );
 }

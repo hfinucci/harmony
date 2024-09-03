@@ -21,6 +21,12 @@ export const TRANSLATIONS_EN = {
             },
             more: "See more",
         },
+        search: {
+            placeholder: "Search here...",
+            songs: "songs",
+            albums: "albums",
+            organizations: "organizations",
+        },
         landingPage: {
             guitarists: "Guitarists",
             jazzband: "Jazz Band",

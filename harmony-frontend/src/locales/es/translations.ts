@@ -21,6 +21,12 @@ export const TRANSLATIONS_ES = {
             },
             more: "Ver más",
         },
+        search: {
+            placeholder: "Buscar...",
+            songs: "canciones",
+            albums: "albumes",
+            organizations: "organizaciones",
+        },
         landingPage: {
             guitarists: "Guitarristas",
             jazzband: "Banda de Jazz",

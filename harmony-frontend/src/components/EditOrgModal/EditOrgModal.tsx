@@ -47,9 +47,8 @@ const EditOrgModal = ({ org, callback, reloadImage }: EditOrgModalProps) => {
                 callback(rsp);
             });
 
-            if (image != null) {
-                reloadImage(Date.now())
-            }
+            reloadImage(Date.now())
+
         } else setError(t("components.editOrgModal.error.edit"));
     };
 

@@ -47,9 +47,8 @@ const EditAlbumModal = ({ album, callback, reloadImage }: EditAlbumModalProps) =
                 callback(rsp);
             });
 
-            if (image != null) {
-                reloadImage(Date.now())
-            }
+            reloadImage(Date.now())
+
         } else setError(t("components.editAlbumModal.error.edit"));
     };
 

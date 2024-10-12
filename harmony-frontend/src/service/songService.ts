@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:3000";
+import {BASE_URI} from "../utils.ts";
 
 export class SongService {
     public static async createSong(name: string, org: number, album: number) {
@@ -13,7 +13,7 @@ export class SongService {
                 album: +album // Agrega la propiedad 'album' solo si 'album' es diferente de 0
             };
         }
-        return await fetch(BASE_URL + "/api/songs", {
+        return await fetch(BASE_URI + "/api/songs", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export class SongService {
                 album: album > 0? +album : null // Agrega la propiedad 'album' solo si 'album' es diferente de 0
             };
         }
-        return await fetch(BASE_URL + "/api/songs/" + id, {
+        return await fetch(BASE_URI + "/api/songs/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export class SongService {
     }
 
     public static async getSongById(id: number) {
-        return await fetch(BASE_URL + "/api/songs/" + id, {
+        return await fetch(BASE_URI + "/api/songs/" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export class SongService {
     }
 
     public static async deleteSongs(id: number) {
-        return await fetch(BASE_URL + "/api/songs/" + id, {
+        return await fetch(BASE_URI + "/api/songs/" + id, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

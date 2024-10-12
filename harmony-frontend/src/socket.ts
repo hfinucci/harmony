@@ -1,4 +1,4 @@
 import { io } from 'socket.io-client';
+import {BASE_URI} from "./utils.ts";
 
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://127.0.0.1:3000';
-export const socket = io(URL)
+export const socket = io(BASE_URI)

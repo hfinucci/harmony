@@ -1,9 +1,9 @@
-const BASE_URL = "http://127.0.0.1:3000";
+import {BASE_URI} from "../utils.ts";
 
 export class AlbumService {
 
     static async createAlbum(name: string, org: number, image: string | null) {
-        return await fetch(BASE_URL + "/api/albums", {
+        return await fetch(BASE_URI + "/api/albums", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export class AlbumService {
     }
 
     static async getAlbumById(id: number) {
-        return await fetch(BASE_URL + "/api/albums/" + id, {
+        return await fetch(BASE_URI + "/api/albums/" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export class AlbumService {
     }
 
     static async getAlbumSongs(id: number, page?: number, limit?: number) {
-        let url = BASE_URL + "/api/albums/" + id + "/songs"
+        let url = BASE_URI + "/api/albums/" + id + "/songs"
         if (page) {
             url += "?page=" + page
             if (limit)
@@ -44,7 +44,7 @@ export class AlbumService {
     }
 
     static async deleteAlbum(id: any) {
-        return await fetch(BASE_URL + "/api/albums/" + id, {
+        return await fetch(BASE_URI + "/api/albums/" + id, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export class AlbumService {
     }
 
     static async deleteAlbumCascade(id: any) {
-        return await fetch(BASE_URL + "/api/albums/" + id + "/cascade", {
+        return await fetch(BASE_URI + "/api/albums/" + id + "/cascade", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export class AlbumService {
             };
         }
 
-        return await fetch(BASE_URL + "/api/albums/" + id, {
+        return await fetch(BASE_URI + "/api/albums/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

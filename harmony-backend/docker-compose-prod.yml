@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    ports:
+      - 80:3000
+    expose:
+      - 54322
+      - 54321
+      - 54323
+    env_file:
+      - .env
+    networks:
+      - default
+      - harmony-network
+
+  mongodb:
+    image: mongo:4.4.6
+    networks:
+      - harmony-network
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+
+networks:
+  harmony-network:

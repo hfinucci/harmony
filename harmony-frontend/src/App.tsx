@@ -17,8 +17,6 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import AlbumsPage from "./pages/AlbumsPage/AlbumsPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 
-export const BASE_URL = "http://127.0.0.1:3000";
-
 function App() {
 
     const [auth, setAuth] = useState<boolean>(!!localStorage.getItem("harmony-jwt"))

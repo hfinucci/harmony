@@ -1,12 +1,12 @@
 import {useEffect, useRef} from "react";
 
-export const BASE_URI = "http://127.0.0.1:3000";
+export const BASE_URI = import.meta.env.VITE_API_HOST || "http://127.0.0.1:3000";
 
-export const ORG_IMAGE_DEFAULT =
-    "http://localhost:54321/storage/v1/object/public/orgs_images/org-default-image.png";
+export const ORG_IMAGE_DEFAULT = (import.meta.env.API_HOST || "http://localhost") +
+    ":54321/storage/v1/object/public/orgs_images/org-default-image.png";
 
-export const ALBUM_IMAGE_DEFAULT
-    = "http://localhost:54321/storage/v1/object/public/orgs_images/album-default-image.png";
+export const ALBUM_IMAGE_DEFAULT = (import.meta.env.API_HOST || "http://localhost") +
+    ":54321/storage/v1/object/public/orgs_images/album-default-image.png";
 
 export const toBase64 = (file: File) =>
     new Promise((resolve, reject) => {

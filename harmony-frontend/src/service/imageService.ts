@@ -1,9 +1,9 @@
-const BASE_URL = "http://127.0.0.1:3000";
+import {BASE_URI} from "../utils.ts";
 
 export class ImageService {
 
     public static async getProfileImages() {
-        return await fetch(BASE_URL + "/api/images", {
+        return await fetch(BASE_URI + "/api/images", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

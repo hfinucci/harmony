@@ -1,8 +1,8 @@
-const BASE_URL = "http://127.0.0.1:3000";
+import {BASE_URI} from "../utils.ts";
 
 export class OrgService {
     public static async getOrg(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id, {
+        return await fetch(BASE_URI + "/api/orgs/" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +12,7 @@ export class OrgService {
     }
 
     public static async getOrgMembers(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id + "/members", {
+        return await fetch(BASE_URI + "/api/orgs/" + id + "/members", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export class OrgService {
     }
 
     public static async getOrgSongs(id: number, page?: number, limit?: number) {
-        let url = BASE_URL + "/api/orgs/" + id + "/songs"
+        let url = BASE_URI + "/api/orgs/" + id + "/songs"
         if (page) {
             url += "?page=" + page
             if (limit)
@@ -39,7 +39,7 @@ export class OrgService {
     }
 
     public static async getOrgSingles(id: number, page?: number, limit?: number) {
-        let url = BASE_URL + "/api/orgs/" + id + "/singles"
+        let url = BASE_URI + "/api/orgs/" + id + "/singles"
         if (page) {
             url += "?page=" + page
             if (limit)
@@ -55,7 +55,7 @@ export class OrgService {
     }
 
     public static async getOrgAlbums(id: number, page?: number, limit?: number) {
-        let url = BASE_URL + "/api/orgs/" + id + "/albums"
+        let url = BASE_URI + "/api/orgs/" + id + "/albums"
         if (page) {
             url += "?page=" + page
             if (limit)
@@ -71,7 +71,7 @@ export class OrgService {
     }
 
     public static async deleteOrg(id: number) {
-        return await fetch(BASE_URL + "/api/orgs/" + id, {
+        return await fetch(BASE_URI + "/api/orgs/" + id, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export class OrgService {
                 image: image
             };
         }
-        return await fetch(BASE_URL + "/api/orgs/" + id, {
+        return await fetch(BASE_URI + "/api/orgs/" + id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export class OrgService {
     }
 
     public static async createOrg(name: string, image: string | null) {
-        return await fetch(BASE_URL + "/api/orgs", {
+        return await fetch(BASE_URI + "/api/orgs", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

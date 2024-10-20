@@ -71,6 +71,7 @@ export default async function memberController(fastify: FastifyInstance, opts: a
             parseId(user)
             parseId(org)
 
+            await checkIfRequesterIsMember(loggedUser.person.id, org)
             await checkIfRequesterIsMember(user, org);
 
             logger.info("Deleting membership of user with id " + user + " from org with id " + org);

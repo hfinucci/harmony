@@ -1,10 +1,11 @@
-import {AppendBlock, AppendRow, ComposeUseCase, EditBlock, InitializeRoom} from "./useCases";
+import {AppendBlock, AppendRow, ComposeUseCase, EditBlock, InitializeRoom, DeleteBlock} from "./useCases";
 import {logger} from "../../server";
 
 const useCases = [
     new AppendRow(),
     new AppendBlock(),
     new EditBlock(),
+    new DeleteBlock(),
     new InitializeRoom()
 ];
 

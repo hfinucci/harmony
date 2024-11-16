@@ -106,6 +106,20 @@ export class ComposePersistence {
         }
     }
 
+    public static async deleteLastBlockFromRow(songId: string, row: number): Promise<Block[][] | undefined> {
+        const song = await this.collection.findOne({ _id: new ObjectId(songId) });
+        if (song && song.blocks[row]) {
+            song.blocks[row].pop()
+            if (song.blocks[row].length == 0) {
+                logger.info(`Removed row ${row} from Song ${songId}`);
+                song.blocks.splice(row,1)
+            }
+            await this.collection.updateOne({ _id: new ObjectId(songId) }, { $set: { blocks: song.blocks } });
+            logger.info(`Last block removed from Song ${songId} at row ${row}`);
+            return song.blocks
+        }
+    }
+
     public static async getRowCount(songId: string): Promise<number> {
         const song = await this.collection.findOne({ _id: new ObjectId(songId) });
         if (song) {

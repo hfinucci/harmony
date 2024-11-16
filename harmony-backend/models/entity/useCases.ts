@@ -40,6 +40,14 @@ const InitializeRoomValidator = z.object({
 }).strict();
 export type InitializeRoomRequest = z.infer<typeof InitializeRoomValidator>
 
+const DeleteBlockValidator = z.object({
+    operation: z.string().startsWith("deleteBlock"),
+    songId: z.string(),
+    userId: z.number(),
+    row: z.number(),
+}).strict();
+export type DeleteBlockRequest = z.infer<typeof DeleteBlockValidator>
+
 export interface ComposeUseCase {
     execute: (session: SongSession) => Promise<string>;
     songId: string | undefined;
@@ -167,6 +175,36 @@ export class InitializeRoom implements ComposeUseCase {
     public async updateRowCount(session: SongSession, songId: string) {
         this.request = {operation: "initializeRoom", songId: songId}
         await this.execute(session)
+    }
+}
+
+export class DeleteBlock implements ComposeUseCase {
+    private request: DeleteBlockRequest | undefined;
+    public songId: string | undefined;
+
+    public parse(rawRequest: string): ComposeUseCase | undefined {
+        const response = DeleteBlockValidator.safeParse(rawRequest);
+        if (response.success) {
+            this.request = response.data
+            this.songId = response.data.songId;
+            return this
+        }
+    }
+
+    public async execute(session: SongSession): Promise<string> {
+        await initializeRoomIfNecessary(session, this.request?.songId!)
+        const position = String(this.request?.row!)
+        const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
+        if (!couldLock) {
+            return buildLockedMutexResponse()
+        }
+        const blocks = await ComposePersistence.deleteLastBlockFromRow(this.request?.songId!, this.request?.row!)
+        await session.releaseLock(this.request?.userId!, position)
+        if (blocks) {
+            session.rowCount = blocks?.length
+            return buildOperationResponse(blocks)
+        }
+        return "Error trying to delete row"
     }
 }
 

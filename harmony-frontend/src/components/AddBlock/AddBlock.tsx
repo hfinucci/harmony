@@ -1,6 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import "./AddBlock.css";
-import {useForm} from "react-hook-form";
 import {Block} from "../../types/dtos/Block";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 

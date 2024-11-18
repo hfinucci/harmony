@@ -55,10 +55,11 @@ export class UserService {
     }
 
     public static async changePassword(password: string) {
-        return await fetch(BASE_URI + "/api/auth", {
-            method: "PUT",
+        return await fetch(BASE_URI + "/api/auth/password", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("harmony-jwt") as string,
             },
             body: JSON.stringify({
                 password: password,

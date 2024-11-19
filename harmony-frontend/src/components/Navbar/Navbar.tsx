@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import logo from "../../assets/logo.png";
 import {useTranslation} from "react-i18next";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Search from "../SearchComponent/SearchComponent.tsx";
 import {SearchService} from "../../service/searchService.ts";
@@ -13,6 +13,8 @@ export const Navbar = () => {
     const nav = useNavigate();
     const [image, setImage] = useState<string>(localStorage.getItem("harmony-profile-image") ? localStorage.getItem("harmony-profile-image") : null)
     const [searchEntities, setSearchEntities] = useState<ItemView[]>([])
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dropdownRef = useRef(null);
 
     window.addEventListener('harmony-pi', () => {
         setImage(localStorage.getItem("harmony-profile-image"))
@@ -25,6 +27,9 @@ export const Navbar = () => {
 
         window.dispatchEvent(new Event("harmony"))
         window.dispatchEvent(new Event("harmony-pi"))
+
+        setIsDropdownOpen(false)
+
         nav("/", {replace: true})
     }
 
@@ -69,6 +74,26 @@ export const Navbar = () => {
         return `/${category}/${item.id}`
     }
 
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen)
+    }
+
+    // Close the dropdown if clicking outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        // Add event listener for clicks
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            // Cleanup the event listener
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <nav
             className="w-full pr-2 sm:px-4 py-2.5 fixed shadow-md rounded z-10"
@@ -111,17 +136,17 @@ export const Navbar = () => {
                         </ul>
                     }
                     {image &&
-                        <ul className="flex flex-col content-center p-4 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
-                            <li>
-                                <img id="avatarButton" data-dropdown-toggle="userDropdown"
-                                     data-dropdown-placement="bottom-start"
-                                     className="w-10 h-10 rounded-full cursor-pointer"
-                                     src={image} alt="Profile Image"/>
-
+                        <ul className="flex flex-col content-center p-4 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 relative" ref={dropdownRef}>
+                            <img id="avatarButton"
+                                 onClick={toggleDropdown}
+                                 data-dropdown-placement="bottom-start"
+                                 className="w-10 h-10 rounded-full cursor-pointer"
+                                 src={image} alt="Profile Image"/>
+                            {isDropdownOpen &&
                                 <div id="userDropdown"
-                                     className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                     className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 right-0 mt-10">
                                     <ul className="py-2 text-sm text-fuchsia-950"
-                                        aria-labelledby="avatarButton">
+                                        onClick={() => setIsDropdownOpen(false)}>
                                         <li>
                                             <Link to="/configuration"
                                                   className="block px-4 py-2 hover:bg-gray-100">{t("components.navbar.userMenu.configuration")}</Link>
@@ -132,7 +157,7 @@ export const Navbar = () => {
                                                 className="block py-2 pl-4 w-full text-left text-sm text-fuchsia-950 hover:bg-gray-100">{t("components.navbar.userMenu.logout")}</button>
                                     </div>
                                 </div>
-                            </li>
+                            }
                         </ul>
                     }
                 </div>

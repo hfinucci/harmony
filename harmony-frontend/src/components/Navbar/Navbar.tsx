@@ -1,7 +1,6 @@
 import {Link} from "react-router-dom";
 import logo from "../../assets/logo.png";
 import {useTranslation} from "react-i18next";
-import {FaRegBell} from "react-icons/fa";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Search from "../SearchComponent/SearchComponent.tsx";
@@ -138,9 +137,6 @@ export const Navbar = () => {
                     }
                     {image &&
                         <ul className="flex flex-col content-center p-4 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 relative" ref={dropdownRef}>
-                            <li className="text-fuchsia-950 text-3xl self-center">
-                                <FaRegBell/>
-                            </li>
                             <img id="avatarButton"
                                  onClick={toggleDropdown}
                                  data-dropdown-placement="bottom-start"

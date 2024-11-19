@@ -116,8 +116,23 @@ const EditPage = () => {
     }, 10000)
 
     function gotComposeResponse(data: any) {
-        const json : Block[][] = JSON.parse(data)["message"]
-        setBlocks(json)
+        const updatedBlocks : Block[][] = JSON.parse(data)["message"]
+        setBlocks((prevBlocks) => {
+            if (!prevBlocks) return updatedBlocks;
+
+            const mergedBlocks = [...prevBlocks];
+            updatedBlocks.forEach((row, rowIndex) => {
+                if (!mergedBlocks[rowIndex]) {
+                    mergedBlocks[rowIndex] = row;
+                } else {
+                    row.forEach((block, blockIndex) => {
+                        mergedBlocks[rowIndex][blockIndex] = block;
+                    });
+                }
+            });
+
+            return mergedBlocks;
+        });
     }
 
     function gotContributorsResponse(data: any) {
@@ -144,6 +159,22 @@ const EditPage = () => {
             col: blockIndex,
             lyrics: block.lyrics,
             chord: block.chord
+        }
+        socket.emit('compose', JSON.stringify(body))
+        setBlocks(updatedBlocks);
+    }
+
+    function handleDeleteBlock(rowIndex: number) {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[rowIndex].pop();
+        if (updatedBlocks[rowIndex].length === 0) {
+            updatedBlocks.splice(rowIndex, 1);
+        }
+        const body = {
+            operation: "deleteBlock",
+            songId: song?.composeid,
+            userId: Number(localStorage.getItem("harmony-uid")),
+            row: rowIndex,
         }
         socket.emit('compose', JSON.stringify(body))
         setBlocks(updatedBlocks);
@@ -177,15 +208,6 @@ const EditPage = () => {
         socket.emit('compose', JSON.stringify(body))
         setBlocks([...blocks, [{note: '', lyric: ''}]]);
     };
-
-    function handleDeleteBlock(rowIndex: number, blockIndex: number) {
-        const updatedBlocks = [...blocks];
-        updatedBlocks[rowIndex].splice(blockIndex, 1);
-        if (updatedBlocks[rowIndex].length === 0) {
-            updatedBlocks.splice(rowIndex, 1);
-        }
-        setBlocks(updatedBlocks);
-    }
 
     const styles = StyleSheet.create({
         section: {
@@ -380,12 +402,14 @@ const EditPage = () => {
                                                     blockIndex={blockIndex}
                                                     submit={handleUpdateBlock}
                                                     defaultBlock={block}
-                                                    deleteBlock={handleDeleteBlock}/>
+                                                    deleteBlock={handleDeleteBlock}
+                                                    isLastBlock={blockIndex === row.length - 1}
+                                                />
                                             </div>
                                         ))}
                                         {blocks[rowIndex].length < 4 && (
                                             <button onClick={() => handleAddBlockInRow(rowIndex)}
-                                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300 mt-2">
+                                                    className="flex justify-center items-center border-gray-200 text-gray-200 h-24 w-20 border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300 mt-2 ml-2">
                                                 <IoAddCircleSharp className="h-10 w-10"/>
                                             </button>
                                         )}

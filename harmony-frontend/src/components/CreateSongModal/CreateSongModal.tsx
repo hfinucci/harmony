@@ -65,6 +65,9 @@ const CreateSongModal = ({
 
     const onSubmit = async (data: any, e: any) => {
         e.preventDefault()
+        if (data.album == null) {
+            data.album = 0
+        }
         const song = await SongService.createSong(data.name, data.org, data.album);
         if (song?.status == 200) {
             setShowModal(false);

@@ -210,41 +210,54 @@ const EditPage = () => {
     };
 
     const styles = StyleSheet.create({
-        section: {
-            padding: 2,
-            display: 'flex',
-            flexDirection: 'column',
+        body: {
+            paddingTop: 35,
+            paddingBottom: 65,
+            paddingHorizontal: 35,
         },
         title: {
             fontSize: 32,
-            fontWeight: 'extrabold',
-            padding: 5
+            fontWeight: "extrabold",
+            padding: 5,
+            marginBottom: 10
+        },
+        stanza: {
+            display: "flex",
+            flexDirection: "row",
+            marginBottom: 5,
+            marginRight: 10
+        },
+        row: {
+            display: "flex",
+            flexDirection: "column",
         },
         chord: {
-            borderRadius: '25px',
-            fontWeight: 'bold',
+            borderRadius: "25px",
+            fontWeight: "bold",
             padding: 5,
-            color: 'rgb(74 4 78)',
-            alignSelf: 'flex-start',
-            backgroundColor: 'rgb(245 208 254)',
+            color: "rgb(74 4 78)",
+            alignSelf: "flex-start",
+            backgroundColor: "rgb(245 208 254)",
+            fontSize: 14,
         },
         lyrics: {
             padding: 5,
+            fontSize: 14,
         }
     });
 
 
     const Pdf = ({blocks}: {blocks: Block[][]} | undefined) => (
         <Document>
-            <Page style={styles.section} wrap={false} size="A4">
+            <Page size="A4" style={styles.body}>
                 <Text style={styles.title}>
                     {song?.name}
                 </Text>
-                <div id="song" >
+                <View id="song">
                     {blocks.map((block, index_l) => (
-                        <div key={index_l}>
+                        <View key={index_l} style={styles.stanza}>
                             {block.map((block, index_b) => (
-                                <View key={index_l + "_" + index_b}>
+                                <View key={index_l + "_" + index_b} style={styles.row}>
                                     <Text style={styles.chord}>
                                         {block?.chord}
                                     </Text>
@@ -253,9 +266,9 @@ const EditPage = () => {
                                     </Text>
                                 </View>
                             ))}
-                        </div>
+                        </View>
                     ))}
-                </div>
+                </View>
             </Page>
         </Document>
     );

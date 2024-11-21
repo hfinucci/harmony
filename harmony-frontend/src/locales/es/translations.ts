@@ -204,6 +204,7 @@ export const TRANSLATIONS_ES = {
         changePasswordModal: {
             title: "Cambiar contraseña",
             label: "Contraseña nueva",
+            success: "Contraseña cambiada exitosamente",
             error: {
                 change: "Error al cambiar la contraseña",
                 length: "La contraseña debe tener al menos 8 caracteres",

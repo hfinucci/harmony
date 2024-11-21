@@ -103,16 +103,18 @@ export const Navbar = () => {
                     <img src={logo} alt="logo" className={"mr-3 h-9"}/>
                     <h1>Harmony</h1>
                 </Link>
-                <div className="flex flex-col rounded-xl w-2/12">
-                    <Search onSearch={searchTerm} setSearchEntities={setSearchEntities}/>
-                    {searchEntities.length > 0 && (
-                        <div className="flex flex-col w-2/12 absolute mt-12 bg-white p-2 z-50">
-                            {searchEntities.map((item: ItemView) => (
-                                <SearchItemRow item={item} onClick={handleEntitySelect}/>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                { localStorage.getItem("harmony-jwt") &&
+                    <div className="flex flex-col rounded-xl w-2/12">
+                        <Search onSearch={searchTerm} setSearchEntities={setSearchEntities}/>
+                        {searchEntities.length > 0 && (
+                            <div className="flex flex-col w-2/12 absolute mt-12 bg-white p-2 z-50">
+                                {searchEntities.map((item: ItemView) => (
+                                    <SearchItemRow item={item} onClick={handleEntitySelect}/>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                }
                 <div
                     className="hidden w-full md:block md:w-auto"
                     id="navbar-default"

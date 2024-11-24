@@ -3,6 +3,7 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { UserService } from "../../service/userService";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Bounce, toast } from "react-toastify";
 
 const ChangePasswordModal = () => {
     const [showModal, setShowModal] = useState(false);
@@ -27,6 +28,7 @@ const ChangePasswordModal = () => {
     const submitChangePassword = async (data: ChangePasswordFormData) => {
         const response = await UserService.changePassword(data.password);
         if (response?.status == 200) {
+            toast.success(t("components.changePasswordModal.success"));
             reset()
             setShowModal(false);
         }

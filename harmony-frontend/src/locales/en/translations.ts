@@ -203,6 +203,7 @@ export const TRANSLATIONS_EN = {
         changePasswordModal: {
             title: "Change password",
             label: "New password",
+            success: "Password changed successfully",
             error: {
                 change: "Error changing password",
                 length: "Password must be at least 8 characters long",

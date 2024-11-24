@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../../public/logo.png";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";

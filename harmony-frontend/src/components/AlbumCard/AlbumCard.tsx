@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import "./AlbumCard.css";
 import { useTranslation } from "react-i18next";
-import { ALBUM_IMAGE_DEFAULT } from "../../utils";
+import {BASE64_HEADER, IMAGE_TYPE} from "../../utils";
+import ALBUM_IMAGE_DEFAULT from "../../assets/album-default-image.png";
 import { Album } from "../../types/dtos/Album";
 import {Link} from "react-router-dom";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
+import {ImageService} from "../../service/imageService.ts";
 
 const AlbumCard = (album: Album) => {
     const [org, setOrg] = useState<Org>();
-    const [image, setImage] = useState<string>(album.image);
+    const [image, setImage] = useState<string>(ALBUM_IMAGE_DEFAULT);
 
     const { t } = useTranslation();
 
@@ -21,6 +23,16 @@ const AlbumCard = (album: Album) => {
             }
         })
     }, []);
+
+    useEffect(() => {
+        ImageService.getImage(album.id, IMAGE_TYPE.ALBUM).then(async (rsp) => {
+            if(rsp?.status == 200) {
+                const img = await rsp.json();
+                setImage(BASE64_HEADER + img.image)
+            }
+        })
+    }, [album.id]);
+
     return (
         <Link
             to={`/albums/${album.id}`}
@@ -29,10 +41,7 @@ const AlbumCard = (album: Album) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={image + "?reload=" + Date.now()}
-                    onError={() => {
-                        setImage(ALBUM_IMAGE_DEFAULT);
-                    }}
+                    src={image}
                     alt="album image"
                 />
             </div>

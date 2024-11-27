@@ -8,6 +8,15 @@ export const ORG_IMAGE_DEFAULT = (import.meta.env.API_HOST || "http://localhost"
 export const ALBUM_IMAGE_DEFAULT = (import.meta.env.API_HOST || "http://localhost") +
     ":54321/storage/v1/object/public/orgs_images/album-default-image.png";
 
+export const IMAGE_TYPE = {
+    ORG: "orgs",
+    ALBUM: "albums"
+};
+
+export const PROFILE_IMAGES_PATH = "../../../public/";
+
+export const BASE64_HEADER = "data:image/png;base64,";
+
 export const toBase64 = (file: File) =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();

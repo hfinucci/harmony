@@ -3,8 +3,21 @@ import {FastifyReply} from "fastify";
 import {AuthenticationError} from "./models/errors/AuthenticationError";
 import {AuthorizationError} from "./models/errors/AuthorizationError";
 
+export const PROFILE_IMAGES = [
+    "cow.png",
+    "dolphin.png",
+    "giraffe.png",
+    "leopard.png",
+    "lion.png",
+    "swan.png"
+];
+
 export function parseId(id: any) {
     return z.number().int().positive().parse(+id)
+}
+
+export function parseType(type: any) {
+    return z.string().parse(type)
 }
 
 export function handleError(err: any, rep: FastifyReply) {

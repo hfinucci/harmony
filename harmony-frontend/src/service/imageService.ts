@@ -12,8 +12,8 @@ export class ImageService {
         });
     }
 
-    public static async getImage(url: string) {
-        return await fetch(url, {
+    public static async getImage(id: number, type: string) {
+        return await fetch(BASE_URI + "/api/images/" + id + "?type=" + type, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

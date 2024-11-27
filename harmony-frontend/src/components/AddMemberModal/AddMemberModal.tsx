@@ -7,6 +7,7 @@ import {MemberService} from "../../service/memberService";
 
 import { useNavigate } from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {PROFILE_IMAGES_PATH} from "../../utils.ts";
 
 const AddMemberModal = ({org}) => {
     const [showModal, setShowModal] = useState(false);
@@ -117,7 +118,7 @@ const AddMemberModal = ({org}) => {
                                                             <div className="flex items-center">
                                                                 <div className="flex-shrink-0">
                                                                     <img className="w-8 h-8 rounded-full"
-                                                                         src={member.image}
+                                                                         src={PROFILE_IMAGES_PATH + member.image}
                                                                          alt="Profile Image"/>
                                                                 </div>
                                                                 <div className="flex-1 min-w-0 ms-4">

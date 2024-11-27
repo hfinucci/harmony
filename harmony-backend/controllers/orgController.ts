@@ -71,13 +71,7 @@ export default async function orgController(
 
                 await checkIfRequesterIsMember(user.person.id, id)
 
-                return {
-                    ...org,
-                    image:
-                        process.env.IMAGE_PATH + "orgs_images/orgs/" +
-                        id +
-                        ".png",
-                };
+                return org;
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -100,12 +94,7 @@ export default async function orgController(
                 if (!members.some((member) => member.id === user.person.id)) {
                     throw new AuthorizationError("User is not a member of this organization");
                 }
-                return members.map((member) => ({
-                    ...member,
-                    image:
-                        process.env.IMAGE_PATH  + "profile_images/" +
-                        member.image,
-                }));
+                return members;
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -193,10 +182,7 @@ export default async function orgController(
                     page,
                     totalItems: result.totalAlbums,
                     totalPages: Math.ceil(result.totalAlbums / limit),
-                    albums: result.albums.map((a) => ({
-                        ...a,
-                        image: process.env.IMAGE_PATH + "orgs_images/albums/" + a.id + ".png"
-                    })),
+                    albums: result.albums,
                 });
             } catch (err) {
                 logger.error(err);

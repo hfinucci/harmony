@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {UserService} from "../../service/userService";
 import {ImageService} from "../../service/imageService";
+import {PROFILE_IMAGES_PATH} from "../../utils.ts";
 
 interface ImageProp {
     url: string;
@@ -23,13 +24,13 @@ const ChangeProfileImageModal = () => {
             ImageService.getProfileImages().then(async (rsp) => {
                 if (rsp?.status == 200) {
                     rsp.json().then((response) => {
-                        const imgs = response.map((img) => {return {url: img, name: img.split("/")[img.split("/").length - 1]}}) as ImageProp[]
+                        const imgs = response.images.map((img) => {return {url: PROFILE_IMAGES_PATH + img, name: img}}) as ImageProp[]
                         setImages(imgs);
                     })
                 } else setError(t("components.changeProfileImageModal.error.fetch"));
             });
             const current = localStorage.getItem("harmony-profile-image")
-            setSelected({url: current, name: current.split("/")[current.split("/").length - 1]})
+            setSelected({url: PROFILE_IMAGES_PATH + current, name: current})
         }
     }, [showModal]);
 

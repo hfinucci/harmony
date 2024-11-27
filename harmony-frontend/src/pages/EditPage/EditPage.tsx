@@ -14,7 +14,7 @@ import {AddBlock} from "../../components/AddBlock/AddBlock";
 import PianoPage from "../PianoPage/PianoPage.tsx";
 import {BlockService} from "../../service/blockService";
 import {socket} from "../../socket.ts";
-import {useInterval} from "../../utils";
+import {PROFILE_IMAGES_PATH, useInterval} from "../../utils";
 import {Contributors} from "../../types/dtos/Contributors";
 import "./EditPage.css"
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
@@ -345,7 +345,7 @@ const EditPage = () => {
                                             {contributor.name}
                                         </div>
                                         <img data-tooltip-target={"tooltip-" + contributor.id} className="w-10 h-10 rounded-full ring-2 ring-fuchsia-900"
-                                             src={contributor.image} alt="Medium avatar" />
+                                             src={PROFILE_IMAGES_PATH + contributor.image} alt="Medium avatar" />
                                     </div>
                             })}
                             <div key={0} className="group flex justify-center">
@@ -354,7 +354,7 @@ const EditPage = () => {
                                     {t("pages.edit.me")}
                                 </div>
                                 <img className="w-10 h-10 rounded-full ring-2 ring-fuchsia-900"
-                                     src={localStorage.getItem("harmony-profile-image")} alt="Medium avatar" />
+                                     src={PROFILE_IMAGES_PATH + localStorage.getItem("harmony-profile-image")} alt="Medium avatar" />
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">

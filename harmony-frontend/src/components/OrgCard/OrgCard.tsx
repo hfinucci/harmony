@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { OrgService } from "../../service/orgService";
 import "./OrgCard.css";
 import { useTranslation } from "react-i18next";
-import { ORG_IMAGE_DEFAULT } from "../../utils";
+import ORG_IMAGE_DEFAULT from "../../assets/org-default-image.jpg";
 import { Org } from "../../types/dtos/Org";
 import {Link} from "react-router-dom";
+import {ImageService} from "../../service/imageService.ts";
+import {BASE64_HEADER, IMAGE_TYPE} from "../../utils.ts";
 
 const OrgCard = (org: Org) => {
     const [members, setMembers] = useState<string>();
-    const [image, setImage] = useState<string>(org.image);
+    const [image, setImage] = useState<string>(ORG_IMAGE_DEFAULT);
 
     const { t } = useTranslation();
 
@@ -26,6 +28,16 @@ const OrgCard = (org: Org) => {
             }
         });
     }, []);
+
+    useEffect(() => {
+        ImageService.getImage(org.id, IMAGE_TYPE.ORG).then(async (rsp) => {
+            if (rsp?.status == 200) {
+                const img = await rsp.json();
+                setImage(BASE64_HEADER + img.image);
+            }
+        });
+    }, [org.id]);
+
     return (
         <Link
             to={`/orgs/${org.id}`}
@@ -34,7 +46,7 @@ const OrgCard = (org: Org) => {
             <div className="max-h-52 flex justify-center">
                 <img
                     className="h-full object-contain rounded-t-lg justify-center"
-                    src={image + "?reload=" + Date.now()}
+                    src={image}
                     onError={() => {
                         setImage(ORG_IMAGE_DEFAULT);
                     }}

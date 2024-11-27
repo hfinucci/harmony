@@ -48,12 +48,7 @@ export class AuthService {
                 throw new AuthenticationError("Invalid password");
             }
             delete user.password;
-            const person = {
-                ...user,
-                image:
-                    process.env.IMAGE_PATH  + "profile_images/" +
-                    user.image,
-            } as Person;
+            const person = user as Person;
             return {
                 access_token: this.generateJWT(person),
                 person: person,

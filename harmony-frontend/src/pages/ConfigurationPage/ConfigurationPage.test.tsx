@@ -149,10 +149,9 @@ describe("Test ConfigurationPage", () => {
 
     test("opens and closes the change profile image modal", async () => {
         // Mocked response data
-        const mockImages = [
-            "https://example.com/image1.jpg",
-            "https://example.com/image2.jpg",
-        ];
+        const mockImages = {
+            images: ["image1.jpg", "image2.jpg"]
+        };
         const mockResponse = {
             status: 200,
             json: vi.fn().mockResolvedValue(mockImages),
@@ -160,7 +159,7 @@ describe("Test ConfigurationPage", () => {
 
         // Set up mock implementation
         ImageService.getProfileImages.mockResolvedValue(mockResponse);
-        localStorage.setItem('harmony-profile-image', 'https://example.com/image1.jpg');
+        localStorage.setItem('harmony-profile-image', 'image1.jpg');
 
         render(
             <BrowserRouter>
@@ -188,10 +187,9 @@ describe("Test ConfigurationPage", () => {
 
     test("changes profile image successfully", async () => {
         // Mocked response data
-        const mockImages = [
-            "https://example.com/image1.jpg",
-            "https://example.com/image2.jpg",
-        ];
+        const mockImages = {
+            images: ["image1.jpg", "image2.jpg"]
+        };
         const mockGetResponse = {
             status: 200,
             json: vi.fn().mockResolvedValue(mockImages),
@@ -199,7 +197,7 @@ describe("Test ConfigurationPage", () => {
 
         // Set up mock implementation
         ImageService.getProfileImages.mockResolvedValue(mockGetResponse);
-        localStorage.setItem('harmony-profile-image', 'https://example.com/image1.jpg');
+        localStorage.setItem('harmony-profile-image', 'image1.jpg');
 
         render(
             <BrowserRouter>
@@ -239,10 +237,9 @@ describe("Test ConfigurationPage", () => {
 
     test("fails to change profile image due to empty body", async () => {
         // Mocked response data
-        const mockImages = [
-            "https://example.com/image1.jpg",
-            "https://example.com/image2.jpg",
-        ];
+        const mockImages = {
+            images: ["image1.jpg", "image2.jpg"]
+        };
         const mockGetResponse = {
             status: 200,
             json: vi.fn().mockResolvedValue(mockImages),
@@ -279,10 +276,9 @@ describe("Test ConfigurationPage", () => {
 
     test("fails to change profile image due to bad request", async () => {
         // Mocked response data
-        const mockImages = [
-            "https://example.com/image1.jpg",
-            "https://example.com/image2.jpg",
-        ];
+        const mockImages = {
+            images: ["image1.jpg", "image2.jpg"]
+        };
         const mockGetResponse = {
             status: 200,
             json: vi.fn().mockResolvedValue(mockImages),
@@ -290,7 +286,7 @@ describe("Test ConfigurationPage", () => {
 
         // Set up mock implementation
         ImageService.getProfileImages.mockResolvedValue(mockGetResponse);
-        localStorage.setItem('harmony-profile-image', 'https://example.com/image1.jpg');
+        localStorage.setItem('harmony-profile-image', 'image1.jpg');
 
         render(
             <BrowserRouter>

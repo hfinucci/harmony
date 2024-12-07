@@ -9,13 +9,14 @@ import EditAlbumModal from "../../components/EditAlbumModal/EditAlbumModal";
 import { useTranslation } from "react-i18next";
 import {Song, SongPagination} from "../../types/dtos/Song";
 import {Album} from "../../types/dtos/Album.ts";
-import { ALBUM_IMAGE_DEFAULT } from "../../utils.ts";
+import ALBUM_IMAGE_DEFAULT from "../../assets/album-default-image.png"
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
 import {Org} from "../../types/dtos/Org";
 import {OrgService} from "../../service/orgService";
 import Pagination from "../../components/Pagination/Pagination";
+import {BASE64_HEADER, IMAGE_TYPE} from "../../utils.ts";
 
 const AlbumPage = () => {
     const [album, setAlbum]: Album = useState();
@@ -68,7 +69,7 @@ const AlbumPage = () => {
 
     useEffect(() => {
         if (album) {
-            fetchImage(album.image);
+            fetchImage(album.id);
         }
     }, [album, imageReload]);
 
@@ -82,14 +83,12 @@ const AlbumPage = () => {
         }
     }, [album]);
 
-    const fetchImage = async (url: string) => {
+    const fetchImage = async (id: number) => {
         setImage(ALBUM_IMAGE_DEFAULT)
-        const response = await ImageService.getImage(url);
+        const response = await ImageService.getImage(id, IMAGE_TYPE.ALBUM);
         if (response.ok) {
-            url = URL.createObjectURL(await response.blob());
-            setImage(url);
-        } else {
-            setImage(ALBUM_IMAGE_DEFAULT)
+            const imgResponse = await response.json()
+            setImage(BASE64_HEADER + imgResponse.image);
         }
     }
 

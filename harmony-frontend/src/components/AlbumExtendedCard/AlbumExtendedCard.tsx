@@ -5,12 +5,14 @@ import SongCard from "../SongCard/SongCard";
 import {useNavigate} from "react-router-dom";
 import {AlbumService} from "../../service/albumService";
 import {useTranslation} from "react-i18next";
-import {ORG_IMAGE_DEFAULT} from "../../utils";
+import ALBUM_IMAGE_DEFAULT from "../../assets/album-default-image.png";
+import {ImageService} from "../../service/imageService.ts";
+import {BASE64_HEADER, IMAGE_TYPE} from "../../utils.ts";
 
 const AlbumExtendedCard = (album: Album) => {
 
     const [songs, setSongs] = useState<SongPagination>()
-    const [image, setImage] = useState<string>(album.image);
+    const [image, setImage] = useState<string>(ALBUM_IMAGE_DEFAULT);
     const limit = 5;
 
 
@@ -33,13 +35,22 @@ const AlbumExtendedCard = (album: Album) => {
         fetch();
     }, []);
 
+    useEffect(() => {
+        ImageService.getImage(album.id, IMAGE_TYPE.ALBUM).then(async (rsp) => {
+            if(rsp?.status == 200) {
+                const img = await rsp.json()
+                setImage(BASE64_HEADER + img.image)
+            }
+        });
+    }, [album.id]);
+
     return (
         <div className=" flex flex-row shadow-md p-10 w-full">
             <img
                 className="max-h-64 max-w-64 object-contain rounded-t-lg justify-center m-5"
-                src={image + "?reload=" + Date.now()}
+                src={image}
                 onError={() => {
-                    setImage(ORG_IMAGE_DEFAULT);
+                    setImage(ALBUM_IMAGE_DEFAULT);
                 }}
                 alt="album image"
             />

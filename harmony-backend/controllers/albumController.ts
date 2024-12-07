@@ -57,10 +57,7 @@ export default async function albumController(fastify: FastifyInstance, opts: an
 
                 await checkIfRequesterIsMember(user.person.id, album.org);
 
-                return {
-                    ...album,
-                    image: process.env.IMAGE_PATH + "orgs_images/albums/" + album.id + ".png"
-                };
+                return album;
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);

@@ -47,8 +47,7 @@ export default async function userController(
                 const changed = await UserService.changeIcon(id, request);
                 if (!changed)
                     return false
-                return  process.env.IMAGE_PATH + "profile_images/" +
-                    request.image
+                return request.image
             } catch (err) {
                 logger.error(err);
                 return handleError(err, rep);
@@ -112,10 +111,7 @@ export default async function userController(
                     page,
                     totalItems: result.totalAlbums,
                     totalPages: Math.ceil(result.totalAlbums / limit),
-                    albums: result.albums.map((a) => ({
-                        ...a,
-                        image: process.env.IMAGE_PATH + "orgs_images/albums/" + a.id + ".png"
-                    })),
+                    albums: result.albums,
                 });
 
             } catch (error: any) {
@@ -132,14 +128,7 @@ export default async function userController(
             try {
                 parseId(id);
                 logger.info("Getting user with id: " + id);
-                const user = await UserService.getUserById(id);
-
-                return {
-                    ...user,
-                    image:
-                        process.env.IMAGE_PATH + "profile_images/" +
-                        user.image,
-                };
+                return await UserService.getUserById(id);
             } catch (error: any) {
                 logger.error(error);
                 return handleError(error, rep);
@@ -170,10 +159,7 @@ export default async function userController(
                     page,
                     totalItems: result.totalOrgs,
                     totalPages: Math.ceil(result.totalOrgs / limit),
-                    orgs: result.orgs.map((o) => ({
-                        ...o,
-                        image: process.env.IMAGE_PATH + "orgs_images/orgs/" + o.id + ".png"
-                    })),
+                    orgs: result.orgs,
                 });
             } catch (error: any) {
                 logger.error(error);

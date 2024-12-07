@@ -43,7 +43,6 @@ const OrgsPage = () => {
                             <OrgCard
                                 key={elem.id}
                                 name={elem.name}
-                                image={elem.image}
                                 id={elem.id}
                             />
                         ))}

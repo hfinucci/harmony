@@ -55,14 +55,7 @@ export class ComposeService {
         let users = []
         for (const s of contributors) {
             const u = await UserService.getUserById(s.userId)
-            users.push(
-                {
-                    ...u,
-                    image:
-                        process.env.IMAGE_PATH  + "profile_images/" +
-                        u.image,
-                }
-            )
+            users.push(u);
         }
         return { contributors: users }
     }

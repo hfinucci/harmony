@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import Search from "../SearchComponent/SearchComponent.tsx";
 import {SearchService} from "../../service/searchService.ts";
 import SearchItemRow, {ItemView} from "../SearchItemRow/SearchItemRow.tsx";
+import {PROFILE_IMAGES_PATH} from "../../utils.ts";
 
 export const Navbar = () => {
     const {t} = useTranslation();
@@ -143,7 +144,7 @@ export const Navbar = () => {
                                  onClick={toggleDropdown}
                                  data-dropdown-placement="bottom-start"
                                  className="w-10 h-10 rounded-full cursor-pointer"
-                                 src={image} alt="Profile Image"/>
+                                 src={PROFILE_IMAGES_PATH + image} alt="Profile Image"/>
                             {isDropdownOpen &&
                                 <div id="userDropdown"
                                      className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 right-0 mt-10">

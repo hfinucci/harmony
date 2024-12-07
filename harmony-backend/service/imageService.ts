@@ -1,5 +1,6 @@
 import {createClient} from "@supabase/supabase-js";
 import {logger} from "../server";
+import {PROFILE_IMAGES} from "../utils";
 
 const supabase = createClient(
     "http://host.docker.internal:54321",
@@ -30,17 +31,30 @@ const base64ImageToBlob = (str: string) => {
     return new Blob([buffer], {type: type});
 }
 
+const blobToBase64 = async (blob: Blob) => {
+    const buffer = Buffer.from(await blob.arrayBuffer()); // Convert Blob to Buffer
+    return buffer.toString('base64'); // Convert Buffer to Base64
+};
+
 export class ImageService {
-    public static async getAllProfileImages() {
-        const { data, error } = await supabase.storage
-            .from(PROFILE_IMAGES_BUCKET)
-            .list();
+    public static getAllProfileImages() {
+        return PROFILE_IMAGES;
+    }
+
+    public static async getImage(id: number, path: string) {
+        logger.info("Getting image with id: " + id);
+        const { data, error } = await supabase
+            .storage
+            .from(ORG_IMAGES_BUCKET)
+            .download(`${path}/${id}.png`);
 
         if (error) {
-            throw new Error("Error getting profile images: " + error.message);
+            throw new Error("Error getting image: " + error.message);
         }
-        return data;
-    }
+
+        const img = await blobToBase64(data as Blob);
+        return { image: img };
+}
 
     public static async uploadOrgImage(orgId: number, image: string) {
         logger.info("Change image for organization with id: " + orgId)

@@ -12,7 +12,7 @@ import EditOrgModal from "../../components/EditOrgModal/EditOrgModal";
 import { useTranslation } from "react-i18next";
 import {SinglePagination, Song, SongPagination} from "../../types/dtos/Song";
 import { Org } from "../../types/dtos/Org";
-import { ORG_IMAGE_DEFAULT } from "../../utils.ts";
+import ORG_IMAGE_DEFAULT from "../../assets/org-default-image.jpg";
 import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 import Loading from "../../components/Loading/Loading.tsx";
 import {ImageService} from "../../service/imageService.ts";
@@ -20,6 +20,7 @@ import {Album, AlbumPagination} from "../../types/dtos/Album";
 import AlbumExtendedCard from "../../components/AlbumExtendedCard/AlbumExtendedCard";
 import CreateAlbumModal from "../../components/CreateAlbumModal/CreateAlbumModal";
 import Pagination from "../../components/Pagination/Pagination";
+import {BASE64_HEADER, IMAGE_TYPE} from "../../utils.ts";
 
 const OrgPage = () => {
     const [org, setOrg]: any = useState();
@@ -104,17 +105,15 @@ const OrgPage = () => {
 
     useEffect(() => {
         if (org) {
-            fetchImage(org.image);
+            fetchImage(org.id);
         }
     }, [org, imageReload]);
 
-    const fetchImage = async (url: string) => {
-        const response = await ImageService.getImage(url);
+    const fetchImage = async (id: number) => {
+        const response = await ImageService.getImage(id, IMAGE_TYPE.ORG)
         if (response.ok) {
-            url = URL.createObjectURL(await response.blob());
-            setImage(url);
-        } else {
-            setImage(ORG_IMAGE_DEFAULT)
+            const img = await response.json();
+            setImage(BASE64_HEADER + img.image);
         }
     }
 
@@ -293,7 +292,6 @@ const OrgPage = () => {
                                     id={elem.id}
                                     name={elem.name}
                                     org={elem.org}
-                                    image={elem.image}
                                 />
                             ))}
                             {albums.totalPages > 1 &&

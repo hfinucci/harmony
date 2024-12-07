@@ -21,17 +21,7 @@ export class MemberService {
     }
 
     public static async getOrgsByUser(user: number, page: number, limit: number) {
-        const result = await MemberPersistence.getOrgsByUser(user, page, limit)
-
-        result.orgs = result.orgs.map(
-            (org) =>
-                ({
-                    ...org,
-                    image: process.env.IMAGE_PATH + "orgs_images/orgs/" + org.id + ".png"
-                })
-        )
-
-        return result
+        return  await MemberPersistence.getOrgsByUser(user, page, limit)
     }
 
     public static async getMembership(user: number, org: number) {

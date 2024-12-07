@@ -77,7 +77,6 @@ const HomePage = () => {
                                 <OrgCard
                                     key={index}
                                     name={org.name}
-                                    image={org.image}
                                     id={org.id}
                                 />
                         ))}
@@ -115,7 +114,6 @@ const HomePage = () => {
                             <AlbumCard
                                 key={index}
                                 name={album.name}
-                                image={album.image}
                                 id={album.id}
                                 org={album.org}
                             />

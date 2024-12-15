@@ -16,13 +16,17 @@ export class ComposeRequestParser {
         try {
             request = JSON.parse(rawRequest);
         } catch (e) {
-            logger.info("Error in JSON parse: " + e)
+            logger.error("Error in JSON parse: " + e)
             return undefined;
         }
         for (let i = 0; i <= useCases.length; i++) {
-            let result = useCases[i].parse(request);
-            if (result) {
-                return useCases[i];
+            try {
+                let result = useCases[i].parse(request);
+                if (result) {
+                    return useCases[i];
+                }
+            } catch (e) {
+                logger.error("Error in UseCase parse: " + e)
             }
         }
         return undefined

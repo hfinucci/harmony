@@ -9,7 +9,8 @@ const AppendRowValidator = z.object({
     songId: z.string(),
     userId: z.number(),
     lyrics: z.string(),
-    chord: z.string()
+    chord: z.string(),
+    timestamp: z.string().datetime()
 }).strict();
 export type AppendRowRequest = z.infer<typeof AppendRowValidator>
 
@@ -19,7 +20,8 @@ const AppendBlockValidator = z.object({
     userId: z.number(),
     row: z.number(),
     lyrics: z.string(),
-    chord: z.string()
+    chord: z.string(),
+    timestamp: z.string().datetime()
 }).strict();
 export type AppendBlockRequest = z.infer<typeof AppendBlockValidator>
 
@@ -30,7 +32,8 @@ const EditBlockValidator = z.object({
     row: z.number(),
     col: z.number(),
     lyrics: z.string(),
-    chord: z.string()
+    chord: z.string(),
+    timestamp: z.string().datetime()
 }).strict();
 export type EditBlockRequest = z.infer<typeof EditBlockValidator>
 
@@ -68,9 +71,11 @@ export class AppendRow implements ComposeUseCase {
 
     public async execute(session: SongSession): Promise<string> {
         await initializeRoomIfNecessary(session, this.request?.songId!)
+        const timestamp = new Date(this.request?.timestamp!)
         const block = {
             chord: this.request?.chord!,
-            lyrics: this.request?.lyrics!
+            lyrics: this.request?.lyrics!,
+            timestamp: timestamp
         }
         logger.info("session.rowcount " + session.rowCount)
         const position = String(session.rowCount)
@@ -100,9 +105,11 @@ export class AppendBlock implements ComposeUseCase {
 
     public async execute(session: SongSession): Promise<string> {
         await initializeRoomIfNecessary(session, this.request?.songId!)
+        const timestamp = new Date(this.request?.timestamp!)
         const block = {
             chord: this.request?.chord!,
-            lyrics: this.request?.lyrics!
+            lyrics: this.request?.lyrics!,
+            timestamp: timestamp
         }
         const position = String(this.request?.row!)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)
@@ -131,9 +138,11 @@ export class EditBlock implements ComposeUseCase {
 
     public async execute(session: SongSession) : Promise<string> {
         await initializeRoomIfNecessary(session, this.request?.songId!)
+        const timestamp = new Date(this.request?.timestamp!)
         const block = {
             chord: this.request?.chord!,
-            lyrics: this.request?.lyrics!
+            lyrics: this.request?.lyrics!,
+            timestamp: timestamp
         }
         const position = String(this.request?.row!)
         const couldLock = await session.acquireIfPossible(this.request?.userId!, position)

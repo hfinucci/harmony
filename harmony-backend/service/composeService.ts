@@ -2,13 +2,17 @@ import {Contributor, SongSession} from "../models/entity/songSession";
 import {ComposeRequestParser} from "../models/entity/composeRequestParser";
 import {buildInvalidRequestResponse} from "../models/errors/composeErrors";
 import {UserService} from "./userService";
+import {logger} from "../server";
+import {Socket} from "socket.io";
 
 class SessionHandler {
     private static instance: SessionHandler;
     private sessions: Map<string, SongSession>
+    private rooms: Map<string, string[]>
 
     private constructor() {
         this.sessions = new Map<string, SongSession>();
+        this.rooms = new Map<string, string[]>;
     }
 
     public static getInstance(): SessionHandler {
@@ -30,6 +34,20 @@ class SessionHandler {
         }
         return this.sessions.get(songId);
     }
+
+    public addUserToRoom(roomId: string, userId: string, socket: Socket): void {
+        const users = this.rooms.get(roomId) || [];
+        if (!users.includes(userId)) {
+            users.push(userId);
+            socket.join(roomId);
+            this.rooms.set(roomId, users);
+        }
+    }
+}
+
+export interface Context {
+    roomId: string,
+    userId: string
 }
 
 export class ComposeService {
@@ -37,6 +55,19 @@ export class ComposeService {
 
     constructor() {
         this.sessionHandler = SessionHandler.getInstance();
+    }
+
+    public async parseContext(request: string): Promise<Context | undefined> {
+        try {
+            const operation = JSON.parse(request);
+            return {
+                roomId: operation.songId,
+                userId: operation.userId
+            } as Context
+        } catch (e) {
+            logger.info("Error parsing context: " + e)
+            return undefined;
+        }
     }
 
     public async processRequest(request: string): Promise<string>{
@@ -65,4 +96,15 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
+    public async joinRoom(socket: Socket, context?: Context) {
+        if (context && context.roomId && context.userId) {
+            this.sessionHandler.addUserToRoom(context.roomId, context.userId, socket)
+        }
+    }
+
+    public async emitToRoom(socket: Socket, response: string, roomId?: string) {
+        if (roomId && response !== undefined && response !== "") {
+            socket.to(roomId).emit("compose", response)
+        }
+    }
 }

@@ -26,24 +26,20 @@ export default async function composeController(
 ) {
 
     const composeService = new ComposeService()
-    let color_id = 2
 
     server.ready().then(() => {
         server.io.on("connect", async (socket) => {
             logger.info("a new client has connected!")
-            logger.info(`sending color_id = ${color_id}`)
-            socket.emit("colorId", "colorcito");
-            color_id += 1
             logger.info(socket.id)
-            socket.on("disconnect", () => {
+            socket.on("disconnect", async () => {
                 logger.info("a client has disconnected!")
             })
             socket.on("compose", async (payload) => {
                 logger.info("compose: " + payload)
+                const context = await composeService.parseContext(payload)
+                await composeService.joinRoom(socket, context)
                 const response = await composeService.processRequest(payload)
-                if (response !== undefined || response !== "") {
-                    socket.broadcast.emit("compose", response)
-                }
+                await composeService.emitToRoom(socket, response, context?.roomId)
             })
             socket.on("session_established", async(request) => {
                 await composeService.addOrUpdateContributor(request.userId, request.songId)

@@ -20,9 +20,13 @@ export class ComposeRequestParser {
             return undefined;
         }
         for (let i = 0; i <= useCases.length; i++) {
-            let result = useCases[i].parse(request);
-            if (result) {
-                return useCases[i];
+            try {
+                let result = useCases[i].parse(request);
+                if (result) {
+                    return useCases[i];
+                }
+            } catch (e) {
+                logger.error("Error parsing useCase: " + e)
             }
         }
         return undefined

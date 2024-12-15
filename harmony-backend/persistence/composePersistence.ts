@@ -5,6 +5,7 @@ import {logger} from "../server";
 export interface Block {
     chord: string;
     lyrics: string;
+    timestamp?: Date;
 }
 
 interface Song {

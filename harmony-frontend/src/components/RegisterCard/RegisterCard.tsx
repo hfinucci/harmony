@@ -27,10 +27,6 @@ export const RegisterCard = () => {
     const nav = useNavigate();
     const { t } = useTranslation();
 
-    const validateTerms = () => {
-        return getValues("terms") == true;
-    };
-
     const submitRegister = async (data: any) => {
         const fullname = data.name + " " + data.lastname;
         const rsp = await UserService.signUpWithUserAndPassword(
@@ -176,23 +172,6 @@ export const RegisterCard = () => {
                             {t("pages.register.error.password")}
                         </p>
                     )}
-                </div>
-                <div className="flex items-center my-6">
-                    <input
-                        id="terms"
-                        type="checkbox"
-                        {...register("terms", {
-                            required: true,
-                            validate: validateTerms,
-                        })}
-                        className="w-4 h-4 text-fuchsia-950 bg-gray-100 border-gray-300 rounded focus:ring-fuchsia-950 focus:ring-2"
-                    />
-                    <label
-                        htmlFor="terms"
-                        className="ml-2 text-sm text-gray-400"
-                    >
-                        {t("pages.register.subscription")}
-                    </label>
                 </div>
                 {errors.terms && (
                     <p className="block mb-2 text-xs font-medium text-red-700 margin-top: 1.25rem">

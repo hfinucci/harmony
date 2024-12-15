@@ -123,49 +123,38 @@ const EditPage = () => {
             const mergedBlocks = [...prevBlocks];
             updatedBlocks.forEach((row, rowIndex) => {
                 if (!mergedBlocks[rowIndex]) {
-                    // Si no existe la fila actual en prevBlocks, añádela directamente
                     mergedBlocks[rowIndex] = row;
                 } else {
-                    // Si la fila ya existe, sincronizar los bloques
                     const existingRow = mergedBlocks[rowIndex];
 
-                    // Crear una nueva fila sincronizada
                     const syncedRow = row.map((incomingBlock, blockIndex) => {
                         const existingBlock = existingRow[blockIndex];
 
                         if (!existingBlock) {
-                            // Si no hay un bloque existente en esta posición, simplemente añadir el bloque entrante
                             return incomingBlock;
                         }
 
-                        // Comparar bloques por igualdad
                         const isSameBlock =
                             existingBlock.chord === incomingBlock.chord &&
                             existingBlock.lyrics === incomingBlock.lyrics;
 
                         if (isSameBlock) {
-                            // Si los bloques son iguales, conservar el existente
                             return existingBlock;
                         } else if (incomingBlock.timestamp > existingBlock.timestamp) {
-                            // Si el bloque entrante tiene un timestamp más reciente, reemplazarlo
                             return incomingBlock;
                         } else {
-                            // Si el bloque local es más reciente, conservar el bloque existente
                             return existingBlock;
                         }
                     });
 
-                    // Actualizar la fila sincronizada
                     mergedBlocks[rowIndex] = syncedRow;
 
-                    // Eliminar bloques adicionales al final de la fila local si no están en la fila entrante
                     if (existingRow.length > row.length) {
                         mergedBlocks[rowIndex] = syncedRow.slice(0, row.length);
                     }
                 }
             });
 
-            // Eliminar filas adicionales al final si no están en la actualización entrante
             if (mergedBlocks.length > updatedBlocks.length) {
                 mergedBlocks.length = updatedBlocks.length;
             }

@@ -46,7 +46,7 @@ class SessionHandler {
 }
 
 export interface Context {
-    roomId: string,
+    songId: string,
     userId: string
 }
 
@@ -61,7 +61,7 @@ export class ComposeService {
         try {
             const operation = JSON.parse(request);
             return {
-                roomId: operation.songId,
+                songId: operation.songId,
                 userId: operation.userId
             } as Context
         } catch (e) {
@@ -97,14 +97,15 @@ export class ComposeService {
     }
 
     public async joinRoom(socket: Socket, context?: Context) {
-        if (context && context.roomId && context.userId) {
-            this.sessionHandler.addUserToRoom(context.roomId, context.userId, socket)
+        if (context && context.songId && context.userId) {
+            console.log("trying to add to room user: " + context.userId + " in  song: " + context.songId)
+            this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)
         }
     }
 
-    public async emitToRoom(socket: Socket, response: string, roomId?: string) {
+    public async emitToRoom(socket: Socket, channel: string, response: string, roomId?: string) {
         if (roomId && response !== undefined && response !== "") {
-            socket.to(roomId).emit("compose", response)
+            socket.to(roomId).emit(channel, response)
         }
     }
 }

@@ -49,6 +49,11 @@ const EditPage = () => {
                 case 200:
                     rsp.json().then((response: Song) => {
                         setSong(response);
+                        const userId = localStorage.getItem("harmony-uid")
+                        socket.emit("context", {
+                            songId: response.composeid,
+                            userId: userId
+                        })
                         socket.emit("contributors", response.composeid)
                         BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
                             if (rsp?.status == 200) {

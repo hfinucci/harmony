@@ -54,7 +54,7 @@ const EditPage = () => {
                             songId: response.composeid,
                             userId: userId
                         })
-                        socket.emit("contributors", response.composeid)
+                        // socket.emit("contributors", response.composeid)
                         BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
                             if (rsp?.status == 200) {
                                 rsp.json().then((response: Block[][]) => {

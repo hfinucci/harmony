@@ -68,7 +68,9 @@ export class ComposeService {
 
     public async parseContext(request: string): Promise<Context | undefined> {
         try {
-            const operation = JSON.parse(request);
+            logger.info("sin tostring: " + request)
+            logger.info("cont tostring: " + request.toString())
+            const operation = JSON.parse(request.toString());
             return {
                 songId: operation.songId,
                 userId: operation.userId

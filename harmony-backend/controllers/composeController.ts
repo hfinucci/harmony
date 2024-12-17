@@ -1,6 +1,6 @@
 import {FastifyInstance, FastifyReply} from "fastify";
 import server, { logger } from "../server";
-import {ComposeService} from "../service/composeService";
+import {ComposeService, Context} from "../service/composeService";
 import {Block} from "../persistence/composePersistence";
 import {SongService} from "../service/songService";
 import {handleError} from "../utils";
@@ -35,7 +35,7 @@ export default async function composeController(
                 logger.info("a client has disconnected!")
             })
             socket.on("compose", async (payload) => {
-                logger.info("compose: " + payload)
+                // logger.info("compose: " + payload)
                 const context = await composeService.parseContext(payload)
                 await composeService.joinRoom(socket, context)
                 const response = await composeService.processRequest(payload)
@@ -45,9 +45,9 @@ export default async function composeController(
                 await composeService.addOrUpdateContributor(request.userId, request.songId)
             })
             socket.on("contributors", async(songId) => {
-                logger.info("Getting contributors for song with id: " + songId)
+                // logger.info("Getting contributors for song with id: " + songId)
                 const response = await composeService.getContributors(songId)
-                logger.info("Contributors: " + response.contributors)
+                // logger.info("Contributors: " + response.contributors)
                 if (response) {
                     socket.emit("contributors", response)
                 }
@@ -60,9 +60,15 @@ export default async function composeController(
                 await composeService.emitToRoom(socket, "contributors", response.toString(), context?.songId)
             })
             socket.on("clientMidi", async (payload: MIDIEvent) => {
-                logger.info(payload);
+                const context = {
+                    songId: payload.composeId!,
+                    userId: payload.userId.toString()
+                } as Context
+                await composeService.joinRoom(socket, context)
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
-                socket.broadcast.emit("serverMidi", payload);
+                // const room = await composeService.getRoomByUserId(payload.userId.toString())
+                await composeService.emitToRoom(socket, "serverMidi", payload.toString(), payload.composeId)
+                // socket.broadcast.emit("serverMidi", payload);
             });
         });
     });

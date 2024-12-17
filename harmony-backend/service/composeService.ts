@@ -43,6 +43,15 @@ class SessionHandler {
             this.rooms.set(roomId, users);
         }
     }
+
+    public getRoomByUserId(userId: string) {
+        for (const [songId, userIds] of this.rooms.entries()) {
+            if (userIds.includes(userId)) {
+                return songId; // Return the first songId where the userId is found
+            }
+        }
+        return undefined;
+    }
 }
 
 export interface Context {
@@ -94,6 +103,10 @@ export class ComposeService {
     public async addOrUpdateContributor(userId: number, songId: string) {
         const session = await this.sessionHandler.getSession(songId)
         session?.addOrUpdateContributor(userId)
+    }
+
+    public async getRoomByUserId(userId: string): Promise<string | undefined> {
+        return this.sessionHandler.getRoomByUserId(userId);
     }
 
     public async joinRoom(socket: Socket, context?: Context) {

@@ -3,7 +3,7 @@ import {logger} from "../server";
 import {PROFILE_IMAGES} from "../utils";
 
 const supabase = createClient(
-    process.env.POSTGRES_HOST || "http://host.docker.internal:54321",
+    "https://" + process.env.POSTGRES_HOST + ":54321" || "http://host.docker.internal:54321",
     process.env.AUTH_KEY || ""
 );
 const PROFILE_IMAGES_BUCKET = "profile_images";

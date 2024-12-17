@@ -48,6 +48,18 @@ class SessionHandler {
         }
     }
 
+    public purgeUserFromRooms(userId: string): string[] {
+        const previousRooms: string[] = [];
+        for (const [songId, userIds] of this.rooms.entries()) {
+            if (userIds.includes(userId)) {
+                previousRooms.push(songId);
+                const updatedUserIds = userIds.filter((id) => id !== userId);
+                this.rooms.set(songId, updatedUserIds);
+            }
+        }
+        return previousRooms;
+    }
+
     public getRoomByUserId(userId: string) {
         for (const [songId, userIds] of this.rooms.entries()) {
             if (userIds.includes(userId)) {
@@ -109,11 +121,11 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
-    public async getRoomByUserId(userId: string): Promise<string | undefined> {
-        return this.sessionHandler.getRoomByUserId(userId);
-    }
-
     public async joinRoom(socket: Socket, context?: Context) {
+        const previousRooms = this.sessionHandler.purgeUserFromRooms(context?.userId!)
+        for (const room in previousRooms) {
+            await socket.leave(room)
+        }
         socket.join(context?.songId!);
         if (context && context.songId && context.userId) {
             this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)

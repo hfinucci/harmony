@@ -41,7 +41,11 @@ class SessionHandler {
             users.push(userId);
             this.rooms.set(roomId, users);
         }
-        logger.info("present in room: " + this.rooms.entries())
+        for (const [songId, userIds] of this.rooms.entries()) {
+            console.log(`Song ID: ${songId}`);
+            console.log(`User IDs: ${userIds.join(', ')}`);
+            console.log('------------------');
+        }
     }
 
     public getRoomByUserId(userId: string) {
@@ -68,8 +72,6 @@ export class ComposeService {
 
     public async parseContext(request: string): Promise<Context | undefined> {
         try {
-            logger.info("sin tostring: " + request)
-            logger.info("cont tostring: " + request.toString())
             const operation = JSON.parse(request.toString());
             return {
                 songId: operation.songId,

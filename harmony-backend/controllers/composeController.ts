@@ -49,7 +49,8 @@ export default async function composeController(
                 const response = await composeService.getContributors(songId)
                 // logger.info("Contributors: " + response.contributors)
                 if (response) {
-                    socket.emit("contributors", response)
+                    await composeService.emitToRoom(socket, "contributors", response, songId)
+                    // socket.emit("contributors", response)
                 }
             })
             socket.on("context", async(payload) => {

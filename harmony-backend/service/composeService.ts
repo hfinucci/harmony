@@ -41,6 +41,7 @@ class SessionHandler {
             users.push(userId);
             this.rooms.set(roomId, users);
         }
+        console.log('**********');
         for (const [songId, userIds] of this.rooms.entries()) {
             console.log(`Song ID: ${songId}`);
             console.log(`User IDs: ${userIds.join(', ')}`);
@@ -122,10 +123,15 @@ export class ComposeService {
     }
 
     public async joinRoom(socket: Socket, context?: Context) {
-        const previousRooms = this.sessionHandler.purgeUserFromRooms(context?.userId!)
-        for (const room in previousRooms) {
-            await socket.leave(room)
-        }
+        // const previousRooms = this.sessionHandler.purgeUserFromRooms(context?.userId!)
+        // for (const room in previousRooms) {
+        //     await socket.leave(room)
+        // }
+        socket.rooms.forEach(room => {
+            if (room !== socket.id) {
+                socket.leave(room);
+            }
+        });
         socket.join(context?.songId!);
         if (context && context.songId && context.userId) {
             this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)

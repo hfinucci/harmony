@@ -53,7 +53,7 @@ const EditPage = () => {
                         socket.emit("context", {
                             songId: response.composeid,
                             userId: userId
-                        })
+                        }.toString())
                         // socket.emit("contributors", response.composeid)
                         BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
                             if (rsp?.status == 200) {

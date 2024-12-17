@@ -49,16 +49,26 @@ class SessionHandler {
         }
     }
 
-    public purgeUserFromRooms(userId: string): string[] {
-        const previousRooms: string[] = [];
+    public invalidateUserSessions(userId: string): void {
+        const oldRooms: string[] = [];
         for (const [songId, userIds] of this.rooms.entries()) {
             if (userIds.includes(userId)) {
-                previousRooms.push(songId);
+                oldRooms.push(songId);
                 const updatedUserIds = userIds.filter((id) => id !== userId);
                 this.rooms.set(songId, updatedUserIds);
             }
         }
-        return previousRooms;
+
+        for (const songId in oldRooms) {
+            const session = this.sessions.get(songId);
+            if (!session) {
+                logger.error(`No session found for songId: ${songId}`);
+            } else {
+                session.contributors = session.contributors.filter(
+                    (contributor) => contributor.userId !== Number(userId)
+                );
+            }
+        }
     }
 
     public getRoomByUserId(userId: string) {
@@ -122,17 +132,18 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
-    public async joinRoom(socket: Socket, context?: Context) {
-        // const previousRooms = this.sessionHandler.purgeUserFromRooms(context?.userId!)
-        // for (const room in previousRooms) {
-        //     await socket.leave(room)
-        // }
-        socket.rooms.forEach(room => {
+    public async leaveRooms(socket: Socket) {
+        for (const room of socket.rooms) {
             if (room !== socket.id) {
-                socket.leave(room);
+                await socket.leave(room);
             }
-        });
-        socket.join(context?.songId!);
+        }
+    }
+
+    public async joinRoom(socket: Socket, context?: Context) {
+        await this.leaveRooms(socket)
+        this.sessionHandler.invalidateUserSessions(context?.userId!)
+        await socket.join(context?.songId!);
         if (context && context.songId && context.userId) {
             this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)
         }

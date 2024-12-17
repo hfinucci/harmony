@@ -43,7 +43,13 @@ const CreateAlbumModal = ({
         watch,
         formState: { errors },
         reset
-    } = useForm<CreateAlbumFormData>();
+    } = useForm<CreateAlbumFormData>({
+        defaultValues: {
+            name: "",
+            org: org,
+            image: null,
+        },
+    });
 
     watch();
 
@@ -132,6 +138,7 @@ const CreateAlbumModal = ({
                                                     })}
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                     required
+                                                    disabled={org != null}
                                                 >
                                                     {orgs.map((o: any, index) => (
                                                         <option

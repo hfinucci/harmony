@@ -49,6 +49,7 @@ const EditPage = () => {
                 case 200:
                     rsp.json().then((response: Song) => {
                         setSong(response);
+                        localStorage["harmony-songid"] = response.composeid
                         const userId = localStorage.getItem("harmony-uid")
                         socket.emit("context", JSON.stringify( {
                             songId: response.composeid,
@@ -292,6 +293,7 @@ const EditPage = () => {
 
     const editSong = (song: Song) => {
         setSong(song);
+        localStorage["harmony-songid"] = song.composeid
     };
 
     return (

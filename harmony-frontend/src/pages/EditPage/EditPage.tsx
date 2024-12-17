@@ -50,15 +50,11 @@ const EditPage = () => {
                     rsp.json().then((response: Song) => {
                         setSong(response);
                         const userId = localStorage.getItem("harmony-uid")
-                        console.log(JSON.stringify( {
-                            songId: response.composeid,
-                            userId: userId
-                        }))
                         socket.emit("context", JSON.stringify( {
                             songId: response.composeid,
                             userId: userId
                         }))
-                        // socket.emit("contributors", response.composeid)
+                        socket.emit("contributors", response.composeid)
                         BlockService.getSongBlocksById(response.composeid).then(async (rsp) => {
                             if (rsp?.status == 200) {
                                 rsp.json().then((response: Block[][]) => {
@@ -146,6 +142,10 @@ const EditPage = () => {
 
     function gotContributorsResponse(data: any) {
         const conts = data.contributors as Contributors[]
+        console.log("contsss " + conts)
+        console.log("contsss 0 id " + conts[0].id)
+        console.log("contsss 0 name " + conts[0].name)
+        console.log("contsss 0 image " + conts[0].image)
         setContributors(conts)
     }
 

@@ -39,9 +39,9 @@ class SessionHandler {
         const users = this.rooms.get(roomId) || [];
         if (!users.includes(userId)) {
             users.push(userId);
-            socket.join(roomId);
             this.rooms.set(roomId, users);
         }
+        logger.info("present in room: " + this.rooms.entries())
     }
 
     public getRoomByUserId(userId: string) {
@@ -112,8 +112,8 @@ export class ComposeService {
     }
 
     public async joinRoom(socket: Socket, context?: Context) {
+        socket.join(context?.songId!);
         if (context && context.songId && context.userId) {
-            console.log("trying to add to room user: " + context.userId + " in  song: " + context.songId)
             this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)
         }
     }

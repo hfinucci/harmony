@@ -50,6 +50,10 @@ const EditPage = () => {
                     rsp.json().then((response: Song) => {
                         setSong(response);
                         const userId = localStorage.getItem("harmony-uid")
+                        console.log({
+                            songId: response.composeid,
+                            userId: userId
+                        }.toString())
                         socket.emit("context", {
                             songId: response.composeid,
                             userId: userId

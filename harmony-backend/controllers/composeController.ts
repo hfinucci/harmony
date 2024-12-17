@@ -67,7 +67,7 @@ export default async function composeController(
                 await composeService.joinRoom(socket, context)
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
                 // const room = await composeService.getRoomByUserId(payload.userId.toString())
-                await composeService.emitToRoom(socket, "serverMidi", payload.toString(), payload.composeId)
+                await composeService.emitToRoom(socket, "serverMidi", payload, payload.composeId)
                 // socket.broadcast.emit("serverMidi", payload);
             });
         });

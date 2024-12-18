@@ -150,6 +150,8 @@ export class ComposeService {
         await this.leaveRooms(socket)
         await socket.join(context?.songId!);
         this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
+        const session = await this.sessionHandler.getSession(context?.songId!)
+        session?.addOrUpdateContributor(Number(context?.userId!))
         const contributors = await this.getContributors(context?.songId!)
         logger.info('**********');
         for (const [songId, session] of this.sessionHandler.sessions.entries()) {

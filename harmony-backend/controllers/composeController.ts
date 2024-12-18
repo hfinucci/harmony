@@ -47,7 +47,7 @@ export default async function composeController(
             socket.on("contributors", async(songId) => {
                 const response = await composeService.getContributors(songId)
                 if (response) {
-                    await composeService.emitToRoom(socket, "contributors", response.toString(), songId)
+                    await composeService.emitToRoom(socket, "contributors", response, songId)
                     // socket.emit("contributors", response)
                 }
             })
@@ -56,7 +56,7 @@ export default async function composeController(
                 await composeService.joinRoom(socket, context)
                 await composeService.addOrUpdateContributor(Number(context?.userId), context?.songId!)
                 const response = await composeService.getContributors( context?.songId!)
-                await composeService.emitToRoom(socket, "contributors", response.toString(), context?.songId)
+                await composeService.emitToRoom(socket, "contributors", response, context?.songId)
             })
             socket.on("clientMidi", async (payload: MIDIEvent) => {
                 const context = {

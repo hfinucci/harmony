@@ -144,6 +144,7 @@ export class ComposeService {
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
         for (const roomId of oldRooms) {
             const contributors = await this.getContributors(roomId)
+            logger.info("CONTRIBUTORS songid: " + roomId + " contributors: " + contributors.toString())
             await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
         }
         await this.leaveRooms(socket)

@@ -132,14 +132,6 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
-    public async leaveRooms(socket: Socket) {
-        for (const room of socket.rooms) {
-            if (room !== socket.id) {
-                await socket.leave(room);
-            }
-        }
-    }
-
     public async joinRoom(socket: Socket, context?: Context) {
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
         for (const roomId of oldRooms) {
@@ -150,22 +142,20 @@ export class ComposeService {
         // await this.leaveRooms(socket)
         await socket.join(context?.songId!);
         this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
-        const session = await this.sessionHandler.getSession(context?.songId!)
-        session?.addOrUpdateContributor(Number(context?.userId!))
-        const contributors = await this.getContributors(context?.songId!)
-        logger.info('**********');
-        for (const [songId, session] of this.sessionHandler.sessions.entries()) {
-            logger.info(`Song ID: ${songId}`);
-            logger.info(`Contributors IDs: ${session.contributors.join(', ')}`);
-            logger.info('------------------');
-        }
-        logger.info("CONTRIBUTORS DE LA ROOM ACTUAL songid: " + context?.songId! + " contributors: " + JSON.stringify(contributors))
-        await this.emitToRoom(socket, "contributors", contributors, context?.songId!)
+        // const session = await this.sessionHandler.getSession(context?.songId!)
+        // session?.addOrUpdateContributor(Number(context?.userId!))
+        // const contributors = await this.getContributors(context?.songId!)
+        // logger.info('**********');
+        // for (const [songId, session] of this.sessionHandler.sessions.entries()) {
+        //     logger.info(`Song ID: ${songId}`);
+        //     logger.info(`Contributors IDs: ${session.contributors.join(', ')}`);
+        //     logger.info('------------------');
+        // }
+        // logger.info("CONTRIBUTORS DE LA ROOM ACTUAL songid: " + context?.songId! + " contributors: " + JSON.stringify(contributors))
+        // await this.emitToRoom(socket, "contributors", contributors.toString(), context?.songId!)
     }
 
     public async emitToRoom(socket: Socket, channel: string, response: any, roomId?: string) {
-        // if (roomId && response !== undefined && response !== "") {
-            socket.to(roomId!).emit(channel, response)
-        // }
+        socket.to(roomId!).emit(channel, response)
     }
 }

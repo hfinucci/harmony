@@ -53,6 +53,7 @@ class SessionHandler {
         const oldRooms: string[] = [];
         for (const [songId, userIds] of this.rooms.entries()) {
             if (userIds.includes(userId)) {
+                logger.info("MATCH: songId: " + songId)
                 oldRooms.push(songId);
                 const updatedUserIds = userIds.filter((id) => id !== userId);
                 this.rooms.set(songId, updatedUserIds);
@@ -65,7 +66,6 @@ class SessionHandler {
                 session.contributors = session.contributors.filter(
                     (contributor) => contributor.userId !== Number(userId)
                 );
-                // socket.to(songId).emit("contributors", session.contributors)
             }
         }
         return oldRooms
@@ -141,12 +141,13 @@ export class ComposeService {
     }
 
     public async joinRoom(socket: Socket, context?: Context) {
-        await this.leaveRooms(socket)
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
         for (const roomId in oldRooms) {
+            logger.info("leaving room: " + roomId)
             const contributors = await this.getContributors(roomId)
             await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
         }
+        await this.leaveRooms(socket)
         await socket.join(context?.songId!);
         if (context && context.songId && context.userId) {
             this.sessionHandler.addUserToRoom(context.songId, context.userId, socket)

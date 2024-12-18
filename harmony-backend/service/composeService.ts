@@ -156,11 +156,9 @@ export class ComposeService {
         await this.leaveRooms(socket)
         await socket.join(context?.songId!);
         const contributors = await this.getContributors(context?.songId!)
-        logger.info("CONTRIBUTORS DE LA ROOM ANTERIOR songid: " + context?.songId! + " contributors: " + JSON.stringify(contributors))
+        this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
+        logger.info("CONTRIBUTORS DE LA ROOM ACTUAL songid: " + context?.songId! + " contributors: " + JSON.stringify(contributors))
         await this.emitToRoom(socket, "contributors", contributors.toString(), context?.songId!)
-        // if (context && context.songId && context.userId) {
-            this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
-        // }
     }
 
     public async emitToRoom(socket: Socket, channel: string, response: any, roomId?: string) {

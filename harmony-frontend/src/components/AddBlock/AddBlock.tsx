@@ -81,7 +81,6 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
                 <form name={"form" + rowIndex + "_" + blockIndex} autoComplete="off" className={"flex flex-col gap-4 h-24 w-fit"}>
                     <div className="flex flex-row justify-between">
                         <input
-                            autoFocus={defaultBlock.chord == '' && defaultBlock.lyrics == '' }
                             id="note"
                             defaultValue={defaultBlock? defaultBlock.chord : undefined}
                             onKeyDown={handleEnter}

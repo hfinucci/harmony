@@ -41,12 +41,12 @@ class SessionHandler {
             users.push(userId);
             this.rooms.set(roomId, users);
         }
-        console.log('**********');
-        for (const [songId, userIds] of this.rooms.entries()) {
-            console.log(`Song ID: ${songId}`);
-            console.log(`User IDs: ${userIds.join(', ')}`);
-            console.log('------------------');
-        }
+        // console.log('**********');
+        // for (const [songId, userIds] of this.rooms.entries()) {
+        //     console.log(`Song ID: ${songId}`);
+        //     console.log(`User IDs: ${userIds.join(', ')}`);
+        //     console.log('------------------');
+        // }
     }
 
     public invalidateUserSessions(userId: string, socket: Socket): string[] {
@@ -67,6 +67,12 @@ class SessionHandler {
                     (contributor) => contributor.userId !== Number(userId)
                 );
             }
+        }
+        console.log('*******************');
+        for (const [songId, session] of this.sessions.entries()) {
+            console.log(`Song ID: ${songId}`);
+            console.log(`Contributors: ${session.contributors.join(', ')}`);
+            console.log('------------------');
         }
         return oldRooms
     }

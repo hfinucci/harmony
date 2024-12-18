@@ -60,19 +60,13 @@ class SessionHandler {
             }
         }
 
-        for (const songId in oldRooms) {
+        for (const songId of oldRooms) {
             const session = this.sessions.get(songId);
             if (session) {
                 session.contributors = session.contributors.filter(
                     (contributor) => contributor.userId !== Number(userId)
                 );
             }
-        }
-        console.log('*******************');
-        for (const [songId, session] of this.sessions.entries()) {
-            console.log(`Song ID: ${songId}`);
-            console.log(`Contributors: ${session.contributors.join(', ')}`);
-            console.log('------------------');
         }
         return oldRooms
     }
@@ -148,7 +142,7 @@ export class ComposeService {
 
     public async joinRoom(socket: Socket, context?: Context) {
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
-        for (const roomId in oldRooms) {
+        for (const roomId of oldRooms) {
             logger.info("leaving room: " + roomId)
             const contributors = await this.getContributors(roomId)
             await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)

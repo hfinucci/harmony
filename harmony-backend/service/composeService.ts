@@ -143,7 +143,6 @@ export class ComposeService {
     public async joinRoom(socket: Socket, context?: Context) {
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
         for (const roomId of oldRooms) {
-            logger.info("leaving room: " + roomId)
             const contributors = await this.getContributors(roomId)
             await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
         }

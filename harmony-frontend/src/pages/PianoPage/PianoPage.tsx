@@ -245,6 +245,7 @@ const PianoPage = ({song, enabled}) => {
     function play(note: Note) {
         const pitch = note.pitch;
         switch (note.on) {
+            case 153:
             case 144:
                 playPianoOn(note)
                 // playSynthOn(pitch, calculateFrequency(pitch));
@@ -252,6 +253,7 @@ const PianoPage = ({song, enabled}) => {
                     return [...prevState, pitch]
                 });
                 break;
+            case 137:
             case 128:
                 playPianoStop(note)
                 // playSynthOff(pitch, calculateFrequency(pitch));

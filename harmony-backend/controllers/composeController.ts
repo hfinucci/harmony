@@ -37,7 +37,7 @@ export default async function composeController(
             socket.on("compose", async (payload) => {
                 // logger.info("compose: " + payload)
                 const context = await composeService.parseContext(payload)
-                await composeService.joinRoom(socket, context)
+                // await composeService.joinRoom(socket, context)
                 const response = await composeService.processRequest(payload)
                 await composeService.emitToRoom(socket, "compose", response, context?.songId)
             })
@@ -64,10 +64,10 @@ export default async function composeController(
                     songId: payload.composeId!,
                     userId: payload.userId.toString()
                 } as Context
-                await composeService.joinRoom(socket, context)
+                // await composeService.joinRoom(socket, context)
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
-                const response = await composeService.getContributors( context?.songId!)
-                await composeService.emitToRoom(socket, "contributors", response.toString(), context?.songId)
+                // const response = await composeService.getContributors( context?.songId!)
+                // await composeService.emitToRoom(socket, "contributors", response.toString(), context?.songId)
                 await composeService.emitToRoom(socket, "serverMidi", payload, payload.composeId)
                 // socket.broadcast.emit("serverMidi", payload);
             });

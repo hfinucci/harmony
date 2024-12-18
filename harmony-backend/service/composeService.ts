@@ -132,6 +132,14 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
+    public async leaveRooms(socket: Socket) {
+        for (const room of socket.rooms) {
+            if (room !== socket.id) {
+                await socket.leave(room);
+            }
+        }
+    }
+
     public async joinRoom(socket: Socket, context?: Context) {
         const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!, socket)
         for (const roomId of oldRooms) {
@@ -139,7 +147,7 @@ export class ComposeService {
             logger.info("CONTRIBUTORS DE LA ROOM ANTERIOR songid: " + roomId + " contributors: " + JSON.stringify(contributors))
             await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
         }
-        // await this.leaveRooms(socket)
+        await this.leaveRooms(socket)
         await socket.join(context?.songId!);
         this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
         // const session = await this.sessionHandler.getSession(context?.songId!)

@@ -7,7 +7,7 @@ import {Socket} from "socket.io";
 
 class SessionHandler {
     private static instance: SessionHandler;
-    private sessions: Map<string, SongSession>
+    public sessions: Map<string, SongSession>
     private rooms: Map<string, string[]>
 
     private constructor() {
@@ -67,12 +67,6 @@ class SessionHandler {
                     (contributor) => contributor.userId !== Number(userId)
                 );
             }
-        }
-        logger.info('**********');
-        for (const [songId, session] of this.sessions.entries()) {
-            logger.info(`Song ID: ${songId}`);
-            logger.info(`Contributors IDs: ${session.contributors.join(', ')}`);
-            logger.info('------------------');
         }
         return oldRooms
     }
@@ -155,8 +149,14 @@ export class ComposeService {
         }
         await this.leaveRooms(socket)
         await socket.join(context?.songId!);
-        const contributors = await this.getContributors(context?.songId!)
         this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!, socket)
+        const contributors = await this.getContributors(context?.songId!)
+        logger.info('**********');
+        for (const [songId, session] of this.sessionHandler.sessions.entries()) {
+            logger.info(`Song ID: ${songId}`);
+            logger.info(`Contributors IDs: ${session.contributors.join(', ')}`);
+            logger.info('------------------');
+        }
         logger.info("CONTRIBUTORS DE LA ROOM ACTUAL songid: " + context?.songId! + " contributors: " + JSON.stringify(contributors))
         await this.emitToRoom(socket, "contributors", contributors.toString(), context?.songId!)
     }

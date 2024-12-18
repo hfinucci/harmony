@@ -164,8 +164,8 @@ export class ComposeService {
     }
 
     public async emitToRoom(socket: Socket, channel: string, response: any, roomId?: string) {
-        if (roomId && response !== undefined && response !== "") {
-            socket.to(roomId).emit(channel, response)
-        }
+        // if (roomId && response !== undefined && response !== "") {
+            socket.to(roomId!).emit(channel, response)
+        // }
     }
 }

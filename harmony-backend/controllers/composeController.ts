@@ -64,7 +64,7 @@ export default async function composeController(
                     songId: payload.composeId!,
                     userId: payload.userId.toString()
                 } as Context
-                await composeService.joinRoom(socket, context)
+                // await composeService.joinRoom(socket, context)
                 await composeService.addOrUpdateContributor(payload.userId, payload.composeId)
                 // const response = await composeService.getContributors( context?.songId!)
                 // await composeService.emitToRoom(socket, "contributors", response.toString(), context?.songId)

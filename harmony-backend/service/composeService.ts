@@ -68,6 +68,12 @@ class SessionHandler {
                 );
             }
         }
+        logger.info('**********');
+        for (const [songId, session] of this.sessions.entries()) {
+            logger.info(`Song ID: ${songId}`);
+            logger.info(`Contributors IDs: ${session.contributors.join(', ')}`);
+            logger.info('------------------');
+        }
         return oldRooms
     }
 
@@ -145,7 +151,7 @@ export class ComposeService {
         for (const roomId of oldRooms) {
             const contributors = await this.getContributors(roomId)
             logger.info("CONTRIBUTORS songid: " + roomId + " contributors: " + JSON.stringify(contributors))
-            await this.emitToRoom(socket, "contributors",  JSON.stringify(contributors), roomId)
+            await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
         }
         await this.leaveRooms(socket)
         await socket.join(context?.songId!);

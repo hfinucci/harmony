@@ -143,7 +143,6 @@ const EditPage = () => {
 
     function gotContributorsResponse(data: any) {
         const conts = data.contributors as Contributors[]
-        console.log("contributors: " + JSON.stringify(data))
         setContributors(conts)
     }
 

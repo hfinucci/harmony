@@ -5,6 +5,8 @@ import * as HandleBars from "handlebars";
 
 const FROM = "no-reply@harmony-itba.com"
 
+const FRONTEND_URI = process.env.FRONTEND_URI || "https://www.harmony-frontend.duckdns.org";
+
 export class MailService {
     public static async sendJoinOrgRequestMail(user: string, org: number) {
         const subject = "You've been invited to join an organization!";
@@ -12,7 +14,7 @@ export class MailService {
         const emailTemplateSource = fs.readFileSync('/app/service/templates/emailTemplate.hbs', 'utf8');
         const template = HandleBars.compile(emailTemplateSource);
 
-        const joinUrl = `http://localhost:5173/accept-invitation?user=${user}&org=${org}`;
+        const joinUrl = FRONTEND_URI + `/accept-invitation?user=${user}&org=${org}`;
         const html = template({
             message: "You've been invited to join an organization on Harmony!",
             clickme: "CLICK HERE TO JOIN",
@@ -28,7 +30,7 @@ export class MailService {
         const emailTemplateSource = fs.readFileSync('/app/service/templates/emailTemplate.hbs', 'utf8');
         const template = HandleBars.compile(emailTemplateSource);
 
-        const viewUrl = `http://localhost:5173/orgs/${org}`;
+        const viewUrl = FRONTEND_URI + `/orgs/${org}`;
 
         const html = template({
             message: "A new member has joined your organization on Harmony!",

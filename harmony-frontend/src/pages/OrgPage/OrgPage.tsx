@@ -281,7 +281,7 @@ const OrgPage = () => {
                                 {t("pages.org.albums.title")}
                             </h1>
                         </div>
-                        <CreateAlbumModal callback={(album) => nav("/albums/" + album.id)} />
+                        <CreateAlbumModal org={org.id} callback={(album) => nav("/albums/" + album.id)} />
                     </div>
 
                     {albums && albums.albums.length != 0 ? (

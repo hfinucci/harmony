@@ -81,7 +81,6 @@ export const TRANSLATIONS_EN = {
             title: "Log In",
             mail: "Email Address",
             password: "Password",
-            forget: "Forgot your password?",
             remember: "Remember me",
             submit: "LOG IN",
             error: {

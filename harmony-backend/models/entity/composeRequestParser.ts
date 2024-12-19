@@ -26,7 +26,7 @@ export class ComposeRequestParser {
                     return useCases[i];
                 }
             } catch (e) {
-                logger.error("Error in UseCase parse: " + e)
+                logger.error("Error parsing useCase: " + e)
             }
         }
         return undefined

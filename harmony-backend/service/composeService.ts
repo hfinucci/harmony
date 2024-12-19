@@ -2,13 +2,17 @@ import {Contributor, SongSession} from "../models/entity/songSession";
 import {ComposeRequestParser} from "../models/entity/composeRequestParser";
 import {buildInvalidRequestResponse} from "../models/errors/composeErrors";
 import {UserService} from "./userService";
+import {logger} from "../server";
+import {Socket} from "socket.io";
 
 class SessionHandler {
     private static instance: SessionHandler;
-    private sessions: Map<string, SongSession>
+    public sessions: Map<string, SongSession>
+    private rooms: Map<string, string[]>
 
     private constructor() {
         this.sessions = new Map<string, SongSession>();
+        this.rooms = new Map<string, string[]>;
     }
 
     public static getInstance(): SessionHandler {
@@ -30,6 +34,42 @@ class SessionHandler {
         }
         return this.sessions.get(songId);
     }
+
+    public addUserToRoom(roomId: string, userId: string): void {
+        const users = this.rooms.get(roomId) || [];
+        if (!users.includes(userId)) {
+            users.push(userId);
+            this.rooms.set(roomId, users);
+        }
+    }
+
+    // Esto invalida ambos tipos de sesiones: las de rooms para conectar y desconectar el socketIO y las de sessions,
+    // para poder mostrar los avatares en la pagina de editar cancion
+    public invalidateUserSessions(userId: string): string[] {
+        const previousRooms: string[] = [];
+        for (const [songId, userIds] of this.rooms.entries()) {
+            if (userIds.includes(userId)) {
+                previousRooms.push(songId);
+                const updatedUserIds = userIds.filter((id) => id !== userId);
+                this.rooms.set(songId, updatedUserIds);
+            }
+        }
+
+        for (const songId of previousRooms) {
+            const session = this.sessions.get(songId);
+            if (session) {
+                session.contributors = session.contributors.filter(
+                    (contributor) => contributor.userId !== Number(userId)
+                );
+            }
+        }
+        return previousRooms
+    }
+}
+
+export interface Context {
+    songId: string,
+    userId: string
 }
 
 export class ComposeService {
@@ -37,6 +77,19 @@ export class ComposeService {
 
     constructor() {
         this.sessionHandler = SessionHandler.getInstance();
+    }
+
+    public async parseContext(request: string): Promise<Context | undefined> {
+        try {
+            const operation = JSON.parse(request.toString());
+            return {
+                songId: operation.songId,
+                userId: operation.userId
+            } as Context
+        } catch (e) {
+            logger.info("Error parsing context: " + e)
+            return undefined;
+        }
     }
 
     public async processRequest(request: string): Promise<string>{
@@ -65,4 +118,26 @@ export class ComposeService {
         session?.addOrUpdateContributor(userId)
     }
 
+    public async leaveSocketIORooms(socket: Socket) {
+        for (const room of socket.rooms) {
+            if (room !== socket.id) {
+                await socket.leave(room);
+            }
+        }
+    }
+
+    public async switchRooms(socket: Socket, context?: Context) {
+        const oldRooms = this.sessionHandler.invalidateUserSessions(context?.userId!)
+        for (const roomId of oldRooms) {
+            const contributors = await this.getContributors(roomId)
+            await this.emitToRoom(socket, "contributors", contributors.toString(), roomId)
+        }
+        await this.leaveSocketIORooms(socket)
+        await socket.join(context?.songId!);
+        this.sessionHandler.addUserToRoom(context?.songId!, context?.userId!)
+    }
+
+    public async emitToRoom(socket: Socket, channel: string, response: any, roomId?: string) {
+        socket.to(roomId!).emit(channel, response)
+    }
 }

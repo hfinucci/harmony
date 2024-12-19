@@ -221,7 +221,8 @@ const PianoPage = ({song, enabled}) => {
         // No toco la nota si es local. Solo suenan las notas que vienen del servidor.
         play(note);
         const userId = Number(localStorage.getItem("harmony-uid"))
-        socket.emit('clientMidi', {composeId: song.composeid, userId: userId, note: note} as MIDIEvent);
+        const currentSongId = localStorage.getItem("harmony-songid") as string
+        socket.emit('clientMidi', {composeId: currentSongId, userId: userId, note: note} as MIDIEvent);
     }
 
     const playPianoOn = (note: Note) => {
@@ -244,6 +245,7 @@ const PianoPage = ({song, enabled}) => {
     function play(note: Note) {
         const pitch = note.pitch;
         switch (note.on) {
+            case 153:
             case 144:
                 playPianoOn(note)
                 // playSynthOn(pitch, calculateFrequency(pitch));
@@ -251,6 +253,7 @@ const PianoPage = ({song, enabled}) => {
                     return [...prevState, pitch]
                 });
                 break;
+            case 137:
             case 128:
                 playPianoStop(note)
                 // playSynthOff(pitch, calculateFrequency(pitch));

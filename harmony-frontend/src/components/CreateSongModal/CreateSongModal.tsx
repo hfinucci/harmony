@@ -38,13 +38,14 @@ const CreateSongModal = ({
     }, []);
 
     useEffect(() => {
-        if (orgSelected)
+        if (orgSelected) {
             OrgService.getOrgAlbums(orgSelected).then(async (rsp) => {
                 if (rsp?.status == 200) {
                     const info = await rsp.json() as AlbumPagination;
                     setAlbums(info.albums)
                 }
             })
+        }
     }, [orgSelected]);
 
     type CreateSongFormData = {
@@ -59,7 +60,13 @@ const CreateSongModal = ({
         watch,
         formState: { errors },
         reset
-    } = useForm<CreateSongFormData>();
+    } = useForm<CreateSongFormData>({
+        defaultValues: {
+            name: "",
+            org: org,
+            album: album,
+        },
+    });
 
     watch();
 
@@ -152,8 +159,10 @@ const CreateSongModal = ({
                                                         required: true,
                                                         min: 1,
                                                     })}
+
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                     required
+                                                    disabled={org != null}
                                                 >
                                                     {orgs.map((o: any, index) => (
                                                         <option
@@ -195,6 +204,7 @@ const CreateSongModal = ({
                                                     })}
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                     required
+                                                    disabled={album != null}
                                                 >
                                                     {albums.map((a: Album, index) => (
                                                         <option
@@ -212,11 +222,13 @@ const CreateSongModal = ({
                                                         />
                                                     )}
                                                 </select>
-                                                <>
-                                                    <p className="text-gray-500 text-xs pl-2.5">
-                                                        {t("components.createSongModal.select.noAlbum")}
-                                                    </p>
-                                                </>
+                                                {album == null &&
+                                                    <>
+                                                        <p className="text-gray-500 text-xs pl-2.5">
+                                                            {t("components.createSongModal.select.noAlbum")}
+                                                        </p>
+                                                    </>
+                                                }
                                             </div>
                                         )}
                                         {errors.album && (

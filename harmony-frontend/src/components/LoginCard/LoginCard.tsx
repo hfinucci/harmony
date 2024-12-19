@@ -110,9 +110,6 @@ export const LoginCard = () => {
                             })}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         />
-                        <p className="text-xs text-gray-400">
-                            {t("pages.login.forget")}
-                        </p>
                         {errors.password && (
                             <p className="block mb-2 text-sm font-medium text-red-700 margin-top: 1.25rem">
                                 {t("pages.login.error.password")}

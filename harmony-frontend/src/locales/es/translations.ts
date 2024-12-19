@@ -81,7 +81,6 @@ export const TRANSLATIONS_ES = {
             title: "Iniciar sesión",
             mail: "Dirección de Correo",
             password: "Contraseña",
-            forget: "¿Te olvidaste la contraseña?",
             remember: "Recordarme",
             submit: "INICIAR SESIÓN",
             error: {

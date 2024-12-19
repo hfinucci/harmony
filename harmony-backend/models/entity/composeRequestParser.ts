@@ -16,7 +16,7 @@ export class ComposeRequestParser {
         try {
             request = JSON.parse(rawRequest);
         } catch (e) {
-            logger.info("Error in JSON parse: " + e)
+            logger.error("Error in JSON parse: " + e)
             return undefined;
         }
         for (let i = 0; i <= useCases.length; i++) {

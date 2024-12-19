@@ -30,7 +30,7 @@ const EditPage = () => {
     const [org, setOrg] = useState<Org>();
     const [view, setView] = useState<number>(1)
     const [piano, setPiano] = useState<boolean>(false)
-    const [contributors, setContributors] = useState<Contributors[]>(null)
+    const [contributors, setContributors] = useState<Contributors[]>()
 
     const [blocks, setBlocks] = useState<Block[][]>()
 
@@ -122,7 +122,7 @@ const EditPage = () => {
     }, 10000)
 
     function gotComposeResponse(data: any) {
-        const updatedBlocks : Block[][] = JSON.parse(data)["message"]
+        const updatedBlocks: Block[][] = JSON.parse(data)["message"];
         setBlocks((prevBlocks) => {
             if (!prevBlocks) return updatedBlocks;
 
@@ -131,15 +131,44 @@ const EditPage = () => {
                 if (!mergedBlocks[rowIndex]) {
                     mergedBlocks[rowIndex] = row;
                 } else {
-                    row.forEach((block, blockIndex) => {
-                        mergedBlocks[rowIndex][blockIndex] = block;
+                    const existingRow = mergedBlocks[rowIndex];
+
+                    const syncedRow = row.map((incomingBlock, blockIndex) => {
+                        const existingBlock = existingRow[blockIndex];
+
+                        if (!existingBlock) {
+                            return incomingBlock;
+                        }
+
+                        const isSameBlock =
+                            existingBlock.chord === incomingBlock.chord &&
+                            existingBlock.lyrics === incomingBlock.lyrics;
+
+                        if (isSameBlock) {
+                            return existingBlock;
+                        } else if (incomingBlock.timestamp > existingBlock.timestamp) {
+                            return incomingBlock;
+                        } else {
+                            return existingBlock;
+                        }
                     });
+
+                    mergedBlocks[rowIndex] = syncedRow;
+
+                    if (existingRow.length > row.length) {
+                        mergedBlocks[rowIndex] = syncedRow.slice(0, row.length);
+                    }
                 }
             });
+
+            if (mergedBlocks.length > updatedBlocks.length) {
+                mergedBlocks.length = updatedBlocks.length;
+            }
 
             return mergedBlocks;
         });
     }
+
 
     function gotContributorsResponse(data: any) {
         const conts = data.contributors as Contributors[]
@@ -164,7 +193,8 @@ const EditPage = () => {
             row: rowIndex,
             col: blockIndex,
             lyrics: block.lyrics,
-            chord: block.chord
+            chord: block.chord,
+            timestamp: block.timestamp
         }
         socket.emit('compose', JSON.stringify(body))
         setBlocks(updatedBlocks);
@@ -193,7 +223,8 @@ const EditPage = () => {
             userId: Number(localStorage.getItem("harmony-uid")),
             row: rowIndex,
             lyrics: "",
-            chord: ""
+            chord: "",
+            timestamp: new Date()
         }
         socket.emit('compose', JSON.stringify(body))
         if (!(blocks) || blocks[rowIndex].length < 4) {
@@ -209,7 +240,8 @@ const EditPage = () => {
             songId: song?.composeid,
             userId: Number(localStorage.getItem("harmony-uid")),
             lyrics: "",
-            chord: ""
+            chord: "",
+            timestamp: new Date()
         }
         socket.emit('compose', JSON.stringify(body))
         setBlocks([...blocks, [{note: '', lyric: ''}]]);
@@ -253,7 +285,7 @@ const EditPage = () => {
     });
 
 
-    const Pdf = ({blocks}: {blocks: Block[][]} | undefined) => (
+    const Pdf = ({blocks}: {blocks: Block[][]}) => (
         <Document>
             <Page size="A4" style={styles.body}>
                 <Text style={styles.title}>
@@ -278,10 +310,6 @@ const EditPage = () => {
             </Page>
         </Document>
     );
-    
-    const submit = () => {
-        // Handle submission of blocks, for example, send to server or process locally
-    };
 
     if (errorCode) {
         return <ErrorPage code={errorCode} msg={errorMsg}/>;
@@ -311,7 +339,7 @@ const EditPage = () => {
                                         {songs.map((song, index) => (
                                             <li key={index}>
                                                 <Link to={"/songs/" + song.id}
-                                                      className={song.id == songId.id ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</Link>
+                                                      className={songId.id != undefined && song.id == parseInt(songId.id) ? "flex items-center w-full h-full p-3 text-fuchsia-950 bg-fuchsia-50 transition text-sm duration-75 pl-11 group" : "flex items-center w-full p-3 text-gray-900 transition text-sm duration-75 pl-11 group hover:bg-gray-100"}>{song.name}</Link>
                                             </li>
                                         ))}
                                     </ul>
@@ -344,7 +372,7 @@ const EditPage = () => {
                             </li>
                         </ul>
                         <div className="flex -space-x-4 rtl:space-x-reverse">
-                            {contributors && contributors.map((contributor, index) => {
+                            {contributors != undefined && contributors.map((contributor, index) => {
                                 if(contributor.id != localStorage.getItem("harmony-uid") as number)
                                     return <div key={index} className="group flex justify-center">
                                         <div
@@ -439,7 +467,6 @@ const EditPage = () => {
                                         className="p-4 flex justify-center items-center border-gray-200 text-gray-200 h-24 w-full border-2 border-dashed rounded-lg hover:border-fuchsia-300 hover:text-fuchsia-300 mt-2">
                                     <IoAddCircleSharp className="h-10 w-10"/>
                                 </button>
-                                <button onClick={submit} className="hidden">submit</button>
                             </div>
                             <div className={"h-fit fixed inset-x-0 bottom-0 flex justify-center mb-4"}>
                                 {piano && <PianoPage enabled={piano} song={song}/>}

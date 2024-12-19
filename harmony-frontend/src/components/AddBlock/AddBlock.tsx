@@ -16,7 +16,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
     const [noteError, setNoteError] = useState(false)
     const span = useRef(null);
 
-    const submitBlock = (event) => {
+    const submitBlock = (event: any) => {
         const name = "form" + rowIndex + "_" + blockIndex
         const form = document.forms[name]
 
@@ -36,6 +36,7 @@ export const AddBlock = ({rowIndex, blockIndex, submit, deleteBlock, defaultBloc
         submit(rowIndex, blockIndex, {
             chord: form.elements[0].value,
             lyrics: form.elements[1].value,
+            timestamp: new Date()
         });
     }
 
